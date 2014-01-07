@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%p] %c [%t] - %m%n</pattern>
+        </encoder>
+    </appender>
+    <appender class="ch.qos.logback.core.FileAppender" name="FILE">
+        <file>scanner.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%p] %c [%t] - %m%n</pattern>
+        </encoder>
+    </appender>
+    
+	<appender class="ch.qos.logback.core.FileAppender" name="MSG_JSON_LOGGER">
+        <file>scanner-JSON.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS}: %m%n</pattern>
+        </encoder>
+    </appender>
+        
+    <logger additivity="false" level="INFO" name="JSON">
+        <appender-ref ref="MSG_JSON_LOGGER"/>
+    </logger>
+    
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>
