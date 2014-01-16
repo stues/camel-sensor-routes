@@ -12,8 +12,6 @@ import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.util.CharsetUtil;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -25,16 +23,6 @@ public class TrafficScanner {
 	private int port;
 	
 	private SBS1Parser sbs1Parser;
-
-	public static void main(String[] args) throws Exception {
-		String host = args[0];
-		int port = Integer.parseInt(args[1]);
-
-		TrafficScanner demo = new TrafficScanner();
-		demo.setHost(host);
-		demo.setPort(port);
-		demo.startScanner();
-	}
 	
 	@Required
 	public void setHost(String host) {
@@ -51,8 +39,7 @@ public class TrafficScanner {
 		this.sbs1Parser = sbs1Parser;
 	}
 	
-	@PostConstruct
-	public void launch() {
+	public void launchScanner() {
 		LOGGER.info("Launch the scanner.");
 		
 		Thread worker = new Thread(new Runnable() {

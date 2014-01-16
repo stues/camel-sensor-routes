@@ -32,7 +32,12 @@ public class CamelStartupListener implements StartupListener {
 	@Override
 	public void onCamelContextStarted(CamelContext context,
 			boolean alreadyStarted) throws Exception {
-		LOGGER.info("Start the traffic scanner: {}", trafficScanner);
-		trafficScanner.launch();
+		LOGGER.info("CamelStartupListener will start the traffic scanner, camelContext: {}, alreadyStarted: {}", context, alreadyStarted);
+		if ("demoCamelContext".equals(context.getName()) && !alreadyStarted) {
+			trafficScanner.launchScanner();
+		}
+		else {
+			LOGGER.info("Wrong context or already started.");
+		}
 	}
 }
