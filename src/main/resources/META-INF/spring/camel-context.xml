@@ -10,6 +10,18 @@
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
        
 	<context:annotation-config/>
+	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath:dvb-t-config.properties"/>
+		<property name="properties">
+			<props>
+            	<prop key="scanner.host">192.168.56.101</prop>
+            	<prop key="scanner.port">30005</prop>
+				<prop key="localadress">10.95.162.246</prop>
+			</props>
+		</property>		
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+	</bean>
 	       
 	<bean id="sbs1Parser" class="ch.trackdata.demo.SBS1Parser"></bean>
 	
@@ -18,21 +30,40 @@
     </bean>
 
 	<bean id="scanner" class="ch.trackdata.demo.TrafficScanner" init-method="launch" >
-		<property name="host" value="192.168.56.101" />
-		<property name="port" value="30003" />
+		<property name="host" value="${scanner.host}" />
+		<property name="port" value="${scanner.port}" />
 		<property name="SBS1Parser" ref="sbs1Parser" />
 	</bean>
 	
 	<bean id="jsonProcessor" class="ch.trackdata.demo.JsonProcessor" />
 
 	<camel:camelContext xmlns="http://camel.apache.org/schema/spring">
-		<camel:route>
+		<!--camel:endpoint id="websocketEndpoint" uri="websocket://10.95.162.246:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" /-->
+		<camel:endpoint id="websocketEndpoint" uri="websocket://${localadress}:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" />
+		<camel:route autoStartup="true">
 			<camel:from uri="direct:sbs1" />
+			<!--
 			<unmarshal ref="bindyDataformat" />
 			<log message="Converted: ${body}"/>
 			<process ref="jsonProcessor" />
-			<camel:to uri="websocket://localhost:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" />
+			-->
+			<!--camel:to uri="websocket://10.95.162.246:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" /-->
+			<camel:to ref="websocketEndpoint" />
 		</camel:route>
+
+		<camel:route autoStartup="false">
+			<camel:from uri="file://src/main/resources?noop=true&amp;fileName=sample_data.json" />
+			<split>
+				<tokenize token="\r\n" group="10" />
+				<log loggingLevel="INFO" message="Converted: ${body}" />
+				<delay asyncDelayed="true">
+					<constant>100</constant>
+				</delay>
+				<camel:to
+					uri="websocket://localhost:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" />
+			</split>
+		</camel:route>
+		
 	</camel:camelContext>
 
 </beans>

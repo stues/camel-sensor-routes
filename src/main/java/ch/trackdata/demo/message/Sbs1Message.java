@@ -5,6 +5,7 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @CsvRecord( separator = "," )
 public class Sbs1Message {
@@ -12,6 +13,21 @@ public class Sbs1Message {
 	@DataField(pos = 1)
 	@JsonIgnore 
 	private String messageType;
+	
+	@DataField(pos = 5)
+	@JsonProperty("hex")
+	private String hexIdent;
+	
+	@DataField(pos = 18)
+	private String squawk;
+	
+	@DataField(pos = 15)
+	@JsonProperty("lat")
+	private String latitude;
+	
+	@DataField(pos = 16)
+	@JsonProperty("lon")
+	private String longitude;
 	
 	@DataField(pos = 2)
 	private int transmissionType;
@@ -22,9 +38,6 @@ public class Sbs1Message {
 
 	@DataField(pos = 4)
 	private int aircraftId;
-	
-	@DataField(pos = 5)
-	private String hexIdent;
 	
 	@DataField(pos = 6)
 	private int flightId;
@@ -53,17 +66,8 @@ public class Sbs1Message {
 	@DataField(pos = 14)
 	private String track;
 	
-	@DataField(pos = 15)
-	private String latitude;
-	
-	@DataField(pos = 16)
-	private String longitude;
-	
 	@DataField(pos = 17)
 	private String verticalRate;
-	
-	@DataField(pos = 18)
-	private String squawk;
 	
 	@DataField(pos = 19)
 	private String alert;
