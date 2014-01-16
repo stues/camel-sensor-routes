@@ -12,7 +12,7 @@
 	<context:annotation-config/>
 	
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations" value="classpath:dvb-t-config.properties"/>
+		<property name="locations" value="classpath*:dvb-t-config.properties"/>
 		<property name="properties">
 			<props>
             	<prop key="scanner.host">192.168.56.101</prop>
@@ -29,16 +29,20 @@
         <constructor-arg value="ch.trackdata.demo.message" />
     </bean>
 
-	<bean id="scanner" class="ch.trackdata.demo.TrafficScanner" init-method="launch" >
+	<bean id="scanner" class="ch.trackdata.demo.TrafficScanner" >
 		<property name="host" value="${scanner.host}" />
 		<property name="port" value="${scanner.port}" />
 		<property name="SBS1Parser" ref="sbs1Parser" />
 	</bean>
 	
 	<bean id="jsonProcessor" class="ch.trackdata.demo.JsonProcessor" />
+	
+	<bean id="camelStartupListener" class="ch.trackdata.demo.CamelStartupListener">
+		<property name="camelContext" ref="demoCamelContext" />
+		<property name="trafficScanner" ref="scanner" />
+	</bean>
 
-	<camel:camelContext xmlns="http://camel.apache.org/schema/spring">
-		<!--camel:endpoint id="websocketEndpoint" uri="websocket://10.95.162.246:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" /-->
+	<camel:camelContext id="demoCamelContext" xmlns="http://camel.apache.org/schema/spring">
 		<camel:endpoint id="websocketEndpoint" uri="websocket://${localadress}:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" />
 		<camel:route autoStartup="true">
 			<camel:from uri="direct:sbs1" />
@@ -47,10 +51,10 @@
 			<log message="Converted: ${body}"/>
 			<process ref="jsonProcessor" />
 			-->
-			<!--camel:to uri="websocket://10.95.162.246:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" /-->
 			<camel:to ref="websocketEndpoint" />
 		</camel:route>
-
+		
+		<!--
 		<camel:route autoStartup="false">
 			<camel:from uri="file://src/main/resources?noop=true&amp;fileName=sample_data.json" />
 			<split>
@@ -63,6 +67,7 @@
 					uri="websocket://localhost:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" />
 			</split>
 		</camel:route>
+		-->
 		
 	</camel:camelContext>
 
