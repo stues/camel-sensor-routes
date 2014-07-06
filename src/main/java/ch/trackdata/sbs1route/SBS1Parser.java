@@ -1,4 +1,4 @@
-package ch.trackdata.demo;
+package ch.trackdata.sbs1route;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
@@ -8,6 +8,9 @@ import org.apache.camel.ProducerTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * SBS1Parser
+ */
 public class SBS1Parser extends ChannelHandlerAdapter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SBS1Parser.class);
 	
@@ -17,7 +20,6 @@ public class SBS1Parser extends ChannelHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg)
 			throws Exception {
-		// TODO Auto-generated method stub
 		LOGGER.info("Received: {}", msg);
 		try {
 			sender.sendBody(msg);
@@ -32,7 +34,7 @@ public class SBS1Parser extends ChannelHandlerAdapter {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 		cause.printStackTrace();
-		LOGGER.warn("Exception!!!!", cause);
+		LOGGER.warn("An error occurred!", cause);
 		ctx.close();
 	}
 }

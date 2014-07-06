@@ -1,0 +1,171 @@
+package ch.trackdata.sbs1route;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.trackdata.sbs1route.message.SBS1Message;
+import ch.trackdata.sbs1route.message.TrackPositionMessage;
+
+/**
+ * Extracts the {@link SBS1Message} from the exchanged List
+ * 
+ */
+public class SBS1DataAggregatorProcessor implements Processor {
+	private static final String STA_MESSAGE_TYPE = "STA";
+	private static final String ID_MESSAGE_TYPE = "ID";
+	private static final String MSG_MESSAGE_TYPE = "MSG";
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(SBS1DataAggregatorProcessor.class);
+
+	private Map<String, TrackPositionMessage> trackPositions;
+	
+	private Timer cleanupTimer;
+
+	private Integer cleanupInterval;
+	
+	public SBS1DataAggregatorProcessor() {
+		trackPositions = new HashMap<String, TrackPositionMessage>();
+		
+		cleanupTimer = new Timer();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void process(Exchange exchange) throws Exception {
+		SBS1Message sbs1Message = exchange.getIn().getBody(SBS1Message.class);
+		
+		TrackPositionMessage trackPosition;
+		synchronized(trackPositions){
+			trackPosition = getUpdatedTrackPosition(sbs1Message);
+		}
+				
+		LOGGER.info("Updated message: {}", trackPosition);
+		
+		exchange.getOut().setBody(trackPosition);
+	}
+
+	/**
+	 * Returns an aggregated Message
+	 * @param sbs1Message the sbs1Message
+	 * @return the aggregated Message {@link TrackPositionMessage}
+	 */
+	private TrackPositionMessage getUpdatedTrackPosition(SBS1Message sbs1Message) {
+		TrackPositionMessage trackPosition = getTrackPosition(sbs1Message);
+		trackPosition.setMessageReceived(new Date());
+		trackPosition.setMessageGenerated(sbs1Message.getDateMessageGenerated(), sbs1Message.getTimeMessageGenerated());
+		
+		if(MSG_MESSAGE_TYPE.equals(sbs1Message.getMessageType())){
+			LOGGER.info("Message received for track: {}", sbs1Message.getHexIdent());
+			switch(sbs1Message.getTransmissionType()){
+			case(1):
+				trackPosition.setCallSign(sbs1Message.getCallsign());
+				break;
+			case(2):
+				trackPosition.setAltitude(sbs1Message.getAltitude());
+				trackPosition.setGroundSpeed(sbs1Message.getGroundSpeed());
+				trackPosition.setTrack(sbs1Message.getTrack());
+				trackPosition.setGeometry(sbs1Message.getLongitude(), sbs1Message.getLatitude());
+				trackPosition.setIsOnGround(sbs1Message.getIsOnGround());
+				break;
+			case(3):
+				trackPosition.setAltitude(sbs1Message.getAltitude());
+				trackPosition.setGeometry(sbs1Message.getLongitude(), sbs1Message.getLatitude());
+				trackPosition.setIsOnGround(sbs1Message.getIsOnGround());
+				break;
+			case(4):
+				trackPosition.setGroundSpeed(sbs1Message.getGroundSpeed());
+				trackPosition.setTrack(sbs1Message.getTrack());
+				break;
+			case(5):
+			case(6):
+			case(7):
+				trackPosition.setAltitude(sbs1Message.getAltitude());
+				trackPosition.setIsOnGround(sbs1Message.getIsOnGround());
+				break;
+			case(8):
+				trackPosition.setIsOnGround(sbs1Message.getIsOnGround());
+				break;
+			default:
+				break;
+			}				
+		} else if(ID_MESSAGE_TYPE.equals(sbs1Message.getMessageType())){
+			LOGGER.info("ID Changed of track: {}", sbs1Message.getHexIdent());
+			trackPosition.setCallSign(sbs1Message.getCallsign());
+		} else if(STA_MESSAGE_TYPE.equals(sbs1Message.getMessageType())){
+			LOGGER.info("STA Message, remove track: {}", sbs1Message.getHexIdent());
+			trackPositions.remove(sbs1Message.getHexIdent());
+		}
+		
+		return trackPosition;
+	}
+
+	/**
+	 * Returns the current {@link TrackPositionMessage} from the trackPositions Map
+	 * @param sbs1Message the sbs1Message
+	 * @return the current {@link TrackPositionMessage} from the trackPositions Map
+	 */
+	private TrackPositionMessage getTrackPosition(SBS1Message sbs1Message) {
+		String hexIdent = sbs1Message.getHexIdent();
+		if (!trackPositions.containsKey(hexIdent)) {
+			TrackPositionMessage trackPosition = new TrackPositionMessage();
+			trackPositions.put(hexIdent, trackPosition);
+		}
+		return trackPositions.get(hexIdent);
+	}
+
+	/**
+	 * Returns the current {@link TrackPositionMessage} from the trackPositions Map
+	 * @param sbs1Message the sbs1Message
+	 * @return the current {@link TrackPositionMessage} from the trackPositions Map
+	 */
+	private void cleanup() {
+		synchronized(trackPositions){
+			LOGGER.info("Removing Old TrackPositions({})", trackPositions.size());
+			Iterator<Entry<String, TrackPositionMessage>> iterator = trackPositions.entrySet().iterator();
+			Date oldestDate = DateUtils.addMilliseconds(new Date(), -cleanupInterval);
+			while(iterator.hasNext()){
+				Entry<String, TrackPositionMessage> trackPositionEntry  = iterator.next();
+				TrackPositionMessage trackPositionMessage = trackPositionEntry.getValue();
+				if(oldestDate.after(trackPositionMessage.getMessageReceived())){
+					iterator.remove();
+					LOGGER.info("Old message removed: {}", trackPositionMessage);
+				}
+			}
+			
+			LOGGER.info("Old messages removed: ({})", trackPositions.size());
+		}
+	}
+
+	public Integer getCleanupInterval() {
+		return cleanupInterval;
+	}
+
+	public void setCleanupInterval(Integer cleanupInterval) {
+		this.cleanupInterval = cleanupInterval;
+		startTimer();
+	}
+
+	private void startTimer() {
+		cleanupTimer.schedule(new TimerTask(){
+
+			@Override
+			public void run() {
+				cleanup();
+			}}, cleanupInterval,cleanupInterval);
+	}
+	
+}

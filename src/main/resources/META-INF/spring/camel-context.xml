@@ -8,67 +8,68 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
-       
-	<context:annotation-config/>
-	
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations" value="classpath*:dvb-t-config.properties"/>
+
+	<context:annotation-config />
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath*:sbs1route-config.properties" />
 		<property name="properties">
 			<props>
-            	<prop key="scanner.host">192.168.56.101</prop>
-            	<prop key="scanner.port">30005</prop>
-				<prop key="localadress">10.95.162.246</prop>
+				<prop key="scanner.host"><!-- The SBS1 Station IP --></prop>
+				<prop key="scanner.port">30003</prop>
+				<prop key="localadress"><!-- The local IP-Address --></prop>
+				<prop key="aggregator.cleanupInterval">30000</prop>
 			</props>
-		</property>		
-		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+		</property>
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 	</bean>
-	       
-	<bean id="sbs1Parser" class="ch.trackdata.demo.SBS1Parser"></bean>
-	
-	<bean id="bindyDataformat" class="org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat">
-        <constructor-arg value="ch.trackdata.demo.message" />
-    </bean>
 
-	<bean id="scanner" class="ch.trackdata.demo.TrafficScanner" >
+
+	<bean id="sbs1Parser" class="ch.trackdata.sbs1route.SBS1Parser"></bean>
+
+	<bean id="bindyDataformat"
+		class="org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat">
+		<constructor-arg value="ch.trackdata.sbs1route.message" />
+	</bean>
+
+	<bean id="scanner" class="ch.trackdata.sbs1route.TrafficScanner">
 		<property name="host" value="${scanner.host}" />
 		<property name="port" value="${scanner.port}" />
 		<property name="SBS1Parser" ref="sbs1Parser" />
 	</bean>
+
+	<bean id="sbs1Processor" class="ch.trackdata.sbs1route.SBS1Processor" />
+	<bean id="geoJSONProcessor" class="ch.trackdata.sbs1route.GeoJSONProcessor" />
+	<bean id="sbs1DataAggregatorProcessor" class="ch.trackdata.sbs1route.SBS1DataAggregatorProcessor">
+		<property name="cleanupInterval" value="${aggregator.cleanupInterval}" />
+	</bean>
 	
-	<bean id="jsonProcessor" class="ch.trackdata.demo.JsonProcessor" />
-	
-	<bean id="camelStartupListener" class="ch.trackdata.demo.CamelStartupListener">
-		<property name="camelContext" ref="demoCamelContext" />
+	<bean id="camelStartupListener" class="ch.trackdata.sbs1route.CamelStartupListener">
+		<property name="camelContext" ref="sbs1RouteCamelContext" />
 		<property name="trafficScanner" ref="scanner" />
 	</bean>
 
-	<camel:camelContext id="demoCamelContext" xmlns="http://camel.apache.org/schema/spring">
-		<camel:endpoint id="websocketEndpoint" uri="websocket://${localadress}:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" />
+	<camel:camelContext id="sbs1RouteCamelContext"
+		xmlns="http://camel.apache.org/schema/spring">
+		<camel:endpoint id="websocketEndpoint"
+			uri="websocket://${localadress}:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" />
 		<camel:route autoStartup="true">
+
 			<camel:from uri="direct:sbs1" />
-			<!--
 			<unmarshal ref="bindyDataformat" />
-			<log message="Converted: ${body}"/>
-			<process ref="jsonProcessor" />
-			-->
-			<camel:to ref="websocketEndpoint" />
+			<log message="Converted: ${body}" />
+			<process ref="sbs1Processor" />
+			<!--<camel:choice>
+				<camel:when>
+					 <camel:simple>${body.messageType} == "MSG"</camel:simple> -->
+					<process ref="sbs1DataAggregatorProcessor" />
+					<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
+					<process ref="geoJSONProcessor" />
+					<camel:to ref="websocketEndpoint" />
+			<!--	</camel:when>
+			</camel:choice> -->
 		</camel:route>
-		
-		<!--
-		<camel:route autoStartup="false">
-			<camel:from uri="file://src/main/resources?noop=true&amp;fileName=sample_data.json" />
-			<split>
-				<tokenize token="\r\n" group="10" />
-				<log loggingLevel="INFO" message="Converted: ${body}" />
-				<delay asyncDelayed="true">
-					<constant>100</constant>
-				</delay>
-				<camel:to
-					uri="websocket://localhost:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" />
-			</split>
-		</camel:route>
-		-->
-		
 	</camel:camelContext>
 
 </beans>

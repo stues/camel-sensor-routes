@@ -1,4 +1,4 @@
-package ch.trackdata.demo;
+package ch.trackdata.sbs1route;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;

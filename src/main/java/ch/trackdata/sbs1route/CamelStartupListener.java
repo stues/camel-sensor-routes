@@ -1,4 +1,4 @@
-package ch.trackdata.demo;
+package ch.trackdata.sbs1route;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.StartupListener;
@@ -19,21 +19,29 @@ public class CamelStartupListener implements StartupListener {
 		this.trafficScanner = trafficScanner;
 	}
 
+	/**
+	 * @param context the camel context to set
+	 */
 	@Required
-	public void setCamelContext (CamelContext context) {
+	public void setCamelContext(CamelContext context) {
         try {
-			context.addStartupListener (this);
+			context.addStartupListener(this);
 		} 
         catch (Exception e) {
 			LOGGER.warn("Add as startup listener failed.", e);
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * Called once the context started
+	 */
 	@Override
 	public void onCamelContextStarted(CamelContext context,
 			boolean alreadyStarted) throws Exception {
 		LOGGER.info("CamelStartupListener will start the traffic scanner, camelContext: {}, alreadyStarted: {}", context, alreadyStarted);
-		if ("demoCamelContext".equals(context.getName()) && !alreadyStarted) {
+		if ("sbs1RouteCamelContext".equals(context.getName()) && !alreadyStarted) {
 			trafficScanner.launchScanner();
 		}
 		else {

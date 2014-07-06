@@ -1,43 +1,29 @@
-package ch.trackdata.demo.message;
+package ch.trackdata.sbs1route.message;
 
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-@CsvRecord( separator = "," )
-public class Sbs1Message {
+/**
+ * SBS1-Object with all provided fields
+ */
+@CsvRecord(separator = ",")
+public class SBS1Message {
 	
 	@DataField(pos = 1)
-	@JsonIgnore 
 	private String messageType;
-	
-	@DataField(pos = 5)
-	@JsonProperty("hex")
-	private String hexIdent;
-	
-	@DataField(pos = 18)
-	private String squawk;
-	
-	@DataField(pos = 15)
-	@JsonProperty("lat")
-	private String latitude;
-	
-	@DataField(pos = 16)
-	@JsonProperty("lon")
-	private String longitude;
 	
 	@DataField(pos = 2)
 	private int transmissionType;
 	
 	@DataField(pos = 3)
-	@JsonIgnore
 	private int sessionId;
 
 	@DataField(pos = 4)
 	private int aircraftId;
+	
+	@DataField(pos = 5)
+	private String hexIdent;
 	
 	@DataField(pos = 6)
 	private int flightId;
@@ -58,17 +44,26 @@ public class Sbs1Message {
 	private String callsign;
 
 	@DataField(pos = 12)
-	private String altitude;
+	private int altitude;
 	
 	@DataField(pos = 13)
-	private String groundSpeed;
+	private int groundSpeed;
 	
 	@DataField(pos = 14)
-	private String track;
+	private Integer track;
+	
+	@DataField(pos = 15)
+	private Double latitude;
+	
+	@DataField(pos = 16)
+	private Double longitude;
 	
 	@DataField(pos = 17)
 	private String verticalRate;
 	
+	@DataField(pos = 18)
+	private String squawk;
+			
 	@DataField(pos = 19)
 	private String alert;
 	
@@ -80,7 +75,7 @@ public class Sbs1Message {
 	
 	@DataField(pos = 22)
 	private Integer isOnGround;
-	
+
 	/**
 	 * @return the messageType
 	 */
@@ -94,7 +89,7 @@ public class Sbs1Message {
 	public void setMessageType(String messageType) {
 		this.messageType = messageType;
 	}
-
+	
 	/**
 	 * @return the transmissionType
 	 */
@@ -221,102 +216,177 @@ public class Sbs1Message {
 		this.timeMessageLogged = timeMessageLogged;
 	}
 
+	/**
+	 * @return the callsign
+	 */
 	public String getCallsign() {
 		return callsign;
 	}
 
+	/**
+	 * @param callsign the callsign to set
+	 */
 	public void setCallsign(String callsign) {
 		this.callsign = callsign;
 	}
 
-	public String getAltitude() {
+	/**
+	 * @return the altitude
+	 */
+	public Integer getAltitude() {
 		return altitude;
 	}
 
-	public void setAltitude(String altitude) {
+	/**
+	 * @param altitude the altitude to set
+	 */
+	public void setAltitude(Integer altitude) {
 		this.altitude = altitude;
 	}
 
-	public String getGroundSpeed() {
+	/**
+	 * @return the groundSpeed
+	 */
+	public int getGroundSpeed() {
 		return groundSpeed;
 	}
 
-	public void setGroundSpeed(String groundSpeed) {
+	/**
+	 * @param groundSpeed the groundSpeed to set
+	 */
+	public void setGroundSpeed(int groundSpeed) {
 		this.groundSpeed = groundSpeed;
 	}
 
-	public String getTrack() {
+	/**
+	 * @return the track
+	 */
+	public Integer getTrack() {
 		return track;
 	}
 
-	public void setTrack(String track) {
+	/**
+	 * @param track the track to set
+	 */
+	public void setTrack(Integer track) {
 		this.track = track;
 	}
 
-	public String getLatitude() {
+	/**
+	 * @return the latitude
+	 */
+	public Double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(String latitude) {
+	/**
+	 * @param latitude the latitude to set
+	 */
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
-	public String getLongitude() {
+	/**
+	 * @return the longitude
+	 */
+	public Double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(String longitude) {
+	/**
+	 * @param longitude the longitude to set
+	 */
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
+	/**
+	 * @return the verticalRate
+	 */
 	public String getVerticalRate() {
 		return verticalRate;
 	}
 
+	/**
+	 * @param verticalRate the verticalRate to set
+	 */
 	public void setVerticalRate(String verticalRate) {
 		this.verticalRate = verticalRate;
 	}
-
+	
+	/**
+	 * @return the squawk
+	 */
 	public String getSquawk() {
 		return squawk;
 	}
 
+	/**
+	 * @param squawk the squawk to set
+	 */
 	public void setSquawk(String squawk) {
 		this.squawk = squawk;
 	}
 
+	/**
+	 * @return the alert
+	 */
 	public String getAlert() {
 		return alert;
 	}
 
+	/**
+	 * @param alert the alert to set
+	 */
 	public void setAlert(String alert) {
 		this.alert = alert;
 	}
 
+	/**
+	 * @return the emergency
+	 */
 	public String getEmergency() {
 		return emergency;
 	}
 
+	/**
+	 * @param emergency the emergency to set
+	 */
 	public void setEmergency(String emergency) {
 		this.emergency = emergency;
 	}
 
+	/**
+	 * @return the spi
+	 */
 	public Integer getSpi() {
 		return spi;
 	}
 
+	/**
+	 * @param spi the spi to set
+	 */
 	public void setSpi(Integer spi) {
 		this.spi = spi;
 	}
 
+	/**
+	 * @return the isOnGround
+	 */
 	public Integer getIsOnGround() {
 		return isOnGround;
 	}
 
+	/**
+	 * @param isOnGround the isOnGround to set
+	 */
 	public void setIsOnGround(Integer isOnGround) {
 		this.isOnGround = isOnGround;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
