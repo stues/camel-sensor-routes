@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * SBS1Parser
+ * Parses the SBS1Parser
  */
 public class SBS1Parser extends ChannelHandlerAdapter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SBS1Parser.class);
@@ -17,6 +17,9 @@ public class SBS1Parser extends ChannelHandlerAdapter {
 	@Produce(uri="direct:sbs1")
 	private ProducerTemplate sender;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg)
 			throws Exception {
@@ -31,6 +34,9 @@ public class SBS1Parser extends ChannelHandlerAdapter {
 		super.channelRead(ctx, msg);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 		cause.printStackTrace();

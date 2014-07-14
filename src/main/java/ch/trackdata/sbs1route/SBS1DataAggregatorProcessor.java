@@ -13,21 +13,23 @@ import org.apache.camel.Processor;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 
 import ch.trackdata.sbs1route.message.SBS1Message;
 import ch.trackdata.sbs1route.message.TrackPositionMessage;
 
 /**
- * Extracts the {@link SBS1Message} from the exchanged List
+ * Aggregates a given SBS1Message with already received data
+ * an returns a TrackPosition Message with all the information
  * 
+ * @author stue
  */
 public class SBS1DataAggregatorProcessor implements Processor {
 	private static final String STA_MESSAGE_TYPE = "STA";
 	private static final String ID_MESSAGE_TYPE = "ID";
 	private static final String MSG_MESSAGE_TYPE = "MSG";
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SBS1DataAggregatorProcessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SBS1DataAggregatorProcessor.class);
 
 	private Map<String, TrackPositionMessage> trackPositions;
 	
@@ -150,15 +152,25 @@ public class SBS1DataAggregatorProcessor implements Processor {
 		}
 	}
 
+	/**
+	 * @return the cleanupInterval
+	 */
 	public Integer getCleanupInterval() {
 		return cleanupInterval;
 	}
 
+	/**
+	 * @param cleanupInterval the cleanupInterval to set
+	 */
+	@Required
 	public void setCleanupInterval(Integer cleanupInterval) {
 		this.cleanupInterval = cleanupInterval;
 		startTimer();
 	}
 
+	/**
+	 * Starts the cleanup Timer
+	 */
 	private void startTimer() {
 		cleanupTimer.schedule(new TimerTask(){
 

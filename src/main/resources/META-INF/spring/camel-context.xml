@@ -26,7 +26,7 @@
 	</bean>
 
 
-	<bean id="sbs1Parser" class="ch.trackdata.sbs1route.SBS1Parser"></bean>
+	<bean id="sbs1Parser" class="ch.trackdata.sbs1route.SBS1Parser" />
 
 	<bean id="bindyDataformat"
 		class="org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat">
