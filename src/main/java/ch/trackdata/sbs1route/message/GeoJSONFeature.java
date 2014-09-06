@@ -2,21 +2,17 @@ package ch.trackdata.sbs1route.message;
 
 import java.util.Map;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GeoJSONFeature {
 
 	private static final String FEATURE_TYPE_STRING = "Feature";
 
-	@JsonProperty("type")
 	private String type;
 	
-	@JsonProperty("geometry")
 	private AbstractGeometry<?> geometry;
 	
-	@JsonProperty("properties")
 	private Map<String, Object> properties;
 	
 	public GeoJSONFeature(AbstractGeometry<?> geometry){
@@ -39,6 +35,13 @@ public class GeoJSONFeature {
 	
 	public String getType() {
 		return type;
+	}
+	
+	public <O> O getProperty(String propertyName, Class<O> clazz){
+		if(MapUtils.isNotEmpty(properties) && properties.containsKey(propertyName)){
+			return clazz.cast(properties.get(propertyName));
+		}
+		return null;
 	}
 	
 	public Map<String, Object> getProperties() {
