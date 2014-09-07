@@ -16,9 +16,11 @@
 		<property name="locations" value="classpath*:sbs1route-config.properties" />
 		<property name="properties">
 			<props>
-				<prop key="scanner.host"><!-- The SBS1 Station IP --></prop>
+				<prop key="scanner.host"><!-- The SBS1 Station IP -->
+				</prop>
 				<prop key="scanner.port">30003</prop>
-				<prop key="localadress"><!-- The local IP-Address --></prop>
+				<prop key="localadress"><!-- The local IP-Address -->
+				</prop>
 				<prop key="aggregator.cleanupInterval">30000</prop>
 			</props>
 		</property>
@@ -44,7 +46,7 @@
 	<bean id="sbs1DataAggregatorProcessor" class="ch.trackdata.sbs1route.SBS1DataAggregatorProcessor">
 		<property name="cleanupInterval" value="${aggregator.cleanupInterval}" />
 	</bean>
-	
+
 	<bean id="camelStartupListener" class="ch.trackdata.sbs1route.CamelStartupListener">
 		<property name="camelContext" ref="sbs1RouteCamelContext" />
 		<property name="trafficScanner" ref="scanner" />
@@ -60,16 +62,33 @@
 			<unmarshal ref="bindyDataformat" />
 			<log message="Converted: ${body}" />
 			<process ref="sbs1Processor" />
-			<!--<camel:choice>
-				<camel:when>
-					 <camel:simple>${body.messageType} == "MSG"</camel:simple> -->
-					<process ref="sbs1DataAggregatorProcessor" />
-					<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
-					<process ref="geoJSONProcessor" />
-					<camel:to ref="websocketEndpoint" />
-			<!--	</camel:when>
-			</camel:choice> -->
+			<!--<camel:choice> <camel:when> <camel:simple>${body.messageType} == "MSG"</camel:simple> -->
+			<process ref="sbs1DataAggregatorProcessor" />
+			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
+			<process ref="geoJSONProcessor" />
+			<multicast stopOnException="true">
+					<to uri="direct:websocket"/>
+					<to uri="direct:sos"/>	
+			</multicast>
+			<to uri="mock:result"/>
+			<!-- </camel:when> </camel:choice> -->
 		</camel:route>
+
+
+
+		<camel:route>
+			<camel:from uri="direct:websocket" />
+			<camel:to ref="websocketEndpoint" />
+		</camel:route>
+
+		<camel:route>
+			<camel:from uri="direct:sos" />
+			<convertBodyTo type="javax.xml.bind.JAXBElement" />
+			<log message="JAXB: ${body}" />
+			<to uri="mock:bar" />
+		</camel:route>
+
+
 	</camel:camelContext>
 
 </beans>

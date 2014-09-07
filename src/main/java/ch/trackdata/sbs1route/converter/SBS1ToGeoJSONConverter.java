@@ -1,10 +1,14 @@
 package ch.trackdata.sbs1route.converter;
 
-import org.apache.camel.Converter;
-import org.apache.commons.collections.BeanMap;
+import javax.xml.bind.JAXBElement;
 
+import net.opengis.sos.v_2_0_0.InsertObservationType;
+
+import org.apache.camel.Converter;
+
+import ch.trackdata.sbs1route.converter.insertobservation.InserObservationJAXBHelper;
+import ch.trackdata.sbs1route.converter.insertobservation.InsertObservationSOSV2Configuration;
 import ch.trackdata.sbs1route.message.GeoJSONFeature;
-import ch.trackdata.sbs1route.message.PointGeometry;
 import ch.trackdata.sbs1route.message.SBS1Message;
 
 /**
@@ -16,12 +20,15 @@ import ch.trackdata.sbs1route.message.SBS1Message;
 @Converter
 public class SBS1ToGeoJSONConverter {
 
+	private InsertObservationSOSV2Configuration configuration;
+	
+	public SBS1ToGeoJSONConverter(){
+		configuration = InserObservationJAXBHelper.getInsertObservationConfiguration();
+	}
+	
 	@Converter
-	@SuppressWarnings("unchecked")
-	public static GeoJSONFeature convert(SBS1Message sbs1Message) {
-		BeanMap sbs1Map = new BeanMap(sbs1Message);
-		GeoJSONFeature geoJSONFeature = new GeoJSONFeature(new PointGeometry(
-				sbs1Message.getLongitude(), sbs1Message.getLatitude()), sbs1Map);
-		return geoJSONFeature;
+	public JAXBElement<InsertObservationType> convert(GeoJSONFeature feature) {
+		JAXBElement<InsertObservationType> insertObservation = InserObservationJAXBHelper.getInsertObservation(configuration, feature);
+		return insertObservation;
 	}
 }
