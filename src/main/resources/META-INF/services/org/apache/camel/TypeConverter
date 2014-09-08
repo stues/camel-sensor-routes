@@ -1,1 +1,2 @@
 ch.trackdata.sbs1route.converter.SBS1ToGeoJSONConverter
+ch.trackdata.sbs1route.converter.GeoJSONToInsertObservationConverter

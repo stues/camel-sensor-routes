@@ -18,11 +18,11 @@ import ch.trackdata.sbs1route.message.SBS1Message;
  */
 
 @Converter
-public class SBS1ToGeoJSONConverter {
+public class GeoJSONToInsertObservationConverter {
 
 	private InsertObservationSOSV2Configuration configuration;
 	
-	public SBS1ToGeoJSONConverter(){
+	public GeoJSONToInsertObservationConverter(){
 		configuration = InserObservationJAXBHelper.getInsertObservationConfiguration();
 	}
 	

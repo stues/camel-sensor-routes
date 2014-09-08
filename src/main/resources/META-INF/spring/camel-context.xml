@@ -54,19 +54,22 @@
 
 	<camel:camelContext id="sbs1RouteCamelContext"
 		xmlns="http://camel.apache.org/schema/spring">
-		<camel:endpoint id="websocketEndpoint"
+				
+		<camel:endpoint id="websocketJSONEndpoint"
 			uri="websocket://${localadress}:8443/traffic?sendToAll=true&amp;staticResources=classpath:webapp" />
+		
+		<camel:endpoint id="sosEndpoint"
+			uri="http://${localadress}:8080/52n-sos-webapp/sos/pox" />
+				
 		<camel:route autoStartup="true">
 
 			<camel:from uri="direct:sbs1" />
 			<unmarshal ref="bindyDataformat" />
 			<log message="Converted: ${body}" />
 			<process ref="sbs1Processor" />
-			<!--<camel:choice> <camel:when> <camel:simple>${body.messageType} == "MSG"</camel:simple> -->
 			<process ref="sbs1DataAggregatorProcessor" />
-			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
-			<process ref="geoJSONProcessor" />
-			<multicast stopOnException="true">
+			<!-- <convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />  -->
+			<multicast stopOnException="false">
 					<to uri="direct:websocket"/>
 					<to uri="direct:sos"/>	
 			</multicast>
@@ -74,18 +77,25 @@
 			<!-- </camel:when> </camel:choice> -->
 		</camel:route>
 
-
-
 		<camel:route>
 			<camel:from uri="direct:websocket" />
-			<camel:to ref="websocketEndpoint" />
+			<process ref="geoJSONProcessor" />
+			<camel:to ref="websocketJSONEndpoint" />
 		</camel:route>
 
 		<camel:route>
 			<camel:from uri="direct:sos" />
 			<convertBodyTo type="javax.xml.bind.JAXBElement" />
-			<log message="JAXB: ${body}" />
-			<to uri="mock:bar" />
+			<marshal>
+				<jaxb id="myJaxb" prettyPrint="false" contextPath="net.opengis.sos.v_2_0_0:net.opengis.swe.v_2_0_0:net.opengis.filter.v_2_0_0"/>
+			</marshal>
+			<setHeader headerName="CamelHttpMethod">
+  				<constant>POST</constant>
+			</setHeader>
+			<setHeader headerName="Content-Type">
+    			<simple>application/xml</simple>
+			</setHeader>
+			<to uri="sosEndpoint" />
 		</camel:route>
 
 
