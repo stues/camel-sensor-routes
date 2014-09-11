@@ -55,7 +55,7 @@ public class AbstractGeometryPropertyConfiguration<T extends AbstractGeometry<?>
 	public void setUseFeatureGeometry(boolean useFeatureGeometry) {
 		this.useFeatureGeometry = useFeatureGeometry;
 	}
-	
+		
 	/**
 	 * {@inheritDoc}
 	 */

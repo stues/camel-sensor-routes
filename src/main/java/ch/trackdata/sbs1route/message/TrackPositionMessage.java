@@ -64,8 +64,9 @@ public class TrackPositionMessage extends GeoJSONFeature {
 	}
 
 	public Boolean isOnGround() {
-		int isOnGround = getProperty(Integer.class, IS_ON_GROUND_PROPERTY_NAME);
-		return isOnGround != 0 ? true : false;
+		Integer isOnGround = getProperty(Integer.class, IS_ON_GROUND_PROPERTY_NAME);
+		return isOnGround != null ? 
+				isOnGround != 0 ? true : false : false;
 	}
 
 	public void setIsOnGround(Boolean isOnGround) {
@@ -90,8 +91,7 @@ public class TrackPositionMessage extends GeoJSONFeature {
 
 	public void setMessageGenerated(String dateString, String timeString) {
 		try {
-			Date date = DateUtils.parseDate(dateString + " " + timeString,
-					"yyyy/MM/dd HH:mm:ss.S");
+			Date date = DateUtils.parseDate(dateString + " " + timeString, "yyyy/MM/dd HH:mm:ss.S");
 			getProperties().put(DATE_TIME_MESSAGE_GENERATED_NAME, date);
 		} catch (ParseException e) {
 			// No Valid date,do Nothing

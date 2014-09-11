@@ -25,6 +25,7 @@ import ch.trackdata.sbs1route.message.TrackPositionMessage;
  * @author stue
  */
 public class SBS1DataAggregatorProcessor implements Processor {
+	
 	private static final String STA_MESSAGE_TYPE = "STA";
 	private static final String ID_MESSAGE_TYPE = "ID";
 	private static final String MSG_MESSAGE_TYPE = "MSG";
@@ -74,9 +75,11 @@ public class SBS1DataAggregatorProcessor implements Processor {
 			LOGGER.info("Message received for track: {}", sbs1Message.getHexIdent());
 			switch(sbs1Message.getTransmissionType()){
 			case(1):
+				trackPosition.setHex(sbs1Message.getHexIdent());
 				trackPosition.setCallSign(sbs1Message.getCallsign());
 				break;
 			case(2):
+				trackPosition.setHex(sbs1Message.getHexIdent());
 				trackPosition.setAltitude(sbs1Message.getAltitude());
 				trackPosition.setGroundSpeed(sbs1Message.getGroundSpeed());
 				trackPosition.setTrack(sbs1Message.getTrack());
@@ -84,21 +87,25 @@ public class SBS1DataAggregatorProcessor implements Processor {
 				trackPosition.setIsOnGround(sbs1Message.getIsOnGround());
 				break;
 			case(3):
+				trackPosition.setHex(sbs1Message.getHexIdent());
 				trackPosition.setAltitude(sbs1Message.getAltitude());
 				trackPosition.setGeometry(sbs1Message.getLongitude(), sbs1Message.getLatitude());
 				trackPosition.setIsOnGround(sbs1Message.getIsOnGround());
 				break;
 			case(4):
+				trackPosition.setHex(sbs1Message.getHexIdent());
 				trackPosition.setGroundSpeed(sbs1Message.getGroundSpeed());
 				trackPosition.setTrack(sbs1Message.getTrack());
 				break;
 			case(5):
 			case(6):
 			case(7):
+				trackPosition.setHex(sbs1Message.getHexIdent());
 				trackPosition.setAltitude(sbs1Message.getAltitude());
 				trackPosition.setIsOnGround(sbs1Message.getIsOnGround());
 				break;
 			case(8):
+				trackPosition.setHex(sbs1Message.getHexIdent());
 				trackPosition.setIsOnGround(sbs1Message.getIsOnGround());
 				break;
 			default:

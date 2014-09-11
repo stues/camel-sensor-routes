@@ -30,9 +30,9 @@ public interface ObservedPropertyConfiguration<T> {
 	public abstract String getFeatureIdentPropertyName();
 
 	/**
-	 * @return whether this is the first observation in insertObservation
+	 *  @return the featureTitlePropertyName
 	 */
-	public abstract boolean isFirstEntry();
+	public abstract String getFeatureTitlePropertyName();
 	
 	/**
 	 * @return the observed value

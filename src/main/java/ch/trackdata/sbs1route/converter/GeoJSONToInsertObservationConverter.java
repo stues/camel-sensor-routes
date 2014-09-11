@@ -4,6 +4,7 @@ import javax.xml.bind.JAXBElement;
 
 import net.opengis.sos.v_2_0_0.InsertObservationType;
 
+import org.apache.camel.BeanInject;
 import org.apache.camel.Converter;
 
 import ch.trackdata.sbs1route.converter.insertobservation.InserObservationJAXBHelper;
@@ -20,12 +21,9 @@ import ch.trackdata.sbs1route.message.SBS1Message;
 @Converter
 public class GeoJSONToInsertObservationConverter {
 
+	@BeanInject("insertObservationConfiguration")
 	private InsertObservationSOSV2Configuration configuration;
-	
-	public GeoJSONToInsertObservationConverter(){
-		configuration = InserObservationJAXBHelper.getInsertObservationConfiguration();
-	}
-	
+		
 	@Converter
 	public JAXBElement<InsertObservationType> convert(GeoJSONFeature feature) {
 		JAXBElement<InsertObservationType> insertObservation = InserObservationJAXBHelper.getInsertObservation(configuration, feature);

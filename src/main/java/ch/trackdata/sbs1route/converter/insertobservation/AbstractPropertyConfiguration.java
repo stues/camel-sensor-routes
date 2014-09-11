@@ -12,9 +12,9 @@ public abstract class AbstractPropertyConfiguration<T> implements ObservedProper
 	private String featureOfInterestPrefix;
 	
 	private String featureIdentPropertyName;
+
+	private String featureTitlePropertyName;
 		
-	private boolean firstEntry;
-	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -90,16 +90,16 @@ public abstract class AbstractPropertyConfiguration<T> implements ObservedProper
 	}
 		
 	/**
-	 * @return the firstEntry
+	 * @return the featureTitlePropertyName
 	 */
-	public boolean isFirstEntry() {
-		return firstEntry;
+	public String getFeatureTitlePropertyName() {
+		return featureTitlePropertyName;
 	}
-	
+
 	/**
-	 * @param firstEntry the firstEntry to set
+	 * @param featureTitlePropertyName the featureTitlePropertyName to set
 	 */
-	public void setFirstEntry(boolean firstEntry) {
-		this.firstEntry = firstEntry;
-	}	
+	public void setFeatureTitlePropertyName(String featureTitlePropertyName) {
+		this.featureTitlePropertyName = featureTitlePropertyName;
+	}
 }
