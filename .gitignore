@@ -2,5 +2,4 @@
 /.classpath
 /.project
 /.settings
-/scanner.log
-/scanner-JSON.log
+/*.log

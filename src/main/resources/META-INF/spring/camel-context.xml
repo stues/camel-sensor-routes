@@ -154,7 +154,7 @@
 
 			<camel:from uri="direct:sbs1" />
 			<unmarshal ref="bindyDataformat" />
-			<log message="Converted: ${body}" />
+			<!-- <log message="Converted: ${body}" />  -->
 			<process ref="sbs1Processor" />
 			<multicast stopOnException="false">
 					<to uri="direct:websocket"/>
@@ -167,6 +167,7 @@
 			<camel:from uri="direct:websocket" />
 				<process ref="sbs1DataAggregatorProcessor" />
 				<process ref="geoJSONProcessor" />
+				<log message="${body}" logName="JSON" />
 			<camel:to ref="websocketJSONEndpoint" />
 		</camel:route>
 
@@ -183,7 +184,7 @@
 				<setHeader headerName="Content-Type">
 	    			<simple>application/xml</simple>
 				</setHeader>
-				<log message="InsertObservation: ${body}" />
+				<log message="${body}" logName="SOS_INSERTOBSERVATION" />
 			<to uri="sosEndpoint" />
 		</camel:route>
 

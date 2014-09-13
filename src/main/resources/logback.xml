@@ -25,6 +25,18 @@
         <appender-ref ref="MSG_JSON_LOGGER"/>
     </logger>
     
+	<appender class="ch.qos.logback.core.FileAppender" name="INSERT_OBSERVATION_LOGGER">
+        <file>scanner-SOS_INSERTOBSERVATION.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS}: %m%n</pattern>
+        </encoder>
+    </appender>
+    
+   <logger additivity="false" level="INFO" name="SOS_INSERTOBSERVATION">
+        <appender-ref ref="INSERT_OBSERVATION_LOGGER"/>
+    </logger>
+    
     <root level="INFO">
     <appender-ref ref="CONSOLE"/>
     <appender-ref ref="FILE"/>
