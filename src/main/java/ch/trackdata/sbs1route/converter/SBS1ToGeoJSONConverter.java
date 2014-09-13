@@ -3,7 +3,6 @@ package ch.trackdata.sbs1route.converter;
 import org.apache.camel.Converter;
 import org.apache.commons.collections.BeanMap;
 
-import ch.trackdata.sbs1route.message.AbstractGeometry;
 import ch.trackdata.sbs1route.message.GeoJSONFeature;
 import ch.trackdata.sbs1route.message.PointGeometry;
 import ch.trackdata.sbs1route.message.SBS1Message;
