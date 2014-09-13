@@ -20,7 +20,7 @@ public class TrackPositionMessage extends GeoJSONFeature {
 	private Date messageReceived;
 
 	public TrackPositionMessage() {
-		super(new PointGeometry(null, null), new HashMap<String, Object>());
+		super(null, new HashMap<String, Object>());
 	}
 
 	public String getHex() {
@@ -78,7 +78,12 @@ public class TrackPositionMessage extends GeoJSONFeature {
 	}
 
 	public void setGeometry(Double longitude, Double latitude) {
-		((PointGeometry) getGeometry()).setCoordinates(longitude, latitude);
+		if(getGeometry() == null){
+			setGeometry(new PointGeometry(longitude, latitude));
+		}
+		else{
+			((PointGeometry) getGeometry()).setCoordinates(longitude, latitude);
+		}
 	}
 
 	public void setMessageReceived(Date messageReceived) {
