@@ -35,6 +35,11 @@ public interface ObservedPropertyConfiguration<T> {
 	public abstract String getFeatureTitlePropertyName();
 	
 	/**
+	 * @return the createNullValueMessages
+	 */
+	public abstract boolean isCreateNullValueMessages();
+	
+	/**
 	 * @return the observed value
 	 */
 	public abstract T getValue(GeoJSONFeature feature);

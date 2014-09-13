@@ -8,7 +8,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 public class TrackPositionMessage extends GeoJSONFeature {
 
-	public static String HEX_PROPERTY_NAME = "hex";
+	public static String HEX_PROPERTY_NAME = "hexIdent";
 	public static String CALLSIGN_PROPERTY_NAME = "callsign";
 	public static String ALTITUDE_PROPERTY_NAME = "altitude";
 	public static String TRACK_PROPERTY_NAME = "track";

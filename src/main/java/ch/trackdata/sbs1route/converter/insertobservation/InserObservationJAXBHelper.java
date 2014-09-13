@@ -39,7 +39,7 @@ public class InserObservationJAXBHelper {
 	private static final net.opengis.om.v_2_0_0.ObjectFactory OM_OBJECT_FACTORY = new net.opengis.om.v_2_0_0.ObjectFactory();
 	private static final net.opengis.gml.v_3_2_1.ObjectFactory GML_OBJECT_FACTORY = new net.opengis.gml.v_3_2_1.ObjectFactory();
 	private static final net.opengis.sos.v_2_0_0.ObjectFactory SOS_OBJECT_FACTORY = new net.opengis.sos.v_2_0_0.ObjectFactory();
-
+	
 	@SuppressWarnings("unchecked")
 	public static InsertObservationSOSV2Configuration getInsertObservationConfiguration() {
 		MeasurementPropertyConfiguration speedPropertyConfiguration = new MeasurementPropertyConfiguration();
@@ -100,15 +100,22 @@ public class InserObservationJAXBHelper {
 	public static JAXBElement<InsertObservationType> getInsertObservation(InsertObservationSOSV2Configuration configuration, GeoJSONFeature geoJSONFeature) {
 
 		List<Observation> observations = new LinkedList<Observation>();
+		boolean firstEntry = true;
 		if (CollectionUtils.isNotEmpty(configuration.getObservedProperties())) {
-			boolean firstEntry = true;
 			for (ObservedPropertyConfiguration<?> observedPropertyConfiguration : configuration.getObservedProperties()) {
-				if (observedPropertyConfiguration instanceof MeasurementPropertyConfiguration) {
-					observations.add(getMeasurementObservation((MeasurementPropertyConfiguration) observedPropertyConfiguration, geoJSONFeature, firstEntry));
-				} else if (observedPropertyConfiguration instanceof AbstractGeometryPropertyConfiguration) {
-					observations.add(getGeometryObservation((AbstractGeometryPropertyConfiguration<? extends AbstractGeometry<?>>) observedPropertyConfiguration, geoJSONFeature, firstEntry));
+				
+				if(observedPropertyConfiguration.isCreateNullValueMessages() ||
+						(!observedPropertyConfiguration.isCreateNullValueMessages() && (observedPropertyConfiguration.getValue(geoJSONFeature) != null))){
+					
+					if (observedPropertyConfiguration instanceof MeasurementPropertyConfiguration) {
+						observations.add(getMeasurementObservation((MeasurementPropertyConfiguration) observedPropertyConfiguration, geoJSONFeature, firstEntry));
+					} else if (observedPropertyConfiguration instanceof AbstractGeometryPropertyConfiguration) {
+						observations.add(getGeometryObservation((AbstractGeometryPropertyConfiguration<? extends AbstractGeometry<?>>) observedPropertyConfiguration, geoJSONFeature, firstEntry));
+					} else if (observedPropertyConfiguration instanceof TextPropertyConfiguration) {
+						observations.add(getTextObservation((TextPropertyConfiguration) observedPropertyConfiguration, geoJSONFeature, firstEntry));
+					}
+					firstEntry = false;
 				}
-				firstEntry = false;
 			}
 		}
 
@@ -122,6 +129,29 @@ public class InserObservationJAXBHelper {
 		return insertObservation;
 	}
 
+	/**
+	 * Creates a new TextObservation for the given PropertyConfiguration
+	 * 
+	 * @param propertyConfiguration the property configuration
+	 * @param feature the GeoJSON feature
+	 * @return the generated Geometry Observation
+	 */
+	private static Observation getTextObservation(TextPropertyConfiguration propertyConfiguration, GeoJSONFeature feature, boolean firstEntry) {
+		OMObservationType omObservation = new OMObservationType();
+		createObservationNoResult(propertyConfiguration.getObservationName(), propertyConfiguration.getProcedure(), propertyConfiguration.getObservedProperty(), feature,
+				propertyConfiguration.getFeatureOfInterestPrefix(), propertyConfiguration.getFeatureIdentPropertyName(), propertyConfiguration.getFeatureTitlePropertyName(),
+				firstEntry, omObservation);
+
+		String value = propertyConfiguration.getValue(feature);
+		if (value != null) {
+			omObservation.setResult(value);
+		}
+
+		Observation observation = SOS_OBJECT_FACTORY.createInsertObservationTypeObservation();
+		observation.setOMObservation(omObservation);
+		return observation;
+	}
+	
 	/**
 	 * Creates a new MeasurementObservation for the given PropertyConfiguration
 	 * 

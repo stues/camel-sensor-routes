@@ -15,6 +15,8 @@ public abstract class AbstractPropertyConfiguration<T> implements ObservedProper
 
 	private String featureTitlePropertyName;
 		
+	private boolean createNullValueMessages;
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -101,5 +103,19 @@ public abstract class AbstractPropertyConfiguration<T> implements ObservedProper
 	 */
 	public void setFeatureTitlePropertyName(String featureTitlePropertyName) {
 		this.featureTitlePropertyName = featureTitlePropertyName;
+	}
+
+	/**
+	 * @return the createNullValueMessages
+	 */
+	public boolean isCreateNullValueMessages() {
+		return createNullValueMessages;
+	}
+
+	/**
+	 * @param createNullValueMessages the createNullValueMessages to set
+	 */
+	public void setCreateNullValueMessages(boolean createNullValueMessages) {
+		this.createNullValueMessages = createNullValueMessages;
 	}
 }
