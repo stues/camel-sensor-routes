@@ -9,28 +9,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Parses the SBS1Parser
+ * Reads from the Channel and parses a the given message
  */
 public class SBS1Parser extends ChannelHandlerAdapter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SBS1Parser.class);
-	
-	@Produce(uri="direct:sbs1")
+
+	@Produce(uri = "direct:sbs1")
 	private ProducerTemplate sender;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg)
-			throws Exception {
-		LOGGER.info("Received: {}", msg);
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		try {
 			sender.sendBody(msg);
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			LOGGER.warn("Send message failed.", ex);
 		}
-		
+
 		super.channelRead(ctx, msg);
 	}
 

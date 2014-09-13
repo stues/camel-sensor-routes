@@ -2,7 +2,12 @@ package ch.trackdata.sbs1route.converter.insertobservation;
 
 import ch.trackdata.sbs1route.message.PointGeometry;
 
-
+/**
+ * Extends a {@link AbstractGeometryPropertyConfiguration} to be able to describe a {@PointGeometry}
+ * Observation 
+ * 
+ * @author stue
+ */
 public class PointGeometryPropertyConfiguration extends AbstractGeometryPropertyConfiguration<PointGeometry> {
 
 	private String srsName;

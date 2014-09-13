@@ -9,25 +9,25 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 @CsvRecord(separator = ",")
 public class SBS1Message {
-	
+
 	@DataField(pos = 1)
 	private String messageType;
-	
+
 	@DataField(pos = 2)
 	private int transmissionType;
-	
+
 	@DataField(pos = 3)
 	private int sessionId;
 
 	@DataField(pos = 4)
 	private int aircraftId;
-	
+
 	@DataField(pos = 5)
 	private String hexIdent;
-	
+
 	@DataField(pos = 6)
 	private int flightId;
-	
+
 	@DataField(pos = 7)
 	private String dateMessageGenerated;
 
@@ -45,34 +45,34 @@ public class SBS1Message {
 
 	@DataField(pos = 12)
 	private int altitude;
-	
+
 	@DataField(pos = 13)
 	private int groundSpeed;
-	
+
 	@DataField(pos = 14)
 	private Integer track;
-	
+
 	@DataField(pos = 15)
 	private Double latitude;
-	
+
 	@DataField(pos = 16)
 	private Double longitude;
-	
+
 	@DataField(pos = 17)
 	private String verticalRate;
-	
+
 	@DataField(pos = 18)
 	private String squawk;
-			
+
 	@DataField(pos = 19)
 	private String alert;
-	
+
 	@DataField(pos = 20)
 	private String emergency;
-	
+
 	@DataField(pos = 21)
 	private Integer spi;
-	
+
 	@DataField(pos = 22)
 	private Integer isOnGround;
 
@@ -84,12 +84,13 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param messageType the messageType to set
+	 * @param messageType
+	 *            the messageType to set
 	 */
 	public void setMessageType(String messageType) {
 		this.messageType = messageType;
 	}
-	
+
 	/**
 	 * @return the transmissionType
 	 */
@@ -98,7 +99,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param transmissionType the transmissionType to set
+	 * @param transmissionType
+	 *            the transmissionType to set
 	 */
 	public void setTransmissionType(int transmissionType) {
 		this.transmissionType = transmissionType;
@@ -112,7 +114,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param sessionId the sessionId to set
+	 * @param sessionId
+	 *            the sessionId to set
 	 */
 	public void setSessionId(int sessionId) {
 		this.sessionId = sessionId;
@@ -126,7 +129,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param aircraftId the aircraftId to set
+	 * @param aircraftId
+	 *            the aircraftId to set
 	 */
 	public void setAircraftId(int aircraftId) {
 		this.aircraftId = aircraftId;
@@ -140,7 +144,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param hexIdent the hexIdent to set
+	 * @param hexIdent
+	 *            the hexIdent to set
 	 */
 	public void setHexIdent(String hexIdent) {
 		this.hexIdent = hexIdent;
@@ -154,7 +159,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param flightId the flightId to set
+	 * @param flightId
+	 *            the flightId to set
 	 */
 	public void setFlightId(int flightId) {
 		this.flightId = flightId;
@@ -168,7 +174,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param dateMessageGenerated the dateMessageGenerated to set
+	 * @param dateMessageGenerated
+	 *            the dateMessageGenerated to set
 	 */
 	public void setDateMessageGenerated(String dateMessageGenerated) {
 		this.dateMessageGenerated = dateMessageGenerated;
@@ -182,7 +189,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param timeMessageGenerated the timeMessageGenerated to set
+	 * @param timeMessageGenerated
+	 *            the timeMessageGenerated to set
 	 */
 	public void setTimeMessageGenerated(String timeMessageGenerated) {
 		this.timeMessageGenerated = timeMessageGenerated;
@@ -196,7 +204,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param dateMessageLogged the dateMessageLogged to set
+	 * @param dateMessageLogged
+	 *            the dateMessageLogged to set
 	 */
 	public void setDateMessageLogged(String dateMessageLogged) {
 		this.dateMessageLogged = dateMessageLogged;
@@ -210,7 +219,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param timeMessageLogged the timeMessageLogged to set
+	 * @param timeMessageLogged
+	 *            the timeMessageLogged to set
 	 */
 	public void setTimeMessageLogged(String timeMessageLogged) {
 		this.timeMessageLogged = timeMessageLogged;
@@ -224,7 +234,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param callsign the callsign to set
+	 * @param callsign
+	 *            the callsign to set
 	 */
 	public void setCallsign(String callsign) {
 		this.callsign = callsign;
@@ -238,7 +249,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param altitude the altitude to set
+	 * @param altitude
+	 *            the altitude to set
 	 */
 	public void setAltitude(Integer altitude) {
 		this.altitude = altitude;
@@ -252,7 +264,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param groundSpeed the groundSpeed to set
+	 * @param groundSpeed
+	 *            the groundSpeed to set
 	 */
 	public void setGroundSpeed(int groundSpeed) {
 		this.groundSpeed = groundSpeed;
@@ -266,7 +279,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param track the track to set
+	 * @param track
+	 *            the track to set
 	 */
 	public void setTrack(Integer track) {
 		this.track = track;
@@ -280,7 +294,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param latitude the latitude to set
+	 * @param latitude
+	 *            the latitude to set
 	 */
 	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
@@ -294,7 +309,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param longitude the longitude to set
+	 * @param longitude
+	 *            the longitude to set
 	 */
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
@@ -308,12 +324,13 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param verticalRate the verticalRate to set
+	 * @param verticalRate
+	 *            the verticalRate to set
 	 */
 	public void setVerticalRate(String verticalRate) {
 		this.verticalRate = verticalRate;
 	}
-	
+
 	/**
 	 * @return the squawk
 	 */
@@ -322,7 +339,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param squawk the squawk to set
+	 * @param squawk
+	 *            the squawk to set
 	 */
 	public void setSquawk(String squawk) {
 		this.squawk = squawk;
@@ -336,7 +354,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param alert the alert to set
+	 * @param alert
+	 *            the alert to set
 	 */
 	public void setAlert(String alert) {
 		this.alert = alert;
@@ -350,7 +369,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param emergency the emergency to set
+	 * @param emergency
+	 *            the emergency to set
 	 */
 	public void setEmergency(String emergency) {
 		this.emergency = emergency;
@@ -364,7 +384,8 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param spi the spi to set
+	 * @param spi
+	 *            the spi to set
 	 */
 	public void setSpi(Integer spi) {
 		this.spi = spi;
@@ -378,12 +399,13 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @param isOnGround the isOnGround to set
+	 * @param isOnGround
+	 *            the isOnGround to set
 	 */
 	public void setIsOnGround(Integer isOnGround) {
 		this.isOnGround = isOnGround;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

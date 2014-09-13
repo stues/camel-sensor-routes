@@ -1,6 +1,12 @@
 package ch.trackdata.sbs1route.converter.insertobservation;
 
-
+/**
+ * Abstract class which almost implements all the Methods of {@link ObservedPropertyConfiguration}
+ * 
+ * @author stue
+ *
+ * @param <T> the Type of Object which will be added as result
+ */
 public abstract class AbstractPropertyConfiguration<T> implements ObservedPropertyConfiguration<T> {
 	
 	private String observationName; 

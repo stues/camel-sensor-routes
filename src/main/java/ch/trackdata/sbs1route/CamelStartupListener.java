@@ -6,45 +6,59 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
+/**
+ * This {@link StartupListener} waits until the given context is fully loaded
+ * once the context is loaded, the {@link SBS1Scanner} will be started
+ */
 public class CamelStartupListener implements StartupListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CamelStartupListener.class);
-	
-	private TrafficScanner trafficScanner;
+
+	private SBS1Scanner sbs1Scanner;
+
+	private String camelContextName;
 
 	/**
-	 * @param trafficScanner the trafficScanner to set
+	 * @param sbs1Scanner
+	 *            the sbs1Scanner to set
 	 */
 	@Required
-	public void setTrafficScanner(TrafficScanner trafficScanner) {
-		this.trafficScanner = trafficScanner;
+	public void setSbs1Scanner(SBS1Scanner sbs1Scanner) {
+		this.sbs1Scanner = sbs1Scanner;
 	}
 
 	/**
-	 * @param context the camel context to set
+	 * @param camelContextName
+	 *            the camelContextName to set
+	 */
+	public void setCamelContextName(String camelContextName) {
+		this.camelContextName = camelContextName;
+	}
+
+	/**
+	 * @param context
+	 *            the camel context to set
 	 */
 	@Required
 	public void setCamelContext(CamelContext context) {
-        try {
+		try {
+			setCamelContextName(context.getName());
 			context.addStartupListener(this);
-		} 
-        catch (Exception e) {
+		} catch (Exception e) {
 			LOGGER.warn("Add as startup listener failed.", e);
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * Called once the context started
 	 */
 	@Override
-	public void onCamelContextStarted(CamelContext context,
-			boolean alreadyStarted) throws Exception {
-		LOGGER.info("CamelStartupListener will start the traffic scanner, camelContext: {}, alreadyStarted: {}", context, alreadyStarted);
-		if ("sbs1RouteCamelContext".equals(context.getName()) && !alreadyStarted) {
-			trafficScanner.launchScanner();
-		}
-		else {
+	public void onCamelContextStarted(CamelContext context, boolean alreadyStarted) throws Exception {
+		LOGGER.info("CamelStartupListener will start the SBS1 scanner, camelContext: {}, alreadyStarted: {}", context, alreadyStarted);
+		if (camelContextName.equals(context.getName()) && !alreadyStarted) {
+			sbs1Scanner.launchScanner();
+		} else {
 			LOGGER.info("Wrong context or already started.");
 		}
 	}

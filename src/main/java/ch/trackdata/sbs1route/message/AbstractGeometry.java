@@ -5,18 +5,19 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * {@link AbstractGeometry} JSON Class provides coordinates and a type member
  * 
  * @author stue
- *
+ * 
  */
 public abstract class AbstractGeometry<C> {
-		
+
 	@JsonProperty("type")
 	private final String type;
-	
+
 	@JsonProperty("coordinates")
 	private List<C> coordinates;
-	
+
 	/**
 	 * @return the coordinates
 	 */
@@ -25,7 +26,8 @@ public abstract class AbstractGeometry<C> {
 	}
 
 	/**
-	 * @param coordinates the coordinates to set
+	 * @param coordinates
+	 *            the coordinates to set
 	 */
 	public void setCoordinates(List<C> coordinates) {
 		this.coordinates = coordinates;
@@ -39,9 +41,10 @@ public abstract class AbstractGeometry<C> {
 	}
 
 	/**
-	 * @param type the type of geometry
+	 * @param type
+	 *            the type of geometry
 	 */
-	public AbstractGeometry(String type){
+	public AbstractGeometry(String type) {
 		this.type = type;
 	}
 }

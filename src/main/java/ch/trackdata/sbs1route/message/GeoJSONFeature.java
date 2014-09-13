@@ -5,53 +5,101 @@ import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * This Class Provides members to describe a GeoJSON-Feature the geometry type
+ * must be of the Type {@link AbstractGeometry} the properties Map may contain
+ * different types of Values (String, Integer, Double, ...)
+ * 
+ * @author stue
+ * 
+ */
 public class GeoJSONFeature {
 
 	private static final String FEATURE_TYPE_STRING = "Feature";
 
 	private String type;
-	
+
 	private AbstractGeometry<?> geometry;
-	
+
 	private Map<String, Object> properties;
-	
-	public GeoJSONFeature(AbstractGeometry<?> geometry){
+
+	/**
+	 * Constructor with a given geometry
+	 * 
+	 * @param geometry
+	 *            the geometry
+	 */
+	public GeoJSONFeature(AbstractGeometry<?> geometry) {
 		this(geometry, null);
 	}
 
-	public GeoJSONFeature(AbstractGeometry<?> geometry, Map<String, Object> properties){
+	/**
+	 * Constructor with a geometry and properties
+	 * 
+	 * @param geometry
+	 *            the geometry
+	 * @param properties
+	 *            the properties
+	 */
+	public GeoJSONFeature(AbstractGeometry<?> geometry, Map<String, Object> properties) {
 		this.geometry = geometry;
 		this.properties = properties;
 		this.type = FEATURE_TYPE_STRING;
 	}
-	
+
+	/**
+	 * @return the Geometry
+	 */
 	public AbstractGeometry<?> getGeometry() {
 		return geometry;
 	}
 
+	/**
+	 * @param geometry
+	 *            the geometry to set
+	 */
 	public void setGeometry(AbstractGeometry<?> geometry) {
 		this.geometry = geometry;
 	}
-	
+
+	/**
+	 * @return the type
+	 */
 	public String getType() {
 		return type;
 	}
-	
-	public <O> O getProperty(String propertyName, Class<O> clazz){
-		if(MapUtils.isNotEmpty(properties) && properties.containsKey(propertyName)){
+
+	/**
+	 * Returns the Property Casted as type of the given clazz
+	 * 
+	 * @param propertyName
+	 *            the property to return
+	 * @param clazz
+	 *            the clazz
+	 * @return the property casted as clazz
+	 */
+	public <O> O getProperty(String propertyName, Class<O> clazz) {
+		if (MapUtils.isNotEmpty(properties) && properties.containsKey(propertyName)) {
 			return clazz.cast(properties.get(propertyName));
 		}
 		return null;
 	}
-	
+
+	/**
+	 * @return the map which contains all the key value pairs
+	 */
 	public Map<String, Object> getProperties() {
 		return properties;
 	}
 
+	/**
+	 * @param properties
+	 *            the properties to set
+	 */
 	public void setProperties(Map<String, Object> properties) {
 		this.properties = properties;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

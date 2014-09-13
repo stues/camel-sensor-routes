@@ -2,7 +2,12 @@ package ch.trackdata.sbs1route.converter.insertobservation;
 
 import java.util.List;
 
-
+/**
+ * The Configuration can be used to Describe a InsertObservation
+ * 
+ * @author stue
+ *
+ */
 public class InsertObservationSOSV2Configuration {
 	
 

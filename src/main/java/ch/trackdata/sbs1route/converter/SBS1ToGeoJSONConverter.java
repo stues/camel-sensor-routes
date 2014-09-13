@@ -12,16 +12,21 @@ import ch.trackdata.sbs1route.message.SBS1Message;
  * 
  * @author stue
  */
-
 @Converter
 public class SBS1ToGeoJSONConverter {
 
+	/**
+	 * Converts the given {@link SBS1Message} into a {@link GeoJSONFeature}
+	 * 
+	 * @param sbs1Message
+	 *            the {@link SBS1Message}
+	 * @return the {@link GeoJSONFeature} object
+	 */
 	@Converter
 	@SuppressWarnings("unchecked")
 	public static GeoJSONFeature convert(SBS1Message sbs1Message) {
 		BeanMap sbs1Map = new BeanMap(sbs1Message);
-		GeoJSONFeature geoJSONFeature = new GeoJSONFeature(new PointGeometry(
-				sbs1Message.getLongitude(), sbs1Message.getLatitude()), sbs1Map);
+		GeoJSONFeature geoJSONFeature = new GeoJSONFeature(new PointGeometry(sbs1Message.getLongitude(), sbs1Message.getLatitude()), sbs1Map);
 		return geoJSONFeature;
 	}
 }
