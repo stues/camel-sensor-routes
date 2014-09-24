@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 import org.apache.commons.lang3.time.DateUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class TrackPositionMessage extends GeoJSONFeature {
 
 	public static String HEX_PROPERTY_NAME = "hexIdent";
@@ -23,6 +25,7 @@ public class TrackPositionMessage extends GeoJSONFeature {
 		super(null, new HashMap<String, Object>());
 	}
 
+	@JsonIgnore
 	public String getHex() {
 		return getProperty(String.class, HEX_PROPERTY_NAME);
 	}
@@ -31,6 +34,7 @@ public class TrackPositionMessage extends GeoJSONFeature {
 		getProperties().put(HEX_PROPERTY_NAME, hex);
 	}
 
+	@JsonIgnore
 	public String getCallSign() {
 		return getProperty(String.class, CALLSIGN_PROPERTY_NAME);
 	}
@@ -39,6 +43,7 @@ public class TrackPositionMessage extends GeoJSONFeature {
 		getProperties().put(CALLSIGN_PROPERTY_NAME, callSign);
 	}
 
+	@JsonIgnore
 	public Integer getTrack() {
 		return getProperty(Integer.class, TRACK_PROPERTY_NAME);
 	}
@@ -47,6 +52,7 @@ public class TrackPositionMessage extends GeoJSONFeature {
 		getProperties().put(TRACK_PROPERTY_NAME, track);
 	}
 
+	@JsonIgnore
 	public Integer getAltitude() {
 		return getProperty(Integer.class, ALTITUDE_PROPERTY_NAME);
 	}
@@ -55,6 +61,7 @@ public class TrackPositionMessage extends GeoJSONFeature {
 		getProperties().put(ALTITUDE_PROPERTY_NAME, altitude);
 	}
 
+	@JsonIgnore
 	public Integer getGroundSpeed() {
 		return getProperty(Integer.class, GROUND_SPEED_NAME);
 	}
@@ -63,6 +70,7 @@ public class TrackPositionMessage extends GeoJSONFeature {
 		getProperties().put(GROUND_SPEED_NAME, groundSpeed);
 	}
 
+	@JsonIgnore
 	public Boolean isOnGround() {
 		Integer isOnGround = getProperty(Integer.class, IS_ON_GROUND_PROPERTY_NAME);
 		return isOnGround != null ? 
@@ -90,6 +98,7 @@ public class TrackPositionMessage extends GeoJSONFeature {
 		this.messageReceived = messageReceived;
 	}
 
+	@JsonIgnore
 	public Date getMessageReceived() {
 		return messageReceived;
 	}
@@ -103,6 +112,7 @@ public class TrackPositionMessage extends GeoJSONFeature {
 		}
 	}
 
+	@JsonIgnore
 	public Date getMessageGenerated() {
 		return getProperty(Date.class, DATE_TIME_MESSAGE_GENERATED_NAME);
 	}
