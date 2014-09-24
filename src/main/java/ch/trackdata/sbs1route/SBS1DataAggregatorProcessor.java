@@ -98,7 +98,6 @@ public class SBS1DataAggregatorProcessor implements Processor {
 				trackPosition.setTrack(sbs1Message.getTrack());
 				break;
 			case(5):
-			case(6):
 			case(7):
 				trackPosition.setHex(sbs1Message.getHexIdent());
 				trackPosition.setAltitude(sbs1Message.getAltitude());
