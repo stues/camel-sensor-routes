@@ -61,7 +61,7 @@ public class InserObservationJAXBHelper {
 			for (ObservedPropertyConfiguration<?> observedPropertyConfiguration : configuration.getObservedProperties()) {
 				
 				if(observedPropertyConfiguration.isCreateNullValueMessages() ||
-						(!observedPropertyConfiguration.isCreateNullValueMessages() && (observedPropertyConfiguration.getValue(geoJSONFeature) != null))){
+						observedPropertyConfiguration.getValue(geoJSONFeature) != null){
 					
 					if (observedPropertyConfiguration instanceof MeasurementPropertyConfiguration) {
 						observations.add(getMeasurementObservation((MeasurementPropertyConfiguration) observedPropertyConfiguration, geoJSONFeature, firstEntry));

@@ -14,19 +14,19 @@ public class SBS1Message {
 	private String messageType;
 
 	@DataField(pos = 2)
-	private int transmissionType;
+	private Integer transmissionType;
 
 	@DataField(pos = 3)
-	private int sessionId;
+	private Integer sessionId;
 
 	@DataField(pos = 4)
-	private int aircraftId;
+	private Integer aircraftId;
 
 	@DataField(pos = 5)
 	private String hexIdent;
 
 	@DataField(pos = 6)
-	private int flightId;
+	private Integer flightId;
 
 	@DataField(pos = 7)
 	private String dateMessageGenerated;
@@ -44,10 +44,10 @@ public class SBS1Message {
 	private String callsign;
 
 	@DataField(pos = 12)
-	private int altitude;
+	private Integer altitude;
 
 	@DataField(pos = 13)
-	private int groundSpeed;
+	private Integer groundSpeed;
 
 	@DataField(pos = 14)
 	private Integer track;
@@ -94,7 +94,7 @@ public class SBS1Message {
 	/**
 	 * @return the transmissionType
 	 */
-	public int getTransmissionType() {
+	public Integer getTransmissionType() {
 		return transmissionType;
 	}
 
@@ -102,14 +102,14 @@ public class SBS1Message {
 	 * @param transmissionType
 	 *            the transmissionType to set
 	 */
-	public void setTransmissionType(int transmissionType) {
+	public void setTransmissionType(Integer transmissionType) {
 		this.transmissionType = transmissionType;
 	}
 
 	/**
 	 * @return the sessionId
 	 */
-	public int getSessionId() {
+	public Integer getSessionId() {
 		return sessionId;
 	}
 
@@ -117,14 +117,14 @@ public class SBS1Message {
 	 * @param sessionId
 	 *            the sessionId to set
 	 */
-	public void setSessionId(int sessionId) {
+	public void setSessionId(Integer sessionId) {
 		this.sessionId = sessionId;
 	}
 
 	/**
 	 * @return the aircraftId
 	 */
-	public int getAircraftId() {
+	public Integer getAircraftId() {
 		return aircraftId;
 	}
 
@@ -132,7 +132,7 @@ public class SBS1Message {
 	 * @param aircraftId
 	 *            the aircraftId to set
 	 */
-	public void setAircraftId(int aircraftId) {
+	public void setAircraftId(Integer aircraftId) {
 		this.aircraftId = aircraftId;
 	}
 
@@ -154,7 +154,7 @@ public class SBS1Message {
 	/**
 	 * @return the flightId
 	 */
-	public int getFlightId() {
+	public Integer getFlightId() {
 		return flightId;
 	}
 
@@ -162,7 +162,7 @@ public class SBS1Message {
 	 * @param flightId
 	 *            the flightId to set
 	 */
-	public void setFlightId(int flightId) {
+	public void setFlightId(Integer flightId) {
 		this.flightId = flightId;
 	}
 
@@ -259,7 +259,7 @@ public class SBS1Message {
 	/**
 	 * @return the groundSpeed
 	 */
-	public int getGroundSpeed() {
+	public Integer getGroundSpeed() {
 		return groundSpeed;
 	}
 
@@ -267,7 +267,7 @@ public class SBS1Message {
 	 * @param groundSpeed
 	 *            the groundSpeed to set
 	 */
-	public void setGroundSpeed(int groundSpeed) {
+	public void setGroundSpeed(Integer groundSpeed) {
 		this.groundSpeed = groundSpeed;
 	}
 
