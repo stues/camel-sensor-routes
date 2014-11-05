@@ -82,7 +82,7 @@ public class SBS1DataAggregatorProcessor implements Processor {
 				trackPosition.setHex(sbs1Message.getHexIdent());
 				trackPosition.setAltitude(sbs1Message.getAltitude());
 				trackPosition.setGroundSpeed(sbs1Message.getGroundSpeed());
-				trackPosition.setTrack(sbs1Message.getTrack());
+				trackPosition.setHeading(sbs1Message.getHeading());
 				trackPosition.setGeometry(sbs1Message.getLongitude(), sbs1Message.getLatitude());
 				trackPosition.setIsOnGround(sbs1Message.getIsOnGround());
 				break;
@@ -95,7 +95,7 @@ public class SBS1DataAggregatorProcessor implements Processor {
 			case(4):
 				trackPosition.setHex(sbs1Message.getHexIdent());
 				trackPosition.setGroundSpeed(sbs1Message.getGroundSpeed());
-				trackPosition.setTrack(sbs1Message.getTrack());
+				trackPosition.setHeading(sbs1Message.getHeading());
 				break;
 			case(5):
 			case(7):

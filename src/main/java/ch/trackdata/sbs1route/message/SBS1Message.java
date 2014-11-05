@@ -50,7 +50,7 @@ public class SBS1Message {
 	private Integer groundSpeed;
 
 	@DataField(pos = 14)
-	private Integer track;
+	private Integer heading;
 
 	@DataField(pos = 15)
 	private Double latitude;
@@ -272,18 +272,18 @@ public class SBS1Message {
 	}
 
 	/**
-	 * @return the track
+	 * @return the heading
 	 */
-	public Integer getTrack() {
-		return track;
+	public Integer getHeading() {
+		return heading;
 	}
 
 	/**
-	 * @param track
-	 *            the track to set
+	 * @param heading
+	 *            the heading to set
 	 */
-	public void setTrack(Integer track) {
-		this.track = track;
+	public void setHeading(Integer heading) {
+		this.heading = heading;
 	}
 
 	/**

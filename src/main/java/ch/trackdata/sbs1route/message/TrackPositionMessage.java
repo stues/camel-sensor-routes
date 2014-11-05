@@ -13,7 +13,7 @@ public class TrackPositionMessage extends GeoJSONFeature {
 	public static String HEX_PROPERTY_NAME = "hexIdent";
 	public static String CALLSIGN_PROPERTY_NAME = "callsign";
 	public static String ALTITUDE_PROPERTY_NAME = "altitude";
-	public static String TRACK_PROPERTY_NAME = "track";
+	public static String HEADING_PROPERTY_NAME = "heading";
 	public static String GROUND_SPEED_NAME = "groundSpeed";
 	public static String IS_ON_GROUND_PROPERTY_NAME = "isOnGround";
 
@@ -44,12 +44,12 @@ public class TrackPositionMessage extends GeoJSONFeature {
 	}
 
 	@JsonIgnore
-	public Integer getTrack() {
-		return getProperty(Integer.class, TRACK_PROPERTY_NAME);
+	public Integer getHeading() {
+		return getProperty(Integer.class, HEADING_PROPERTY_NAME);
 	}
 
-	public void setTrack(Integer track) {
-		getProperties().put(TRACK_PROPERTY_NAME, track);
+	public void setHeading(Integer heading) {
+		getProperties().put(HEADING_PROPERTY_NAME, heading);
 	}
 
 	@JsonIgnore

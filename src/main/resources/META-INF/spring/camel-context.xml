@@ -151,7 +151,7 @@
 		<property name="measureUom" value="urn:x-ogc:def:property:OGC::Heading" />
 		<property name="featureMeasurementPropertyName">
 			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.TRACK_PROPERTY_NAME" />
+				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEADING_PROPERTY_NAME" />
 		</property>
 		<property name="featureMeasurementPropertyClazz" value="java.lang.Integer" />
 		<property name="createNullValueMessages" value="false" />

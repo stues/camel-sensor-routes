@@ -47,7 +47,7 @@ public class InserObservationJAXBConvertTest {
 		headingPropertyConfiguration.setFeatureOfInterestPrefix(FEATURE_OF_INTEREST_HREF_PREFIX);
 		headingPropertyConfiguration.setFeatureIdentPropertyName(TrackPositionMessage.CALLSIGN_PROPERTY_NAME);
 		headingPropertyConfiguration.setMeasureUom("urn:x-ogc:def:property:OGC::Heading");
-		headingPropertyConfiguration.setFeatureMeasurementPropertyName(TrackPositionMessage.TRACK_PROPERTY_NAME);
+		headingPropertyConfiguration.setFeatureMeasurementPropertyName(TrackPositionMessage.HEADING_PROPERTY_NAME);
 		headingPropertyConfiguration.setFeatureMeasurementPropertyClazz(Integer.class);
 
 		PointGeometryPropertyConfiguration positionPropertyConfiguration = new PointGeometryPropertyConfiguration();
