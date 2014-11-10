@@ -93,11 +93,6 @@
 			<artifactId>commons-collections4</artifactId>
 			<version>4.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.vast.opengis</groupId>
-			<artifactId>ows-framework-bindings</artifactId>
-			<version>1.0</version>
-		</dependency>
 
 		<!-- logging -->
 		<dependency>
