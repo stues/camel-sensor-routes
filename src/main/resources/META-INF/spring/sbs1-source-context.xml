@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configures the Camel Context -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath*:sbs1route-config.properties" />
+		<property name="properties">
+			<props>
+				<prop key="scanner.host"><!-- The SBS1 Station IP -->
+				</prop>
+				<prop key="scanner.port">30003</prop>
+				<prop key="localadress"><!-- The local IP-Address -->
+				</prop>
+				<prop key="aggregator.cleanupInterval">30000</prop>
+			</props>
+		</property>
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+	</bean>
+
+
+	<bean id="sbs1Parser" class="ch.trackdata.sbs1route.SBS1Parser" />
+
+	<bean id="bindyDataformat"
+		class="org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat">
+		<constructor-arg value="ch.trackdata.sbs1route.message" />
+	</bean>
+
+	<!-- <bean id="scanner" class="ch.trackdata.sbs1route.SBS1Scanner">
+		<property name="host" value="${scanner.host}" />
+		<property name="port" value="${scanner.port}" />
+		<property name="SBS1Parser" ref="sbs1Parser" />
+	</bean>  
+
+	<bean id="sbs1Processor" class="ch.trackdata.sbs1route.SBS1Processor" />
+	<bean id="geoJSONProcessor" class="ch.trackdata.sbs1route.GeoJSONProcessor" />
+	<bean id="sbs1DataAggregatorProcessor" class="ch.trackdata.sbs1route.SBS1DataAggregatorProcessor">
+		<property name="cleanupInterval" value="${aggregator.cleanupInterval}" />
+	</bean>
+
+	<bean id="camelStartupListener" class="ch.trackdata.sbs1route.CamelStartupListener">
+		<property name="camelContext" ref="sbs1RouteCamelContext" />
+		<property name="sbs1Scanner" ref="scanner" />
+	</bean>-->
+</beans>
