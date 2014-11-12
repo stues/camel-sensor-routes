@@ -16,10 +16,11 @@ import org.apache.camel.component.websocket.WebsocketStore;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.ServiceHelper;
 
-import ch.trackdata.sbs1route.message.SBS1Message;
-
 /**
- * Extracts the {@link SBS1Message} from the exchanged List
+ * Extends {@link WebsocketEndpoint} to instantiate a custom {@link FilterWebsocketComponent}
+ * as Component
+ * 
+ * @author stue
  */
 public class FilterWebsocketEndpoint extends WebsocketEndpoint {
 

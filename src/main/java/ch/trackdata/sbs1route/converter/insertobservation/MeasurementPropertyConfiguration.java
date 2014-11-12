@@ -66,7 +66,7 @@ public class MeasurementPropertyConfiguration extends AbstractPropertyConfigurat
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Number getValue(GeoJSONFeature feature) {
+	public Number getValue(GeoJSONFeature<?> feature) {
 		return feature.getProperty(getFeatureMeasurementPropertyName(), getFeatureMeasurementPropertyClazz());
 	}
 }

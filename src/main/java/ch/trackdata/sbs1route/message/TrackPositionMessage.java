@@ -8,7 +8,14 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class TrackPositionMessage extends GeoJSONFeature {
+/**
+ * Extends the GeoJSONFeature with some utility methods to instantiate a {@link TrackPositionMessage}
+ * 
+ * It also provides some getter and setter methods for the Mode-S Attributes 
+ * 
+ * @author stue
+ */
+public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 
 	public static String HEX_PROPERTY_NAME = "hexIdent";
 	public static String CALLSIGN_PROPERTY_NAME = "callsign";
@@ -90,7 +97,7 @@ public class TrackPositionMessage extends GeoJSONFeature {
 			setGeometry(new PointGeometry(longitude, latitude));
 		}
 		else{
-			((PointGeometry) getGeometry()).setCoordinates(longitude, latitude);
+			getGeometry().setCoordinates(longitude, latitude);
 		}
 	}
 

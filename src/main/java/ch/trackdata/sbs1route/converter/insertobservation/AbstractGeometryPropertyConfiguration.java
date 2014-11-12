@@ -70,7 +70,7 @@ public class AbstractGeometryPropertyConfiguration<T extends AbstractGeometry<?>
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public T getValue(GeoJSONFeature feature) {
+	public T getValue(GeoJSONFeature<?> feature) {
 		if (useFeatureGeometry) {
 			return (T) feature.getGeometry();
 		} else {

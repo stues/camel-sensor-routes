@@ -31,7 +31,7 @@ public class TextPropertyConfiguration extends AbstractPropertyConfiguration<Str
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getValue(GeoJSONFeature feature) {
+	public String getValue(GeoJSONFeature<?> feature) {
 		return feature.getProperty(getFeatureTextPropertyName(), String.class);
 	}
 }

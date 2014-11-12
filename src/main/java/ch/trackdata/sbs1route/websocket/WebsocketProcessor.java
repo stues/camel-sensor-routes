@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import ch.trackdata.sbs1route.message.SBS1Message;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Polygon;
+
 /**
  * Extracts the {@link SBS1Message} from the exchanged List
  */
@@ -45,6 +48,11 @@ public class WebsocketProcessor implements Processor {
 		
 		Message in = exchange.getIn();
 		String message = in.getMandatoryBody(String.class);
+		
+		Coordinate coordinate = new Coordinate(6, 47);
+		Coordinate coordinate2 = new Coordinate(7,48);
+		
+		
 		
 		String connectionKey = (String)in.getHeader(WebsocketConstants.CONNECTION_KEY);
 		DefaultWebsocket websocket = websocketStore.get(connectionKey);

@@ -49,6 +49,6 @@ public interface ObservedPropertyConfiguration<T> {
 	/**
 	 * @return the observed value
 	 */
-	public abstract T getValue(GeoJSONFeature feature);
+	public abstract T getValue(GeoJSONFeature<?> feature);
 	
 }

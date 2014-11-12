@@ -22,7 +22,10 @@ import org.eclipse.jetty.servlet.ServletHolder;
 public class FilterWebsocketComponent extends WebsocketComponent {
 
 	/**
-	 * Whole method copied from superclass to instantiate the custom Endpoint 
+	 * Whole method copied from superclass 
+	 * to instantiate the custom Endpoint 
+	 *
+	 * {@inheritDoc}
 	 */
     @Override
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
@@ -121,14 +124,29 @@ public class FilterWebsocketComponent extends WebsocketComponent {
         }
     }
 	
+    /**
+     * Derived to make Method public
+     * 
+     * {@inheritDoc}
+     */
     public WebsocketComponentServlet addServlet(NodeSynchronization sync, WebsocketConsumer consumer, String remaining) throws Exception {
     	return super.addServlet(sync, consumer, remaining);
     }
-    
+
+    /**
+     * Derived to make Method public
+     * 
+     * {@inheritDoc}
+     */
     public WebsocketComponentServlet addServlet(NodeSynchronization sync, WebsocketProducer producer, String remaining) throws Exception {
     	return super.addServlet(sync, producer, remaining);
     }
     
+    /**
+     * Derived to instantiate custom {@link FilterWebsocketComponentServlet}
+     * 
+     * {@inheritDoc}
+     */
     protected WebsocketComponentServlet createServlet(NodeSynchronization sync, String pathSpec, Map<String, WebsocketComponentServlet> servlets, ServletContextHandler handler) {
         WebsocketComponentServlet servlet = new FilterWebsocketComponentServlet(sync);
         servlets.put(pathSpec, servlet);

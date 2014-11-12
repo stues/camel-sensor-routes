@@ -53,7 +53,7 @@ public class InserObservationJAXBHelper {
 	 * @return the {@link JAXBElement} which contains a {@link InsertObservationType}
 	 */
 	@SuppressWarnings("unchecked")
-	public static JAXBElement<InsertObservationType> getInsertObservation(InsertObservationSOSV2Configuration configuration, GeoJSONFeature geoJSONFeature) {
+	public static JAXBElement<InsertObservationType> getInsertObservation(InsertObservationSOSV2Configuration configuration, GeoJSONFeature<?> geoJSONFeature) {
 
 		List<Observation> observations = new LinkedList<Observation>();
 		boolean firstEntry = true;
@@ -92,7 +92,7 @@ public class InserObservationJAXBHelper {
 	 * @param feature the GeoJSON feature
 	 * @return the generated Geometry Observation
 	 */
-	private static Observation getTextObservation(TextPropertyConfiguration propertyConfiguration, GeoJSONFeature feature, boolean firstEntry) {
+	private static Observation getTextObservation(TextPropertyConfiguration propertyConfiguration, GeoJSONFeature<?> feature, boolean firstEntry) {
 		OMObservationType omObservation = new OMObservationType();
 		createObservationNoResult(propertyConfiguration.getObservationName(), propertyConfiguration.getProcedure(), propertyConfiguration.getObservedProperty(), feature,
 				propertyConfiguration.getFeatureOfInterestPrefix(), propertyConfiguration.getFeatureIdentPropertyName(), propertyConfiguration.getFeatureTitlePropertyName(),
@@ -115,7 +115,7 @@ public class InserObservationJAXBHelper {
 	 * @param feature the GeoJSON feature
 	 * @return the generated Geometry Observation
 	 */
-	private static Observation getMeasurementObservation(MeasurementPropertyConfiguration propertyConfiguration, GeoJSONFeature feature, boolean firstEntry) {
+	private static Observation getMeasurementObservation(MeasurementPropertyConfiguration propertyConfiguration, GeoJSONFeature<?> feature, boolean firstEntry) {
 		OMObservationType omObservation = new OMObservationType();
 		createObservationNoResult(propertyConfiguration.getObservationName(), propertyConfiguration.getProcedure(), propertyConfiguration.getObservedProperty(), feature,
 				propertyConfiguration.getFeatureOfInterestPrefix(), propertyConfiguration.getFeatureIdentPropertyName(), propertyConfiguration.getFeatureTitlePropertyName(),
@@ -142,7 +142,7 @@ public class InserObservationJAXBHelper {
 	 * @return the generated Geometry Observation
 	 */
 	@SuppressWarnings("unchecked")
-	private static Observation getGeometryObservation(AbstractGeometryPropertyConfiguration<? extends AbstractGeometry<?>> propertyConfiguration, GeoJSONFeature feature, boolean firstEntry) {
+	private static Observation getGeometryObservation(AbstractGeometryPropertyConfiguration<? extends AbstractGeometry<?>> propertyConfiguration, GeoJSONFeature<?> feature, boolean firstEntry) {
 		OMObservationType omObservation = new OMObservationType();
 		createObservationNoResult(propertyConfiguration.getObservationName(), 
 				propertyConfiguration.getProcedure(), 
@@ -189,7 +189,7 @@ public class InserObservationJAXBHelper {
 	 * @param firstEntry whether this is the first entry or not (important for references)
 	 * @param omObservation the object to fill
 	 */
-	private static void createObservationNoResult(String observationName, String procedure, String observedProperty, GeoJSONFeature feature, String featureOfInterestPrefix,
+	private static void createObservationNoResult(String observationName, String procedure, String observedProperty, GeoJSONFeature<?> feature, String featureOfInterestPrefix,
 			String featureIdentPropertyName, String featureTitlePropertyName, boolean firstEntry, OMObservationType omObservation) {
 		omObservation.setId(observationName);
 		if (firstEntry) {
@@ -223,7 +223,7 @@ public class InserObservationJAXBHelper {
 	 * @param featureTitlePropertyName the property name of the title of the feature of interest
 	 * @return the created {@link FeaturePropertyType} instance
 	 */
-	private static FeaturePropertyType getFeatureOfInterestType(GeoJSONFeature feature, 
+	private static FeaturePropertyType getFeatureOfInterestType(GeoJSONFeature<?> feature, 
 			String featureOfInterestPrefix, 
 			String featureIdentPropertyName, 
 			String featureTitlePropertyName) {

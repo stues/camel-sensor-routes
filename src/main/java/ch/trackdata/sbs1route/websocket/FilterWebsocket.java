@@ -32,6 +32,7 @@ public class FilterWebsocket extends DefaultWebsocket {
 	 * @param filter the filter to set
 	 */
 	public void setFilter(Predicate<Message> filter) {
+		LOGGER.trace("filter predicate set");
 		this.filter = filter;
 	}
 

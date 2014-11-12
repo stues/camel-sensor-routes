@@ -13,13 +13,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author stue
  * 
  */
-public class GeoJSONFeature {
+public class GeoJSONFeature<T extends AbstractGeometry<?>> {
 
 	private static final String FEATURE_TYPE_STRING = "Feature";
 
 	private String type;
 
-	private AbstractGeometry<?> geometry;
+	private T geometry;
 
 	private Map<String, Object> properties;
 
@@ -29,7 +29,7 @@ public class GeoJSONFeature {
 	 * @param geometry
 	 *            the geometry
 	 */
-	public GeoJSONFeature(AbstractGeometry<?> geometry) {
+	public GeoJSONFeature(T geometry) {
 		this(geometry, null);
 	}
 
@@ -41,7 +41,7 @@ public class GeoJSONFeature {
 	 * @param properties
 	 *            the properties
 	 */
-	public GeoJSONFeature(AbstractGeometry<?> geometry, Map<String, Object> properties) {
+	public GeoJSONFeature(T geometry, Map<String, Object> properties) {
 		this.geometry = geometry;
 		this.properties = properties;
 		this.type = FEATURE_TYPE_STRING;
@@ -50,7 +50,7 @@ public class GeoJSONFeature {
 	/**
 	 * @return the Geometry
 	 */
-	public AbstractGeometry<?> getGeometry() {
+	public T getGeometry() {
 		return geometry;
 	}
 
@@ -58,7 +58,7 @@ public class GeoJSONFeature {
 	 * @param geometry
 	 *            the geometry to set
 	 */
-	public void setGeometry(AbstractGeometry<?> geometry) {
+	public void setGeometry(T geometry) {
 		this.geometry = geometry;
 	}
 
