@@ -71,4 +71,13 @@ public class TrackPositionMessageFilter implements Predicate<Message> {
 		LOGGER.trace("Single Predicate set");
 		this.predicates = Collections.singleton(predicate);
 	}
+	
+	/**
+	 * Resets the filter to evaluate every message positive
+	 */
+	public void clearPredicates(){
+		if(CollectionUtils.isNotEmpty(predicates)){
+			predicates = null;
+		}
+	}
 }

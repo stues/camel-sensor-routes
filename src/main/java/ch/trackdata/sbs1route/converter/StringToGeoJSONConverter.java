@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.trackdata.sbs1route.message.GeoJSONFeature;
 import ch.trackdata.sbs1route.message.PolygonGeometry;
-import ch.trackdata.sbs1route.websocket.WebsocketProcessor;
+import ch.trackdata.sbs1route.websocket.FilterWebsocketProcessor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Converter
 public class StringToGeoJSONConverter {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(WebsocketProcessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FilterWebsocketProcessor.class);
 
 	
 	private static ObjectMapper mapper = new ObjectMapper();
@@ -34,7 +34,6 @@ public class StringToGeoJSONConverter {
 	@Converter
 	public static GeoJSONFeature<?> convertTo(String message) {
 		try {
-			message = message.replace("\\", "");
 			GeoJSONFeature<?> geoJSONFeature = mapper.readValue(message, GeoJSONFeature.class);
 			return geoJSONFeature;
 		} catch(Exception e) {

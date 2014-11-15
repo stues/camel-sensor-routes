@@ -18,7 +18,7 @@
 
 	<bean id="websocketStore" class="org.apache.camel.component.websocket.MemoryWebsocketStore" />
 
-	<bean name="websocketProcessor" class="ch.trackdata.sbs1route.websocket.WebsocketProcessor">
+	<bean name="filterWebsocketProcessor" class="ch.trackdata.sbs1route.websocket.FilterWebsocketProcessor">
 		<property name="websocketStore" ref="websocketStore" />
 	</bean>
 
@@ -39,7 +39,7 @@
 		<camel:route autoStartup="true">
 			<camel:from uri="websocketClientJSONEndpoint" />
 			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
-			<camel:process ref="websocketProcessor"></camel:process>
+			<camel:process ref="filterWebsocketProcessor"></camel:process>
 			<log message="Converted: ${body}" />
 			
 			<camel:to uri="websocketClientJSONEndpoint" />
