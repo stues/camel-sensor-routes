@@ -141,7 +141,6 @@ public class InserObservationJAXBHelper {
 	 * @param feature the GeoJSON feature
 	 * @return the generated Geometry Observation
 	 */
-	@SuppressWarnings("unchecked")
 	private static Observation getGeometryObservation(AbstractGeometryPropertyConfiguration<? extends AbstractGeometry<?>> propertyConfiguration, GeoJSONFeature<?> feature, boolean firstEntry) {
 		OMObservationType omObservation = new OMObservationType();
 		createObservationNoResult(propertyConfiguration.getObservationName(), 

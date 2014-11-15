@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * @author stue
  * 
  */
-
 @JsonTypeInfo(
 	    use = JsonTypeInfo.Id.NAME,
 	    include = JsonTypeInfo.As.PROPERTY,
@@ -30,16 +29,6 @@ public abstract class AbstractGeometry<C> {
 
 	@JsonProperty(COORDINATES_PROPERTY_NAME)
 	private C coordinates;
-
-	/**
-	 * @param type
-	 *            the type of geometry
-	 */
-//	@JsonCreator
-//	public AbstractGeometry(
-//			@JsonProperty("coordinates") C coordinates) {
-//		this.coordinates = coordinates;
-//	}
 
 	/**
 	 * @return the coordinates

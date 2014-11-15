@@ -28,70 +28,114 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 
 	private Date messageReceived;
 
+	/**
+	 * Default Constructor
+	 */
 	public TrackPositionMessage() {
 		super(null, new HashMap<String, Object>());
 	}
 
+	/**
+	 * @return the hex id as {@link String} 
+	 */
 	@JsonIgnore
 	public String getHex() {
-		return getProperty(String.class, HEX_PROPERTY_NAME);
+		return getProperty(HEX_PROPERTY_NAME, String.class);
 	}
 
+	/**
+	 * @param hex the hex id to set
+	 */
 	public void setHex(String hex) {
 		getProperties().put(HEX_PROPERTY_NAME, hex);
 	}
 
+	/**
+	 * @return the call sign as {@link String} 
+	 */
 	@JsonIgnore
 	public String getCallSign() {
-		return getProperty(String.class, CALLSIGN_PROPERTY_NAME);
+		return getProperty(CALLSIGN_PROPERTY_NAME, String.class);
 	}
 
+	/**
+	 * @param callSign the call sign to set
+	 */
 	public void setCallSign(String callSign) {
 		getProperties().put(CALLSIGN_PROPERTY_NAME, callSign);
 	}
 
+	/**
+	 * @return the heading as {@link Integer} 
+	 */
 	@JsonIgnore
 	public Integer getHeading() {
-		return getProperty(Integer.class, HEADING_PROPERTY_NAME);
+		return getProperty(HEADING_PROPERTY_NAME, Integer.class);
 	}
 
 	public void setHeading(Integer heading) {
 		getProperties().put(HEADING_PROPERTY_NAME, heading);
 	}
 
+	/**
+	 * @return the altitude as {@link Integer} 
+	 */
 	@JsonIgnore
 	public Integer getAltitude() {
-		return getProperty(Integer.class, ALTITUDE_PROPERTY_NAME);
+		return getProperty(ALTITUDE_PROPERTY_NAME, Integer.class);
 	}
 
+	/**
+	 * @param altitude the altitude to set
+	 */
 	public void setAltitude(Integer altitude) {
 		getProperties().put(ALTITUDE_PROPERTY_NAME, altitude);
 	}
 
+	/**
+	 * @return the speed over ground as {@link Integer}
+	 */
 	@JsonIgnore
 	public Integer getGroundSpeed() {
-		return getProperty(Integer.class, GROUND_SPEED_NAME);
+		return getProperty(GROUND_SPEED_NAME, Integer.class);
 	}
 
+	/**
+	 * @param groundSpeed the ground speed to set
+	 */
 	public void setGroundSpeed(Integer groundSpeed) {
 		getProperties().put(GROUND_SPEED_NAME, groundSpeed);
 	}
 
+	/**
+	 * @return true if aircraft on ground otherwise false
+	 */
 	@JsonIgnore
 	public Boolean isOnGround() {
-		Integer isOnGround = getProperty(Integer.class, IS_ON_GROUND_PROPERTY_NAME);
+		Integer isOnGround = getProperty(IS_ON_GROUND_PROPERTY_NAME, Integer.class);
 		return isOnGround != null ? 
 				isOnGround != 0 ? true : false : false;
 	}
 
+	/**
+	 * @param isOnGround whether the aircraft is on ground or not (true if on ground otherwise false)
+	 */
 	public void setIsOnGround(Boolean isOnGround) {
 		setIsOnGround(isOnGround ? -1 : 0);
 	}
 
+	/**
+	 * @param isOnGround whether the aircraft is on ground or not (-1 if on ground otherwise 0)
+	 */
 	public void setIsOnGround(Integer isOnGround) {
 		getProperties().put(IS_ON_GROUND_PROPERTY_NAME, isOnGround);
 	}
 
+	/**
+	 * Sets the geometry with longitude and latitude 
+	 * @param longitude the longitude
+	 * @param latitude the latitude
+	 */
 	public void setGeometry(Double longitude, Double latitude) {
 		if(getGeometry() == null){
 			setGeometry(new PointGeometry(longitude, latitude));
@@ -101,15 +145,26 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 		}
 	}
 
+	/**
+	 * @param messageReceived sets the date when the message was received from the system
+	 */
 	public void setMessageReceived(Date messageReceived) {
 		this.messageReceived = messageReceived;
 	}
 
+	/**
+	 * @return the date when the message was received from the system
+	 */
 	@JsonIgnore
 	public Date getMessageReceived() {
 		return messageReceived;
 	}
 
+	/**
+	 * Sets the message generated date
+	 * @param dateString the date string
+	 * @param timeString the time string
+	 */
 	public void setMessageGenerated(String dateString, String timeString) {
 		try {
 			Date date = DateUtils.parseDate(dateString + " " + timeString, "yyyy/MM/dd HH:mm:ss.S");
@@ -119,17 +174,11 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 		}
 	}
 
+	/**
+	 * @return when the message was generated
+	 */
 	@JsonIgnore
 	public Date getMessageGenerated() {
-		return getProperty(Date.class, DATE_TIME_MESSAGE_GENERATED_NAME);
-	}
-
-	@SuppressWarnings("unchecked")
-	private <T> T getProperty(Class<T> type, String propertyName) {
-		if (getProperties().containsKey(propertyName)) {
-			return (T) getProperties().get(propertyName);
-		} else {
-			return null;
-		}
+		return getProperty(DATE_TIME_MESSAGE_GENERATED_NAME, Date.class);
 	}
 }
