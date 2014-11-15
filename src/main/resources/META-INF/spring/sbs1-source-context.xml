@@ -35,14 +35,13 @@
 		<constructor-arg value="ch.trackdata.sbs1route.message" />
 	</bean>
 
-	<!-- <bean id="scanner" class="ch.trackdata.sbs1route.SBS1Scanner">
+	<bean id="scanner" class="ch.trackdata.sbs1route.SBS1Scanner">
 		<property name="host" value="${scanner.host}" />
 		<property name="port" value="${scanner.port}" />
 		<property name="SBS1Parser" ref="sbs1Parser" />
 	</bean>  
 
 	<bean id="sbs1Processor" class="ch.trackdata.sbs1route.SBS1Processor" />
-	<bean id="geoJSONProcessor" class="ch.trackdata.sbs1route.GeoJSONProcessor" />
 	<bean id="sbs1DataAggregatorProcessor" class="ch.trackdata.sbs1route.SBS1DataAggregatorProcessor">
 		<property name="cleanupInterval" value="${aggregator.cleanupInterval}" />
 	</bean>
@@ -50,5 +49,5 @@
 	<bean id="camelStartupListener" class="ch.trackdata.sbs1route.CamelStartupListener">
 		<property name="camelContext" ref="sbs1RouteCamelContext" />
 		<property name="sbs1Scanner" ref="scanner" />
-	</bean>-->
+	</bean>
 </beans>

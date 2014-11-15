@@ -1,7 +1,9 @@
 package ch.trackdata.sbs1route.message;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.util.Assert;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * A Geometry which represents a Point Geometry
@@ -9,9 +11,9 @@ import java.util.List;
  * @author stue
  * 
  */
-public class PointGeometry extends AbstractGeometry<Double> {
+public class PointGeometry extends AbstractGeometry<Double[]> {
 
-	private static final String POINT_TYPE_STRING = "Point";
+	public static final String POINT_TYPE_STRING = "Point";
 
 	/**
 	 * Constructor with longitude and latitude
@@ -22,10 +24,25 @@ public class PointGeometry extends AbstractGeometry<Double> {
 	 *            the latitude
 	 */
 	public PointGeometry(Double longitude, Double latitude) {
-		super(POINT_TYPE_STRING);
-		setCoordinates(longitude, latitude);
+		setCoordinates(new Double[]{longitude, latitude});
 	}
-
+	
+	/**
+	 * Constructor to instantiate from JSON
+	 * @param coordinates the coordinates as Double Array
+	 */
+	@JsonCreator
+	public PointGeometry(@JsonProperty(COORDINATES_PROPERTY_NAME) Double[] coordinates){
+		setCoordinates(coordinates);
+	}
+	
+	/**
+	 * @param geometry instantiates this geometry with the given geometry
+	 */
+	public PointGeometry(AbstractGeometry<Double[]> geometry){
+		setCoordinates(geometry.getCoordinates());
+	}
+	
 	/**
 	 * Update the Point with the given coordinates
 	 * 
@@ -35,15 +52,51 @@ public class PointGeometry extends AbstractGeometry<Double> {
 	 *            the latitude
 	 */
 	public void setCoordinates(Double longitude, Double latitude) {
-		List<Double> coordinates = getCoordinates();
-		if (getCoordinates() == null) {
-			coordinates = new ArrayList<Double>();
-		} else {
-			coordinates.clear();
+		Double[] coordinates = getCoordinates();
+		if (coordinates == null) {
+			coordinates = new Double[2];
 		}
-		coordinates.add(longitude);
-		coordinates.add(latitude);
+		coordinates[0] = longitude;
+		coordinates[1] = latitude;
 		setCoordinates(coordinates);
 	}
 
+	/**
+	 * Sets the given coordinates as point coordinates
+	 * @param coordinates the coordinates needs to be a double array of length 2
+	 */
+	public void setCoordinates(Double[] coordinates){
+		Assert.isTrue(coordinates != null && coordinates.length == 2);
+		super.setCoordinates(coordinates);
+	}
+	
+	/**
+	 * @return the longitude if set otherwise null
+	 */
+	public Double getLongitude(){
+		Double[] pointCoordinates = getCoordinates();
+		if(pointCoordinates != null){
+			return pointCoordinates[0];
+		}
+		return null;
+	}
+	
+	/**
+	 * @return the latitude if set otherwise null
+	 */
+	public Double getLatitude(){
+		Double[] pointCoordinates = getCoordinates();
+		if(pointCoordinates != null){
+			return pointCoordinates[1];
+		}
+		return null;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getType() {
+		return POINT_TYPE_STRING;
+	}
 }

@@ -4,7 +4,8 @@ import org.apache.commons.collections4.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.trackdata.sbs1route.message.TrackPositionMessage;
+import ch.trackdata.sbs1route.message.GeoJSONFeature;
+import ch.trackdata.sbs1route.message.PointGeometry;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
@@ -18,21 +19,36 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author stue
  */
-public class TrackPositionGeometryFilter implements Predicate<TrackPositionMessage> {
+public class TrackPositionGeometryFilter implements Predicate<GeoJSONFeature<PointGeometry>> {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(TrackPositionGeometryFilter.class);
 
-	private Geometry boundingBox;
+	private Geometry geometry;
 
+	/**
+	 * Default Constructor
+	 */
+	public TrackPositionGeometryFilter(){
+		//Nothing to do!
+	}
+	
+	/**
+	 * Constructor with geometry
+	 * @param geometry the geometry
+	 */
+	public TrackPositionGeometryFilter(Geometry geometry){
+		this.geometry = geometry;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean evaluate(TrackPositionMessage trackPositionMessage) {
-		if(boundingBox != null){
-			Point position = TrackPositionGeometryHelper.getGeometry(trackPositionMessage.getGeometry());
-			if(position != null && !boundingBox.contains(position)){
+	public boolean evaluate(GeoJSONFeature<PointGeometry> trackPositionMessage) {
+		if(geometry != null){
+			Point position = GeometryConverterHelper.getGeometry(trackPositionMessage.getGeometry());
+			if(position != null && !geometry.contains(position)){
 				return false;
 			}
 		}
@@ -40,17 +56,17 @@ public class TrackPositionGeometryFilter implements Predicate<TrackPositionMessa
 	}
 	
 	/**
-	 * @return the bounding box geometry
+	 * @return the geometry
 	 */
-	public Geometry getBoundingBox() {
-		return boundingBox;
+	public Geometry getGeometry() {
+		return geometry;
 	}
 
 	/**
-	 * @param boundingBox the boundingBox to set
+	 * @param geometry the geometry to set
 	 */
-	public void setBoundingBox(Geometry boundingBox) {
-		LOGGER.trace("bounding box geometry set");
-		this.boundingBox = boundingBox;
+	public void setGeometry(Geometry geometry) {
+		LOGGER.trace("geometry set");
+		this.geometry = geometry;
 	}
 }

@@ -1,8 +1,8 @@
 package ch.trackdata.sbs1route.message;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * {@link AbstractGeometry} JSON Class provides coordinates and a type member
@@ -10,18 +10,41 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author stue
  * 
  */
+
+@JsonTypeInfo(
+	    use = JsonTypeInfo.Id.NAME,
+	    include = JsonTypeInfo.As.PROPERTY,
+	    property = AbstractGeometry.TYPE_PROPERTY_NAME)
+@JsonSubTypes({
+    @JsonSubTypes.Type(
+        value = PointGeometry.class,
+        name = PointGeometry.POINT_TYPE_STRING),
+    @JsonSubTypes.Type(
+            value = PolygonGeometry.class,
+            name = PolygonGeometry.POLYGON_TYPE_STRING)})
 public abstract class AbstractGeometry<C> {
 
-	@JsonProperty("type")
-	private final String type;
+	public static final String TYPE_PROPERTY_NAME = "type";
+	public static final String COORDINATES_PROPERTY_NAME = "coordinates";
 
-	@JsonProperty("coordinates")
-	private List<C> coordinates;
+
+	@JsonProperty(COORDINATES_PROPERTY_NAME)
+	private C coordinates;
+
+	/**
+	 * @param type
+	 *            the type of geometry
+	 */
+//	@JsonCreator
+//	public AbstractGeometry(
+//			@JsonProperty("coordinates") C coordinates) {
+//		this.coordinates = coordinates;
+//	}
 
 	/**
 	 * @return the coordinates
 	 */
-	public List<C> getCoordinates() {
+	public C getCoordinates() {
 		return coordinates;
 	}
 
@@ -29,22 +52,12 @@ public abstract class AbstractGeometry<C> {
 	 * @param coordinates
 	 *            the coordinates to set
 	 */
-	public void setCoordinates(List<C> coordinates) {
+	public void setCoordinates(C coordinates) {
 		this.coordinates = coordinates;
 	}
 
 	/**
 	 * @return the type
 	 */
-	public String getType() {
-		return type;
-	}
-
-	/**
-	 * @param type
-	 *            the type of geometry
-	 */
-	public AbstractGeometry(String type) {
-		this.type = type;
-	}
+	public abstract String getType();
 }

@@ -158,7 +158,7 @@ public class InserObservationJAXBHelper {
 			PointGeometryPropertyConfiguration pointPropertyConfiguration = (PointGeometryPropertyConfiguration) propertyConfiguration;
 			DirectPositionType positionType = GML_OBJECT_FACTORY.createDirectPositionType();
 			positionType.setSrsName(pointPropertyConfiguration.getSrsName());
-			positionType.setValue((List<Double>) feature.getGeometry().getCoordinates());
+			positionType.setValue(Arrays.asList((Double[])feature.getGeometry().getCoordinates()));
 
 			PointType pointType = GML_OBJECT_FACTORY.createPointType();
 			pointType.setId(pointPropertyConfiguration.getPointId());

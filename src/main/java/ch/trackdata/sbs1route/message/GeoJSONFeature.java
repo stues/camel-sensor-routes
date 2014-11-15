@@ -5,6 +5,9 @@ import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * This Class Provides members to describe a GeoJSON-Feature the geometry type
  * must be of the Type {@link AbstractGeometry} the properties Map may contain
@@ -15,11 +18,16 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public class GeoJSONFeature<T extends AbstractGeometry<?>> {
 
+	private static final String GEOMETRY_PROPERTY_NAME = "geometry";
+	private static final String PROPERTIES_PROPERTY_NAME = "properties";
+	
 	private static final String FEATURE_TYPE_STRING = "Feature";
 
+	
+	
 	private String type;
 
-	private T geometry;
+	private AbstractGeometry<?> geometry;
 
 	private Map<String, Object> properties;
 
@@ -41,7 +49,10 @@ public class GeoJSONFeature<T extends AbstractGeometry<?>> {
 	 * @param properties
 	 *            the properties
 	 */
-	public GeoJSONFeature(T geometry, Map<String, Object> properties) {
+	@JsonCreator
+	public GeoJSONFeature(
+			@JsonProperty(GEOMETRY_PROPERTY_NAME) AbstractGeometry<?> geometry, 
+			@JsonProperty(PROPERTIES_PROPERTY_NAME) Map<String, Object> properties) {
 		this.geometry = geometry;
 		this.properties = properties;
 		this.type = FEATURE_TYPE_STRING;
@@ -50,8 +61,9 @@ public class GeoJSONFeature<T extends AbstractGeometry<?>> {
 	/**
 	 * @return the Geometry
 	 */
+	@SuppressWarnings("unchecked")
 	public T getGeometry() {
-		return geometry;
+		return (T) geometry;
 	}
 
 	/**

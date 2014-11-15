@@ -6,13 +6,14 @@ import org.apache.camel.Processor;
 import org.apache.camel.component.websocket.DefaultWebsocket;
 import org.apache.camel.component.websocket.WebsocketConstants;
 import org.apache.camel.component.websocket.WebsocketStore;
-import org.apache.commons.collections4.functors.FalsePredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.trackdata.sbs1route.message.AbstractGeometry;
+import ch.trackdata.sbs1route.message.GeoJSONFeature;
+import ch.trackdata.sbs1route.message.PolygonGeometry;
 import ch.trackdata.sbs1route.message.SBS1Message;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -24,7 +25,6 @@ public class WebsocketProcessor implements Processor {
 
 	private WebsocketStore websocketStore;
 		
-
 	/**
 	 * @return the websocketStore
 	 */
@@ -43,28 +43,33 @@ public class WebsocketProcessor implements Processor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
 	public void process(Exchange exchange) throws Exception {
 		
 		Message in = exchange.getIn();
-		String message = in.getMandatoryBody(String.class);
+		GeoJSONFeature<?> message = in.getMandatoryBody(GeoJSONFeature.class);
 		
-		Coordinate coordinate = new Coordinate(6, 47);
-		Coordinate coordinate2 = new Coordinate(7,48);
+		AbstractGeometry<?> geometry = message.getGeometry();
 		
-		
-		
-		String connectionKey = (String)in.getHeader(WebsocketConstants.CONNECTION_KEY);
-		DefaultWebsocket websocket = websocketStore.get(connectionKey);
-		if(websocket instanceof FilterWebsocket){
-			((FilterWebsocket) websocket).setFilter(FalsePredicate.INSTANCE);
+		if(geometry instanceof PolygonGeometry){
+			Polygon polygon = GeometryConverterHelper.getGeometry((PolygonGeometry)geometry);
+			if(polygon != null){
+				String connectionKey = (String)in.getHeader(WebsocketConstants.CONNECTION_KEY);
+				DefaultWebsocket websocket = websocketStore.get(connectionKey);
+				if(websocket instanceof FilterWebsocket){
+					
+					TrackPositionGeometryFilter geometryFilter = new TrackPositionGeometryFilter(polygon);
+					
+					TrackPositionMessageFilter messageFilter = new TrackPositionMessageFilter();
+					messageFilter.setPredicate(geometryFilter);
+					
+					((FilterWebsocket) websocket).setFilter(messageFilter);
+				}
+				else{
+					LOGGER.trace("websocket NOT in store");
+				}
+			}
 		}
-		else{
-			LOGGER.trace("websocket NOT in store");
-		}
-		
-		exchange.getOut().setHeader(WebsocketConstants.CONNECTION_KEY, in.getHeader(WebsocketConstants.CONNECTION_KEY));
-		exchange.getOut().setBody("OK");
+				
 	}
 
 }

@@ -17,7 +17,6 @@ import ch.trackdata.sbs1route.message.GeoJSONFeature;
  * 
  * @author stue
  */
-
 @Converter
 public class GeoJSONToInsertObservationConverter {
 
@@ -31,7 +30,7 @@ public class GeoJSONToInsertObservationConverter {
 	 * @return
 	 */
 	@Converter
-	public JAXBElement<InsertObservationType> convert(GeoJSONFeature feature) {
+	public JAXBElement<InsertObservationType> convert(GeoJSONFeature<?> feature) {
 		JAXBElement<InsertObservationType> insertObservation = InserObservationJAXBHelper.getInsertObservation(configuration, feature);
 		return insertObservation;
 	}

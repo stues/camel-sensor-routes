@@ -13,8 +13,8 @@
 
 	<context:annotation-config />
 	
-	<!-- <import resource="sos-context.xml" />  -->
-	<!-- <import resource="sbs1-source-context.xml" />  -->
+	<import resource="sos-context.xml" />
+	<import resource="sbs1-source-context.xml" />
 
 	<bean id="websocketStore" class="org.apache.camel.component.websocket.MemoryWebsocketStore" />
 
@@ -22,13 +22,12 @@
 		<property name="websocketStore" ref="websocketStore" />
 	</bean>
 
+
+
 	<camel:camelContext id="sbs1RouteCamelContext"
 		xmlns="http://camel.apache.org/schema/spring">
 			
 		<!-- Websocket Endpoint -->
-		<camel:endpoint id="websocketJSONEndpoint"
-			uri="websocket://${localadress}:8443/traffic?sendToAll=true" />
-
 		<camel:endpoint id="websocketClientJSONEndpoint"
 			uri="filterwebsocket://${localadress}:8443/clientTrackData?websocketStore=#websocketStore&amp;sendToAll=true" />
 
@@ -39,13 +38,14 @@
 
 		<camel:route autoStartup="true">
 			<camel:from uri="websocketClientJSONEndpoint" />
+			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
 			<camel:process ref="websocketProcessor"></camel:process>
 			<log message="Converted: ${body}" />
 			
 			<camel:to uri="websocketClientJSONEndpoint" />
 		</camel:route>
 
-		<camel:route autoStartup="true">
+		<!-- <camel:route autoStartup="true">
 			<camel:from
 				uri="file://src/main/resources?noop=true&amp;fileName=sample_data.json" />
 			<loop>
@@ -55,17 +55,19 @@
 					<delay asyncDelayed="true">
 						<constant>1000</constant>
 					</delay>
+					<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
 					<multicast stopOnException="false">
 						<camel:to ref="websocketClientJSONEndpoint" />
-						<!-- <to uri="direct:sos" />  -->
+						<to uri="direct:sos" />
 					</multicast>
 					<to uri="mock:result" />
 				</split>
 			</loop>
 		</camel:route>
+		 -->
 
 
-		<!-- <camel:route autoStartup="false">
+		<camel:route autoStartup="true">
 			<camel:from uri="direct:sbs1" />
 			<unmarshal ref="bindyDataformat" />
 			<log message="Converted: ${body}" />
@@ -80,9 +82,8 @@
 		<camel:route>
 			<camel:from uri="direct:websocket" />
 			<process ref="sbs1DataAggregatorProcessor" />
-			<process ref="geoJSONProcessor" />
 			<log message="${body}" logName="JSON" />
-			<camel:to ref="websocketJSONEndpoint" />
+			<camel:to ref="websocketClientJSONEndpoint" />
 		</camel:route>
 
 		<camel:route>
@@ -101,7 +102,7 @@
 			</setHeader>
 			<log message="${body}" logName="SOS_INSERTOBSERVATION" />
 			<to uri="sosEndpoint" />
-		</camel:route>-->
+		</camel:route>
 
 
 	</camel:camelContext>
