@@ -11,23 +11,6 @@
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
        http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<bean
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations" value="classpath*:sbs1route-config.properties" />
-		<property name="properties">
-			<props>
-				<prop key="scanner.host"><!-- The SBS1 Station IP -->
-				</prop>
-				<prop key="scanner.port">30003</prop>
-				<prop key="localadress"><!-- The local IP-Address -->
-				</prop>
-				<prop key="aggregator.cleanupInterval">30000</prop>
-			</props>
-		</property>
-		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
-	</bean>
-
-
 	<bean id="sbs1Parser" class="ch.trackdata.sbs1route.SBS1Parser" />
 
 	<bean id="bindyDataformat"
@@ -35,9 +18,10 @@
 		<constructor-arg value="ch.trackdata.sbs1route.message" />
 	</bean>
 
-	<bean id="scanner" class="ch.trackdata.sbs1route.SBS1Scanner">
-		<property name="host" value="${scanner.host}" />
-		<property name="port" value="${scanner.port}" />
+	<bean id="sbs1DataReceiver" class="ch.trackdata.sbs1route.SBS1DataReceiver">
+		<property name="enabled" value="${sbs1.enabled}" />
+		<property name="host" value="${sbs1.host}" />
+		<property name="port" value="${sbs1.port}" />
 		<property name="SBS1Parser" ref="sbs1Parser" />
 	</bean>  
 
@@ -48,6 +32,6 @@
 
 	<bean id="camelStartupListener" class="ch.trackdata.sbs1route.CamelStartupListener">
 		<property name="camelContext" ref="sbs1RouteCamelContext" />
-		<property name="sbs1Scanner" ref="scanner" />
+		<property name="sbs1DataReceiver" ref="sbs1DataReceiver" />
 	</bean>
 </beans>

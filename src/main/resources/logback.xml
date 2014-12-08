@@ -6,7 +6,7 @@
         </encoder>
     </appender>
     <appender class="ch.qos.logback.core.FileAppender" name="FILE">
-        <file>scanner.log</file>
+        <file>datareceiver.log</file>
         <append>false</append>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%p] %c [%t] - %m%n</pattern>
@@ -14,7 +14,7 @@
     </appender>
     
 	<appender class="ch.qos.logback.core.FileAppender" name="MSG_JSON_LOGGER">
-        <file>scanner-JSON.log</file>
+        <file>datareceiver-JSON.log</file>
         <append>false</append>
         <encoder>
             <pattern>%m%n</pattern>
@@ -26,7 +26,7 @@
     </logger>
     
 	<appender class="ch.qos.logback.core.FileAppender" name="INSERT_OBSERVATION_LOGGER">
-        <file>scanner-SOS_INSERTOBSERVATION.log</file>
+        <file>datareceiver-SOS_INSERTOBSERVATION.log</file>
         <append>false</append>
         <encoder>
             <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS}: %m%n</pattern>

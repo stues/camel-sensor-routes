@@ -8,22 +8,22 @@ import org.springframework.beans.factory.annotation.Required;
 
 /**
  * This {@link StartupListener} waits until the given context is fully loaded
- * once the context is loaded, the {@link SBS1Scanner} will be started
+ * once the context is loaded, the {@link SBS1DataReceiver} will be started
  */
 public class CamelStartupListener implements StartupListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CamelStartupListener.class);
 
-	private SBS1Scanner sbs1Scanner;
+	private SBS1DataReceiver sbs1DataReceiver;
 
 	private String camelContextName;
 
 	/**
-	 * @param sbs1Scanner
-	 *            the sbs1Scanner to set
+	 * @param sbs1DataReceiver
+	 *            the sbs1DataReceiver to set
 	 */
 	@Required
-	public void setSbs1Scanner(SBS1Scanner sbs1Scanner) {
-		this.sbs1Scanner = sbs1Scanner;
+	public void setSbs1DataReceiver(SBS1DataReceiver sbs1DataReceiver) {
+		this.sbs1DataReceiver = sbs1DataReceiver;
 	}
 
 	/**
@@ -55,9 +55,9 @@ public class CamelStartupListener implements StartupListener {
 	 */
 	@Override
 	public void onCamelContextStarted(CamelContext context, boolean alreadyStarted) throws Exception {
-		LOGGER.info("CamelStartupListener will start the SBS1 scanner, camelContext: {}, alreadyStarted: {}", context, alreadyStarted);
+		LOGGER.info("CamelStartupListener will start the SBS1 data receiver, camelContext: {}, alreadyStarted: {}", context, alreadyStarted);
 		if (camelContextName.equals(context.getName()) && !alreadyStarted) {
-			sbs1Scanner.launchScanner();
+			sbs1DataReceiver.launchDataReceiver();
 		} else {
 			LOGGER.info("Wrong context or already started.");
 		}

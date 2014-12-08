@@ -37,6 +37,8 @@ public class RandomTrackGenerator implements InitializingBean {
 	private int maxSpeedDelta = 40;
 	private int maxHeadingDelta = 40;
 	
+	private boolean enabled = true;
+	
 	private List<TrackPositionMessage> trackPositions = null;
 
 	private int currentTrack;
@@ -59,14 +61,16 @@ public class RandomTrackGenerator implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		trackPositions = new ArrayList<TrackPositionMessage>(amountOfTracks);
-
-		for (int i = 0; i < amountOfTracks; i++) {
-			TrackPositionMessage trackPosition = createRandomTrackPosition();
-			trackPositions.add(trackPosition);
+		if(isEnabled() && amountOfTracks > 0){
+			trackPositions = new ArrayList<TrackPositionMessage>(amountOfTracks);
+	
+			for (int i = 0; i < amountOfTracks; i++) {
+				TrackPositionMessage trackPosition = createRandomTrackPosition();
+				trackPositions.add(trackPosition);
+			}
+	
+			generateTracks();
 		}
-
-		generateTracks();
 	}
 
 	/**
@@ -395,6 +399,20 @@ public class RandomTrackGenerator implements InitializingBean {
 	 */
 	public void setMaxHeadingDelta(int maxHeadingDelta) {
 		this.maxHeadingDelta = maxHeadingDelta;
+	}
+
+	/**
+	 * @return the enabled
+	 */
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	/**
+	 * @param enabled the enabled to set
+	 */
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	/**

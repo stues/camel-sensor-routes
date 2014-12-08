@@ -20,11 +20,12 @@ import org.springframework.beans.factory.annotation.Required;
  * Opens a TCP connection to the given host on the given port,
  * The {@link SBS1Parser} receives the data from the Channel 
  */
-public class SBS1Scanner {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SBS1Scanner.class); 
+public class SBS1DataReceiver {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SBS1DataReceiver.class); 
 	
 	private String host;
 	private int port;
+	private boolean enabled = true;
 	
 	private SBS1Parser sbs1Parser;
 	
@@ -53,25 +54,44 @@ public class SBS1Scanner {
 	}
 	
 	/**
-	 * Launches the scanner in a new worker Thread
+	 * @return the enabled
 	 */
-	public void launchScanner() {
-		LOGGER.info("Launch the scanner.");
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	/**
+	 * @param enabled the enabled to set
+	 */
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
+	/**
+	 * Launches the data receiver in a new worker Thread
+	 */
+	public void launchDataReceiver() {
+		if(isEnabled()){
+		LOGGER.info("Launch the SBS1 data receiver.");
 		
 		Thread worker = new Thread(new Runnable() {
 			public void run() {
-				startScanner();
+				startDataReceiver();
 			}
 		});
 		worker.start();
 
-		LOGGER.info("Launch the scanner has passed.");
+		LOGGER.info("Launch the sbs1 data receiver has passed.");
+		}
+		else {
+			LOGGER.info("SBS1 Data Receiver is disabled");
+		}
 	}
 	
 	/**
 	 * Start receiving data from the {@link SocketChannel}
 	 */
-	public void startScanner() {
+	public void startDataReceiver() {
 		LOGGER.info("Connect to host: {}, port: {}", host, port);
 		
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -107,5 +127,4 @@ public class SBS1Scanner {
 		
 		LOGGER.info("Scanner has finished.");
 	}
-
 }
