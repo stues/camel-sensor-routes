@@ -22,11 +22,25 @@
 		<property name="websocketStore" ref="websocketStore" />
 	</bean>
 
+	<bean id="randomTrackGenerator" class="ch.trackdata.sbs1route.generator.RandomTrackGenerator">
+		<property name="producerTemplate" ref="generatedTrackProducer" />
+		<property name="amountOfTracks" value="50" />
+		<property name="updateInterval" value="100" />
+		<property name="minLatitude" value="44" />
+		<property name="maxLatitude" value="49" />
+		<property name="minLongitude" value="4.5" />
+		<property name="maxLongitude" value="14" />
+		<property name="maxAltitudeDelta" value="4000" />
+		<property name="maxSpeedDelta" value="40" />
+		<property name="maxHeadingDelta" value="40" />
+	</bean>
 
 
 	<camel:camelContext id="sbs1RouteCamelContext"
 		xmlns="http://camel.apache.org/schema/spring">
-			
+
+		<camel:template id="generatedTrackProducer" defaultEndpoint="direct:trackgeneration"/>
+
 		<!-- Websocket Endpoint -->
 		<camel:endpoint id="websocketClientJSONEndpoint"
 			uri="filterwebsocket://${localadress}:8443/clientTrackData?websocketStore=#websocketStore&amp;sendToAll=true" />
@@ -65,6 +79,11 @@
 			</loop>
 		</camel:route>
 		 -->
+
+		<camel:route>
+			<camel:from uri="direct:trackgeneration" />
+			<camel:to uri="websocketClientJSONEndpoint" />
+		</camel:route>
 
 
 		<camel:route autoStartup="true">

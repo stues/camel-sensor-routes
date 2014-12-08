@@ -161,7 +161,7 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	}
 
 	/**
-	 * Sets the message generated date
+	 * Sets the message generated date as to strings
 	 * @param dateString the date string
 	 * @param timeString the time string
 	 */
@@ -174,6 +174,14 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 		}
 	}
 
+	/**
+	 * Sets the message generated date
+	 * @param messageGenerated the daten when the message has been generated 
+	 */
+	public void setMessageGenerated(Date messageGgenerated) {
+			getProperties().put(DATE_TIME_MESSAGE_GENERATED_NAME, messageGgenerated);
+	}
+	
 	/**
 	 * @return when the message was generated
 	 */
