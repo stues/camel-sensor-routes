@@ -169,6 +169,7 @@ public class RandomTrackGenerator implements InitializingBean {
 		updateGroundSpeed(trackPosition);
 		updateAltitude(trackPosition);
 		trackPosition.setMessageReceived(new Date());
+		trackPosition.setMessageGenerated(new Date());
 	}
 
 	/**

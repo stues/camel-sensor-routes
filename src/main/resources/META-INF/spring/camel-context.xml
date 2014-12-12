@@ -12,16 +12,30 @@
        http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<context:annotation-config />
-	
+
 	<bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations" value="classpath*:sbs1route-config.properties" />
 		<property name="properties">
 			<props>
-				<prop key="localadress"><!-- The local IP-Address --></prop>
+				<prop key="localaddress"><!-- The local IP-Address -->
+				</prop>
+
+				<prop key="sos.enabled">true</prop>
+				<prop key="sos.host">${localaddress}</prop>
+				<prop key="sos.port">8080</prop>
+				<prop key="sos.path">/52n-sos-webapp/sos/pox</prop>
+
+				<prop key="websocket.enabled">true</prop>
+				<prop key="websocket.host">${localaddress}</prop>
+				<prop key="websocket.port">8443</prop>
+				<prop key="websocket.path">/clientTrackData</prop>
+
 				<prop key="sbs1.enabled">true</prop>
-				<prop key="sbs1.host"><!-- The SBS1 Station IP --></prop>
+				<prop key="sbs1.host"><!-- The SBS1 Station IP -->
+				</prop>
 				<prop key="sbs1.port">30003</prop>
+
 				<prop key="generator.enabled">false</prop>
 				<prop key="generator.amountOfTracks">20</prop>
 				<prop key="generator.updateInterval">200</prop>
@@ -30,13 +44,15 @@
 		</property>
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 	</bean>
-	
+
 	<import resource="sos-context.xml" />
 	<import resource="sbs1-source-context.xml" />
 
-	<bean id="websocketStore" class="org.apache.camel.component.websocket.MemoryWebsocketStore" />
+	<bean id="websocketStore"
+		class="org.apache.camel.component.websocket.MemoryWebsocketStore" />
 
-	<bean name="filterWebsocketProcessor" class="ch.trackdata.sbs1route.websocket.FilterWebsocketProcessor">
+	<bean name="filterWebsocketProcessor"
+		class="ch.trackdata.sbs1route.websocket.FilterWebsocketProcessor">
 		<property name="websocketStore" ref="websocketStore" />
 	</bean>
 
@@ -58,51 +74,48 @@
 	<camel:camelContext id="sbs1RouteCamelContext"
 		xmlns="http://camel.apache.org/schema/spring">
 
-		<camel:template id="generatedTrackProducer" defaultEndpoint="direct:trackgeneration"/>
+		<propertyPlaceholder id="properties"
+			location="sbs1route-config.properties" />
+
+		<camel:template id="generatedTrackProducer"
+			defaultEndpoint="direct:trackgeneration" />
 
 		<!-- Websocket Endpoint -->
 		<camel:endpoint id="websocketClientJSONEndpoint"
-			uri="filterwebsocket://${localadress}:8443/clientTrackData?websocketStore=#websocketStore&amp;sendToAll=true" />
+			uri="filterwebsocket://${websocket.host}:${websocket.port}${websocket.path}?websocketStore=#websocketStore&amp;sendToAll=true" />
 
 
 		<!-- Sensor Observation Service Endpoint -->
 		<camel:endpoint id="sosEndpoint"
-			uri="http://${localadress}:8080/52n-sos-webapp/sos/pox" />
+			uri="http://${sos.host}:${sos.port}${sos.path}" />
 
 		<camel:route autoStartup="true">
 			<camel:from uri="websocketClientJSONEndpoint" />
 			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
 			<camel:process ref="filterWebsocketProcessor"></camel:process>
 			<log message="Converted: ${body}" />
-			
-			<camel:to uri="websocketClientJSONEndpoint" />
+
+			<camel:to uri="mock:result" />
 		</camel:route>
 
-		<!-- <camel:route autoStartup="true">
-			<camel:from
-				uri="file://src/main/resources?noop=true&amp;fileName=sample_data.json" />
-			<loop>
-				<constant>99999</constant>
-				<split streaming="true">
-					<tokenize token="\n" />
-					<delay asyncDelayed="true">
-						<constant>1000</constant>
-					</delay>
-					<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
-					<multicast stopOnException="false">
-						<camel:to ref="websocketClientJSONEndpoint" />
-						<to uri="direct:sos" />
-					</multicast>
-					<to uri="mock:result" />
-				</split>
-			</loop>
-		</camel:route>
-		 -->
+		<!-- <camel:route autoStartup="true"> <camel:from uri="file://src/main/resources?noop=true&amp;fileName=sample_data.json" 
+			/> <loop> <constant>99999</constant> <split streaming="true"> <tokenize token="\n" 
+			/> <delay asyncDelayed="true"> <constant>1000</constant> </delay> <convertBodyTo 
+			type="ch.trackdata.sbs1route.message.GeoJSONFeature" /> <multicast stopOnException="false"> 
+			<camel:to ref="websocketClientJSONEndpoint" /> <to uri="direct:sos" /> </multicast> 
+			<to uri="mock:result" /> </split> </loop> </camel:route> -->
 
 		<camel:route>
 			<camel:from uri="direct:trackgeneration" />
 			<multicast stopOnException="false">
-				<camel:to uri="websocketClientJSONEndpoint" />
+				<camel:when>
+					<simple>${properties:websocket.enabled}</simple>
+					<camel:to ref="websocketClientJSONEndpoint" />
+				</camel:when>
+				<camel:otherwise>
+					<to uri="mock:websocketResult" />
+				</camel:otherwise>
+				
 				<camel:to uri="direct:featuresos" />
 			</multicast>
 		</camel:route>
@@ -122,9 +135,15 @@
 
 		<camel:route>
 			<camel:from uri="direct:websocket" />
-			<process ref="sbs1DataAggregatorProcessor" />
-			<log message="${body}" logName="JSON" />
-			<camel:to ref="websocketClientJSONEndpoint" />
+			<camel:when>
+				<simple>${properties:websocket.enabled}</simple>
+				<process ref="sbs1DataAggregatorProcessor" />
+				<log message="${body}" logName="JSON" />
+				<camel:to ref="websocketClientJSONEndpoint" />
+			</camel:when>
+			<camel:otherwise>
+				<to uri="mock:websocketResult" />
+			</camel:otherwise>
 		</camel:route>
 
 		<camel:route>
@@ -135,19 +154,28 @@
 
 		<camel:route>
 			<camel:from uri="direct:featuresos" />
-			<convertBodyTo type="javax.xml.bind.JAXBElement" />
-			<marshal>
-				<jaxb id="myJaxb" prettyPrint="false"
-					contextPath="net.opengis.sos.v_2_0_0:net.opengis.swe.v_2_0_0:net.opengis.filter.v_2_0_0" />
-			</marshal>
-			<setHeader headerName="CamelHttpMethod">
-				<constant>POST</constant>
-			</setHeader>
-			<setHeader headerName="Content-Type">
-				<simple>application/xml</simple>
-			</setHeader>
-			<log message="${body}" logName="SOS_INSERTOBSERVATION" />
-			<to uri="sosEndpoint" />
+			<camel:choice>
+				<camel:when>
+					<simple>${properties:sos.enabled}</simple>
+					<convertBodyTo type="javax.xml.bind.JAXBElement" />
+					<marshal>
+						<jaxb id="myJaxb" prettyPrint="false"
+							contextPath="net.opengis.sos.v_2_0_0:net.opengis.swe.v_2_0_0:net.opengis.filter.v_2_0_0" />
+					</marshal>
+					<setHeader headerName="CamelHttpMethod">
+						<constant>POST</constant>
+					</setHeader>
+					<setHeader headerName="Content-Type">
+						<simple>application/xml</simple>
+					</setHeader>
+					<log message="${body}" logName="SOS_INSERTOBSERVATION" />
+					<to uri="sosEndpoint" />
+
+				</camel:when>
+				<camel:otherwise>
+					<to uri="mock:sosResult" />
+				</camel:otherwise>
+			</camel:choice>
 		</camel:route>
 
 	</camel:camelContext>
