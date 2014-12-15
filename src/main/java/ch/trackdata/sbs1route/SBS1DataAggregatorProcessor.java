@@ -38,6 +38,9 @@ public class SBS1DataAggregatorProcessor implements Processor {
 
 	private Integer cleanupInterval;
 	
+	/**
+	 * Default Constructor
+	 */
 	public SBS1DataAggregatorProcessor() {
 		trackPositions = new HashMap<String, TrackPositionMessage>();
 		

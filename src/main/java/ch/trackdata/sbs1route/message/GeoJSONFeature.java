@@ -22,8 +22,6 @@ public class GeoJSONFeature<T extends AbstractGeometry<?>> {
 	private static final String PROPERTIES_PROPERTY_NAME = "properties";
 	
 	private static final String FEATURE_TYPE_STRING = "Feature";
-
-	
 	
 	private String type;
 

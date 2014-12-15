@@ -11,16 +11,16 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * 
  */
 @JsonTypeInfo(
-	    use = JsonTypeInfo.Id.NAME,
-	    include = JsonTypeInfo.As.PROPERTY,
-	    property = AbstractGeometry.TYPE_PROPERTY_NAME)
+		use = JsonTypeInfo.Id.NAME,
+		include = JsonTypeInfo.As.PROPERTY,
+		property = AbstractGeometry.TYPE_PROPERTY_NAME)
 @JsonSubTypes({
     @JsonSubTypes.Type(
-        value = PointGeometry.class,
+    	value = PointGeometry.class,
         name = PointGeometry.POINT_TYPE_STRING),
     @JsonSubTypes.Type(
-            value = PolygonGeometry.class,
-            name = PolygonGeometry.POLYGON_TYPE_STRING)})
+    	value = PolygonGeometry.class,
+    	name = PolygonGeometry.POLYGON_TYPE_STRING)})
 public abstract class AbstractGeometry<C> {
 
 	public static final String TYPE_PROPERTY_NAME = "type";

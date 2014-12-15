@@ -118,7 +118,6 @@ public class FilterWebsocketEndpoint extends WebsocketEndpoint {
     @Override
     public void disconnect(WebsocketProducer producer) throws Exception {
         component.disconnect(producer);
-        // Servlet should be removed
     }
 
     /**
