@@ -50,7 +50,6 @@ public class FilterWebsocketProcessor implements Processor {
 	 */
 	@Override
 	public void process(Exchange exchange) throws Exception {
-
 		Message in = exchange.getIn();
 		GeoJSONFeature<?> geoJSONFeature = in.getMandatoryBody(GeoJSONFeature.class);
 

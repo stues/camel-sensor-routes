@@ -95,7 +95,7 @@
 			<camel:process ref="filterWebsocketProcessor"></camel:process>
 			<log message="Converted: ${body}" />
 
-			<camel:to uri="mock:result" />
+			<camel:stop />
 		</camel:route>
 
 		<!-- <camel:route autoStartup="true"> <camel:from uri="file://src/main/resources?noop=true&amp;fileName=sample_data.json" 
@@ -103,7 +103,7 @@
 			/> <delay asyncDelayed="true"> <constant>1000</constant> </delay> <convertBodyTo 
 			type="ch.trackdata.sbs1route.message.GeoJSONFeature" /> <multicast stopOnException="false"> 
 			<camel:to ref="websocketClientJSONEndpoint" /> <to uri="direct:sos" /> </multicast> 
-			<to uri="mock:result" /> </split> </loop> </camel:route> -->
+			<camel:stop /> </split> </loop> </camel:route> -->
 
 		<camel:route>
 			<camel:from uri="direct:trackgeneration" />
@@ -113,7 +113,7 @@
 					<camel:to ref="websocketClientJSONEndpoint" />
 				</camel:when>
 				<camel:otherwise>
-					<to uri="mock:websocketResult" />
+					<camel:stop />
 				</camel:otherwise>
 				
 				<camel:to uri="direct:featuresos" />
@@ -130,7 +130,7 @@
 				<to uri="direct:websocket" />
 				<to uri="direct:sos" />
 			</multicast>
-			<to uri="mock:result" />
+			<camel:stop />
 		</camel:route>
 
 		<camel:route>
@@ -142,7 +142,7 @@
 				<camel:to ref="websocketClientJSONEndpoint" />
 			</camel:when>
 			<camel:otherwise>
-				<to uri="mock:websocketResult" />
+				<camel:stop />
 			</camel:otherwise>
 		</camel:route>
 
@@ -173,7 +173,7 @@
 
 				</camel:when>
 				<camel:otherwise>
-					<to uri="mock:sosResult" />
+					<camel:stop />
 				</camel:otherwise>
 			</camel:choice>
 		</camel:route>
