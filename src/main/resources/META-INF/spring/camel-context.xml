@@ -170,7 +170,6 @@
 					</setHeader>
 					<log message="${body}" logName="SOS_INSERTOBSERVATION" />
 					<to uri="sosEndpoint" />
-
 				</camel:when>
 				<camel:otherwise>
 					<camel:stop />
