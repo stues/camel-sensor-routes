@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 /**
  * Opens a TCP connection to the given host on the given port,
- * The {@link SBS1Parser} receives the data from the Channel 
+ * The {@link SBS1ProducerAdapter} receives the data from the Channel 
  */
 public class SBS1DataReceiver {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SBS1DataReceiver.class); 
@@ -27,7 +27,7 @@ public class SBS1DataReceiver {
 	private int port;
 	private boolean enabled = true;
 	
-	private SBS1Parser sbs1Parser;
+	private SBS1ProducerAdapter sbs1ProducerAdapter;
 	
 	/**
 	 * @param host the host name
@@ -46,11 +46,11 @@ public class SBS1DataReceiver {
 	}
 
 	/**
-	 * @param sbs1Parser the {@link SBS1Parser}
+	 * @param sbs1ProducerAdapter the {@link SBS1ProducerAdapter}
 	 */
 	@Required
-	public void setSBS1Parser(SBS1Parser sbs1Parser) {
-		this.sbs1Parser = sbs1Parser;
+	public void setSBS1ProducerAdapter(SBS1ProducerAdapter sbs1ProducerAdapter) {
+		this.sbs1ProducerAdapter = sbs1ProducerAdapter;
 	}
 	
 	/**
@@ -107,8 +107,8 @@ public class SBS1DataReceiver {
 					// Decoders
 					channel.pipeline().addLast("frameDecoder", new LineBasedFrameDecoder(200));
 					channel.pipeline().addLast("stringDecoder", new StringDecoder(CharsetUtil.UTF_8));
-					LOGGER.info("Adding the scanner to pipeline: {}", sbs1Parser);
-					channel.pipeline().addLast(sbs1Parser/*new SBS1Parser()*/);
+					LOGGER.info("Adding the scanner to pipeline: {}", sbs1ProducerAdapter);
+					channel.pipeline().addLast(sbs1ProducerAdapter);
 				}
 			});
 

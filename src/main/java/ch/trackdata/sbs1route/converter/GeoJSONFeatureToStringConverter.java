@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import ch.trackdata.sbs1route.message.GeoJSONFeature;
 import ch.trackdata.sbs1route.websocket.FilterWebsocketProcessor;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,7 +22,12 @@ public class GeoJSONFeatureToStringConverter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FilterWebsocketProcessor.class);
 	
-	ObjectMapper mapper = new ObjectMapper();
+	ObjectMapper mapper;
+	
+	public GeoJSONFeatureToStringConverter(){
+		mapper = new ObjectMapper();
+		mapper.setSerializationInclusion(Include.NON_NULL);
+	}
 	
 	/**
 	 * converts the {@link GeoJSONFeature} into a JSON-{@link String}

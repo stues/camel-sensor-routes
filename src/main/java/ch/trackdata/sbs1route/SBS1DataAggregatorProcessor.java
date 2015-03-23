@@ -71,6 +71,18 @@ public class SBS1DataAggregatorProcessor implements Processor {
 	 */
 	private TrackPositionMessage getUpdatedTrackPosition(SBS1Message sbs1Message) {
 		TrackPositionMessage trackPosition = getTrackPosition(sbs1Message);
+		trackPosition = updateTrackPosition(trackPosition, sbs1Message);
+		
+		return trackPosition;
+	}
+
+	/**
+	 * Updates the trackPosition with information from the given sbs1Message
+	 * @param trackPosition the trackPosition
+	 * @param sbs1Message the sbs1Message
+	 * @return 
+	 */
+	private TrackPositionMessage updateTrackPosition(TrackPositionMessage trackPosition, SBS1Message sbs1Message) {
 		trackPosition.setMessageReceived(new Date());
 		trackPosition.setMessageGenerated(sbs1Message.getDateMessageGenerated(), sbs1Message.getTimeMessageGenerated());
 		
@@ -120,7 +132,6 @@ public class SBS1DataAggregatorProcessor implements Processor {
 			LOGGER.info("STA Message, remove track: {}", sbs1Message.getHexIdent());
 			trackPositions.remove(sbs1Message.getHexIdent());
 		}
-		
 		return trackPosition;
 	}
 
@@ -131,11 +142,15 @@ public class SBS1DataAggregatorProcessor implements Processor {
 	 */
 	private TrackPositionMessage getTrackPosition(SBS1Message sbs1Message) {
 		String hexIdent = sbs1Message.getHexIdent();
+		TrackPositionMessage trackPositionMessage;
 		if (!trackPositions.containsKey(hexIdent)) {
-			TrackPositionMessage trackPosition = new TrackPositionMessage();
-			trackPositions.put(hexIdent, trackPosition);
+			trackPositionMessage = new TrackPositionMessage();
+			trackPositions.put(hexIdent, trackPositionMessage);
 		}
-		return trackPositions.get(hexIdent);
+		else{
+			trackPositionMessage = trackPositions.get(hexIdent);
+		}
+		return trackPositionMessage;
 	}
 
 	/**

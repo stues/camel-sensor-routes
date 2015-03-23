@@ -9,8 +9,8 @@ import org.apache.camel.component.websocket.WebsocketStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.trackdata.sbs1route.message.AbstractGeometry;
-import ch.trackdata.sbs1route.message.GeoJSONFeature;
+import ch.trackdata.sbs1route.message.Feature;
+import ch.trackdata.sbs1route.message.Geometry;
 import ch.trackdata.sbs1route.message.PolygonGeometry;
 import ch.trackdata.sbs1route.message.SBS1Message;
 
@@ -51,11 +51,11 @@ public class FilterWebsocketProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		Message in = exchange.getIn();
-		GeoJSONFeature<?> geoJSONFeature = in.getMandatoryBody(GeoJSONFeature.class);
+		Feature<?> feature = in.getMandatoryBody(Feature.class);
 
-		String action = geoJSONFeature.getProperty(ACTION_PROPERTY_NAME, String.class);
+		String action = feature.getProperty(ACTION_PROPERTY_NAME, String.class);
 		if (action != null) {
-			AbstractGeometry<?> geometry = geoJSONFeature.getGeometry();
+			Geometry<?> geometry = feature.getGeometry();
 
 			String connectionKey = (String) in.getHeader(WebsocketConstants.CONNECTION_KEY);
 			DefaultWebsocket websocket = websocketStore.get(connectionKey);

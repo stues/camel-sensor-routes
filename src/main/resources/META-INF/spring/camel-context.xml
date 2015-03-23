@@ -77,8 +77,9 @@
 		<propertyPlaceholder id="properties"
 			location="sbs1route-config.properties" />
 
-		<camel:template id="generatedTrackProducer"
-			defaultEndpoint="direct:trackgeneration" />
+		<camel:template id="sbs1Producer" defaultEndpoint="direct:sbs1" />
+
+		<camel:template id="generatedTrackProducer"	defaultEndpoint="direct:trackgeneration" />
 
 		<!-- Websocket Endpoint -->
 		<camel:endpoint id="websocketClientJSONEndpoint"
@@ -94,7 +95,6 @@
 			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
 			<camel:process ref="filterWebsocketProcessor"></camel:process>
 			<log message="Converted: ${body}" />
-
 			<camel:stop />
 		</camel:route>
 
@@ -102,12 +102,12 @@
 			/> <loop> <constant>99999</constant> <split streaming="true"> <tokenize token="\n" 
 			/> <delay asyncDelayed="true"> <constant>1000</constant> </delay> <convertBodyTo 
 			type="ch.trackdata.sbs1route.message.GeoJSONFeature" /> <multicast stopOnException="false"> 
-			<camel:to ref="websocketClientJSONEndpoint" /> <to uri="direct:sos" /> </multicast> 
+			<camel:to ref="websocketClientJSONEndpoint" /> <to uri="direct:sbs1sos" /> </multicast> 
 			<camel:stop /> </split> </loop> </camel:route> -->
 
 		<camel:route>
 			<camel:from uri="direct:trackgeneration" />
-			<multicast stopOnException="false">
+			<camel:multicast stopOnException="false">
 				<camel:when>
 					<simple>${properties:websocket.enabled}</simple>
 					<camel:to ref="websocketClientJSONEndpoint" />
@@ -116,29 +116,34 @@
 					<camel:stop />
 				</camel:otherwise>
 				
-				<camel:to uri="direct:featuresos" />
-			</multicast>
+				<camel:to uri="direct:sos" />
+			</camel:multicast>
 		</camel:route>
 
 
 		<camel:route autoStartup="true">
 			<camel:from uri="direct:sbs1" />
-			<unmarshal ref="bindyDataformat" />
-			<log message="Converted: ${body}" />
-			<process ref="sbs1Processor" />
-			<multicast stopOnException="false">
-				<to uri="direct:websocket" />
-				<to uri="direct:sos" />
-			</multicast>
+			<camel:unmarshal ref="bindyDataformat" />
+			<camel:log message="Converted: ${body}" />
+			<camel:process ref="sbs1Processor" />
+			<camel:multicast stopOnException="false">
+				<camel:to uri="direct:sbs1websocket" />
+				<camel:to uri="direct:sbs1sos" />
+			</camel:multicast>
 			<camel:stop />
+		</camel:route>
+
+		<camel:route>
+			<camel:from uri="direct:sbs1websocket" />
+			<convertBodyTo type="ch.trackdata.sbs1route.message.Feature" />
+			<!-- <process ref="sbs1DataAggregatorProcessor" />-->
+			<camel:to uri="direct:websocket" />
 		</camel:route>
 
 		<camel:route>
 			<camel:from uri="direct:websocket" />
 			<camel:when>
 				<simple>${properties:websocket.enabled}</simple>
-				<process ref="sbs1DataAggregatorProcessor" />
-				<log message="${body}" logName="JSON" />
 				<camel:to ref="websocketClientJSONEndpoint" />
 			</camel:when>
 			<camel:otherwise>
@@ -147,13 +152,13 @@
 		</camel:route>
 
 		<camel:route>
-			<camel:from uri="direct:sos" />
-			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
-			<camel:to uri="direct:featuresos" />
+			<camel:from uri="direct:sbs1sos" />
+			<convertBodyTo type="ch.trackdata.sbs1route.message.Feature" />
+			<camel:to uri="direct:sos" />
 		</camel:route>
 
 		<camel:route>
-			<camel:from uri="direct:featuresos" />
+			<camel:from uri="direct:sos" />
 			<camel:choice>
 				<camel:when>
 					<simple>${properties:sos.enabled}</simple>

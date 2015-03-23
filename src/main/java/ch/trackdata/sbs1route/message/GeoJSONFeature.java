@@ -1,5 +1,6 @@
 package ch.trackdata.sbs1route.message;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.commons.collections4.MapUtils;
@@ -16,8 +17,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author stue
  * 
  */
-public class GeoJSONFeature<T extends AbstractGeometry<?>> {
+public class GeoJSONFeature<T extends AbstractGeometry<?>> implements Feature<T>, Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private static final String GEOMETRY_PROPERTY_NAME = "geometry";
 	private static final String PROPERTIES_PROPERTY_NAME = "properties";
 	
@@ -79,15 +82,10 @@ public class GeoJSONFeature<T extends AbstractGeometry<?>> {
 		return type;
 	}
 
-	/**
-	 * Returns the Property Casted as type of the given clazz
-	 * 
-	 * @param propertyName
-	 *            the property to return
-	 * @param clazz
-	 *            the clazz
-	 * @return the property casted as clazz
+	/* (non-Javadoc)
+	 * @see ch.trackdata.sbs1route.message.Feat#getProperty(java.lang.String, java.lang.Class)
 	 */
+	@Override
 	public <O> O getProperty(String propertyName, Class<O> clazz) {
 		if (MapUtils.isNotEmpty(properties) && properties.containsKey(propertyName)) {
 			return clazz.cast(properties.get(propertyName));

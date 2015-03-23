@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.camel.ProducerTemplate;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -19,8 +20,6 @@ import ch.trackdata.sbs1route.message.TrackPositionMessage;
  * the results are written into the producer {@link #producerTemplate}
  */
 public class RandomTrackGenerator implements InitializingBean {
-
-	private static final double RADIANS_TO_DEGREE_FACTOR = Math.PI / 180;
 
 	private static final double KNOTS_TO_KMH_FACTOR = 1.852;
 
@@ -225,8 +224,8 @@ public class RandomTrackGenerator implements InitializingBean {
 		double absolutDistance = kmhGroundSpeed * (double) updateInterval / 3600000;
 
 		double heading = trackPosition.getHeading();
-		double latitudeDelta = absolutDistance * Math.cos(heading * RADIANS_TO_DEGREE_FACTOR) / 100;
-		double longitudeDelta = absolutDistance * Math.sin(heading * RADIANS_TO_DEGREE_FACTOR) / 100;
+		double latitudeDelta = absolutDistance * Math.cos(Math.toRadians(heading)) / 100.0;
+		double longitudeDelta = absolutDistance * Math.sin(Math.toRadians(heading)) / 100.0;
 
 		trackPosition.setGeometry(currentLongitude + longitudeDelta, currentLatitude + latitudeDelta);
 	}
@@ -435,7 +434,10 @@ public class RandomTrackGenerator implements InitializingBean {
 						updateTrackPosition(trackPosition);
 					}
 					LOGGER.info("Sending Tracks");
-					producerTemplate.sendBody(trackPositions.get(currentTrack));
+					
+					TrackPositionMessage trackPosition = trackPositions.get(currentTrack);
+					
+					producerTemplate.sendBody(removeSomeProperties(trackPosition));
 					
 					currentTrack = ++currentTrack%amountOfTracks;
 					
@@ -445,6 +447,40 @@ public class RandomTrackGenerator implements InitializingBean {
 					LOGGER.warn("General Exception", e);
 				}
 			}
+		}
+
+		/**
+		 * Does clone the given {@link TrackPositionMessage} and remove some random properties
+		 * 
+		 * @param trackPosition the trackPosition
+		 * @return a clone of the given trackPosition with less properties 
+		 */
+		private TrackPositionMessage removeSomeProperties(TrackPositionMessage trackPosition) {
+			TrackPositionMessage trackPositionClone = SerializationUtils.clone(trackPosition);
+			
+			if(doRemoveProperty()){
+				trackPositionClone.setGeometry(null);
+			}
+			if(doRemoveProperty()){
+				trackPositionClone.setHeading(null);
+			}
+			if(doRemoveProperty()){
+				trackPositionClone.setAltitude(null);
+			}
+			if(doRemoveProperty()){
+				trackPositionClone.setCallSign(null);
+			}
+			if(doRemoveProperty()){
+				trackPositionClone.setIsOnGround((Boolean)null);
+			}
+			return trackPositionClone;
+		}
+		
+		/**
+		 * @return does randomly return true
+		 */
+		private boolean doRemoveProperty() {
+			return random.nextInt(5)>=4;
 		}
 	}
 

@@ -3,6 +3,7 @@ package ch.trackdata.sbs1route.message;
 import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -13,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class PointGeometry extends AbstractGeometry<Double[]> {
 
+	private static final long serialVersionUID = 1L;
+	
 	public static final String POINT_TYPE_STRING = "Point";
 
 	/**
@@ -73,6 +76,7 @@ public class PointGeometry extends AbstractGeometry<Double[]> {
 	/**
 	 * @return the longitude if set otherwise null
 	 */
+	@JsonIgnore
 	public Double getLongitude(){
 		Double[] pointCoordinates = getCoordinates();
 		if(pointCoordinates != null){
@@ -84,6 +88,7 @@ public class PointGeometry extends AbstractGeometry<Double[]> {
 	/**
 	 * @return the latitude if set otherwise null
 	 */
+	@JsonIgnore
 	public Double getLatitude(){
 		Double[] pointCoordinates = getCoordinates();
 		if(pointCoordinates != null){
@@ -96,6 +101,7 @@ public class PointGeometry extends AbstractGeometry<Double[]> {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@JsonIgnore
 	public String getType() {
 		return POINT_TYPE_STRING;
 	}

@@ -11,7 +11,7 @@ import org.apache.commons.collections4.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.trackdata.sbs1route.message.GeoJSONFeature;
+import ch.trackdata.sbs1route.message.Feature;
 import ch.trackdata.sbs1route.message.PointGeometry;
 
 /**
@@ -24,7 +24,7 @@ public class TrackPositionMessageFilter implements Predicate<Message> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TrackPositionMessageFilter.class);
 
-	private Collection<Predicate<GeoJSONFeature<PointGeometry>>> predicates;
+	private Collection<Predicate<Feature<PointGeometry>>> predicates;
 
 	/**
 	 * {@inheritDoc}
@@ -32,11 +32,11 @@ public class TrackPositionMessageFilter implements Predicate<Message> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean evaluate(Message message) {
-		GeoJSONFeature<PointGeometry> object;
+		Feature<PointGeometry> object;
 		try {
-			object = message.getMandatoryBody(GeoJSONFeature.class);
-			if (object instanceof GeoJSONFeature && CollectionUtils.isNotEmpty(predicates)) {
-				for (Predicate<GeoJSONFeature<PointGeometry>> predicate : predicates) {
+			object = message.getMandatoryBody(Feature.class);
+			if (object instanceof Feature && CollectionUtils.isNotEmpty(predicates)) {
+				for (Predicate<Feature<PointGeometry>> predicate : predicates) {
 					if (!predicate.evaluate(object)) {
 						return false;
 					}
@@ -52,14 +52,14 @@ public class TrackPositionMessageFilter implements Predicate<Message> {
 	/**
 	 * @return the predicates
 	 */
-	public Collection<Predicate<GeoJSONFeature<PointGeometry>>> getPredicates() {
+	public Collection<Predicate<Feature<PointGeometry>>> getPredicates() {
 		return predicates;
 	}
 
 	/**
 	 * @param predicates a collection of the predicates to set
 	 */
-	public void setPredicates(Collection<Predicate<GeoJSONFeature<PointGeometry>>> predicates) {
+	public void setPredicates(Collection<Predicate<Feature<PointGeometry>>> predicates) {
 		LOGGER.trace("Set Predicates");
 		this.predicates = predicates;
 	}
@@ -67,7 +67,7 @@ public class TrackPositionMessageFilter implements Predicate<Message> {
 	/**
 	 * @param predicate a single predicate to set
 	 */
-	public void setPredicate(Predicate<GeoJSONFeature<PointGeometry>> predicate) {
+	public void setPredicate(Predicate<Feature<PointGeometry>> predicate) {
 		LOGGER.trace("Single Predicate set");
 		this.predicates = Collections.singleton(predicate);
 	}

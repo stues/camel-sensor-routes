@@ -1,6 +1,6 @@
 package ch.trackdata.sbs1route.converter.insertobservation;
 
-import ch.trackdata.sbs1route.message.GeoJSONFeature;
+import ch.trackdata.sbs1route.message.Feature;
 
 /**
  * Extends a {@link AbstractGeometryPropertyConfiguration} to be able to
@@ -31,7 +31,7 @@ public class TextPropertyConfiguration extends AbstractPropertyConfiguration<Str
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getValue(GeoJSONFeature<?> feature) {
+	public String getValue(Feature<?> feature) {
 		return feature.getProperty(getFeatureTextPropertyName(), String.class);
 	}
 }

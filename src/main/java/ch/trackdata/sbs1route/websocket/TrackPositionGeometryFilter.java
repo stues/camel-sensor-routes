@@ -4,7 +4,7 @@ import org.apache.commons.collections4.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.trackdata.sbs1route.message.GeoJSONFeature;
+import ch.trackdata.sbs1route.message.Feature;
 import ch.trackdata.sbs1route.message.PointGeometry;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -19,7 +19,7 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author stue
  */
-public class TrackPositionGeometryFilter implements Predicate<GeoJSONFeature<PointGeometry>> {
+public class TrackPositionGeometryFilter implements Predicate<Feature<PointGeometry>> {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(TrackPositionGeometryFilter.class);
@@ -45,14 +45,14 @@ public class TrackPositionGeometryFilter implements Predicate<GeoJSONFeature<Poi
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean evaluate(GeoJSONFeature<PointGeometry> trackPositionMessage) {
+	public boolean evaluate(Feature<PointGeometry> trackPositionMessage) {
 		if(geometry != null){
 			Point position = GeometryConverterHelper.getGeometry(trackPositionMessage.getGeometry());
-			if(position != null && !geometry.contains(position)){
-				return false;
+			if(position != null && geometry.contains(position)){
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 	
 	/**

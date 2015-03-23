@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.camel.Converter;
 import org.apache.commons.beanutils.BeanMap;
 
+import ch.trackdata.sbs1route.message.Feature;
 import ch.trackdata.sbs1route.message.GeoJSONFeature;
 import ch.trackdata.sbs1route.message.PointGeometry;
 import ch.trackdata.sbs1route.message.SBS1Message;
@@ -15,7 +16,7 @@ import ch.trackdata.sbs1route.message.SBS1Message;
  * @author stue
  */
 @Converter
-public class SBS1ToGeoJSONConverter {
+public class SBS1ToFeatureConverter {
 
 	/**
 	 * Converts the given {@link SBS1Message} into a {@link GeoJSONFeature}
@@ -25,9 +26,8 @@ public class SBS1ToGeoJSONConverter {
 	 * @return the {@link GeoJSONFeature} object
 	 */
 	@Converter
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static GeoJSONFeature<?> convert(SBS1Message sbs1Message) {
-		Map sbs1Map = new BeanMap(sbs1Message);
+	public static Feature<PointGeometry> convert(SBS1Message sbs1Message) {
+		Map<String, Object> properties = getProperties(sbs1Message);
 		PointGeometry pointGeometry;
 		if(sbs1Message.getLatitude() != null || sbs1Message.getLongitude() != null){
 			pointGeometry = new PointGeometry(sbs1Message.getLongitude(), sbs1Message.getLatitude());
@@ -35,7 +35,17 @@ public class SBS1ToGeoJSONConverter {
 		else{
 			pointGeometry = null;
 		}
-		GeoJSONFeature<?> geoJSONFeature = new GeoJSONFeature<PointGeometry>(pointGeometry, sbs1Map);
+		GeoJSONFeature<PointGeometry> geoJSONFeature = new GeoJSONFeature<PointGeometry>(pointGeometry, properties);
 		return geoJSONFeature;
+	}
+
+	/**
+	 * Extracts all the values from the sbs1Message into a String to Object Map
+	 * @param sbs1Message the message
+	 * @return a map which contains property name to value entries
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static Map<String,Object> getProperties(SBS1Message sbs1Message) {
+		return (Map)new BeanMap(sbs1Message);
 	}
 }

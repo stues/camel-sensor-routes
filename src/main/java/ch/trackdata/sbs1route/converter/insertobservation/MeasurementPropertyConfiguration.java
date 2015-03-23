@@ -1,6 +1,6 @@
 package ch.trackdata.sbs1route.converter.insertobservation;
 
-import ch.trackdata.sbs1route.message.GeoJSONFeature;
+import ch.trackdata.sbs1route.message.Feature;
 
 /**
  * Extends the {@link AbstractPropertyConfiguration} to describe 
@@ -66,7 +66,7 @@ public class MeasurementPropertyConfiguration extends AbstractPropertyConfigurat
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Number getValue(GeoJSONFeature<?> feature) {
+	public Number getValue(Feature<?> feature) {
 		return feature.getProperty(getFeatureMeasurementPropertyName(), getFeatureMeasurementPropertyClazz());
 	}
 }

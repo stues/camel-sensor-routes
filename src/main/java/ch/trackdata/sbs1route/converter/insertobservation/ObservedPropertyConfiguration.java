@@ -1,6 +1,6 @@
 package ch.trackdata.sbs1route.converter.insertobservation;
 
-import ch.trackdata.sbs1route.message.GeoJSONFeature;
+import ch.trackdata.sbs1route.message.Feature;
 
 /**
  * A interface which can be used to describe a Observation including a ObservedProperty
@@ -49,6 +49,6 @@ public interface ObservedPropertyConfiguration<T> {
 	/**
 	 * @return the observed value
 	 */
-	public abstract T getValue(GeoJSONFeature<?> feature);
+	public abstract T getValue(Feature<?> feature);
 	
 }

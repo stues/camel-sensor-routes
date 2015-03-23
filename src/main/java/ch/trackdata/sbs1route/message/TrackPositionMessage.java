@@ -9,14 +9,17 @@ import org.apache.commons.lang3.time.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * Extends the GeoJSONFeature with some utility methods to instantiate a {@link TrackPositionMessage}
+ * Extends the GeoJSONFeature with some utility methods to instantiate a
+ * {@link TrackPositionMessage}
  * 
- * It also provides some getter and setter methods for the Mode-S Attributes 
+ * It also provides some getter and setter methods for the Mode-S Attributes
  * 
  * @author stue
  */
 public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 
+	private static final long serialVersionUID = 1L;
+	
 	public static String HEX_PROPERTY_NAME = "hexIdent";
 	public static String CALLSIGN_PROPERTY_NAME = "callsign";
 	public static String ALTITUDE_PROPERTY_NAME = "altitude";
@@ -36,7 +39,7 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	}
 
 	/**
-	 * @return the hex id as {@link String} 
+	 * @return the hex id as {@link String}
 	 */
 	@JsonIgnore
 	public String getHex() {
@@ -44,14 +47,19 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	}
 
 	/**
-	 * @param hex the hex id to set
+	 * @param hex
+	 *            the hex id to set
 	 */
 	public void setHex(String hex) {
-		getProperties().put(HEX_PROPERTY_NAME, hex);
+		if(hex != null){
+			getProperties().put(HEX_PROPERTY_NAME, hex);
+		} else {
+			getProperties().remove(HEX_PROPERTY_NAME);
+		}
 	}
 
 	/**
-	 * @return the call sign as {@link String} 
+	 * @return the call sign as {@link String}
 	 */
 	@JsonIgnore
 	public String getCallSign() {
@@ -59,14 +67,19 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	}
 
 	/**
-	 * @param callSign the call sign to set
+	 * @param callSign
+	 *            the call sign to set
 	 */
 	public void setCallSign(String callSign) {
-		getProperties().put(CALLSIGN_PROPERTY_NAME, callSign);
+		if (callSign != null) {
+			getProperties().put(CALLSIGN_PROPERTY_NAME, callSign);
+		} else {
+			getProperties().remove(CALLSIGN_PROPERTY_NAME);
+		}
 	}
 
 	/**
-	 * @return the heading as {@link Integer} 
+	 * @return the heading as {@link Integer}
 	 */
 	@JsonIgnore
 	public Integer getHeading() {
@@ -74,11 +87,15 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	}
 
 	public void setHeading(Integer heading) {
-		getProperties().put(HEADING_PROPERTY_NAME, heading);
+		if (heading != null) {
+			getProperties().put(HEADING_PROPERTY_NAME, heading);
+		} else {
+			getProperties().remove(HEADING_PROPERTY_NAME);
+		}
 	}
 
 	/**
-	 * @return the altitude as {@link Integer} 
+	 * @return the altitude as {@link Integer}
 	 */
 	@JsonIgnore
 	public Integer getAltitude() {
@@ -86,10 +103,15 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	}
 
 	/**
-	 * @param altitude the altitude to set
+	 * @param altitude
+	 *            the altitude to set
 	 */
 	public void setAltitude(Integer altitude) {
-		getProperties().put(ALTITUDE_PROPERTY_NAME, altitude);
+		if (altitude != null) {
+			getProperties().put(ALTITUDE_PROPERTY_NAME, altitude);
+		} else {
+			getProperties().remove(ALTITUDE_PROPERTY_NAME);
+		}
 	}
 
 	/**
@@ -101,10 +123,15 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	}
 
 	/**
-	 * @param groundSpeed the ground speed to set
+	 * @param groundSpeed
+	 *            the ground speed to set
 	 */
 	public void setGroundSpeed(Integer groundSpeed) {
-		getProperties().put(GROUND_SPEED_NAME, groundSpeed);
+		if (groundSpeed != null) {
+			getProperties().put(GROUND_SPEED_NAME, groundSpeed);
+		} else {
+			getProperties().remove(GROUND_SPEED_NAME);
+		}
 	}
 
 	/**
@@ -113,40 +140,54 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	@JsonIgnore
 	public Boolean isOnGround() {
 		Integer isOnGround = getProperty(IS_ON_GROUND_PROPERTY_NAME, Integer.class);
-		return isOnGround != null ? 
-				isOnGround != 0 ? true : false : false;
+		return isOnGround != null ? isOnGround != 0 ? true : false : false;
 	}
 
 	/**
-	 * @param isOnGround whether the aircraft is on ground or not (true if on ground otherwise false)
+	 * @param isOnGround
+	 *            whether the aircraft is on ground or not (true if on ground
+	 *            otherwise false)
 	 */
 	public void setIsOnGround(Boolean isOnGround) {
-		setIsOnGround(isOnGround ? -1 : 0);
+		if (isOnGround != null) {
+			setIsOnGround(isOnGround ? -1 : 0);
+		} else {
+			setIsOnGround((Integer) null);
+		}
 	}
 
 	/**
-	 * @param isOnGround whether the aircraft is on ground or not (-1 if on ground otherwise 0)
+	 * @param isOnGround
+	 *            whether the aircraft is on ground or not (-1 if on ground
+	 *            otherwise 0)
 	 */
 	public void setIsOnGround(Integer isOnGround) {
-		getProperties().put(IS_ON_GROUND_PROPERTY_NAME, isOnGround);
+		if (isOnGround != null) {
+			getProperties().put(IS_ON_GROUND_PROPERTY_NAME, isOnGround);
+		} else {
+			getProperties().remove(IS_ON_GROUND_PROPERTY_NAME);
+		}
 	}
 
 	/**
-	 * Sets the geometry with longitude and latitude 
-	 * @param longitude the longitude
-	 * @param latitude the latitude
+	 * Sets the geometry with longitude and latitude
+	 * 
+	 * @param longitude
+	 *            the longitude
+	 * @param latitude
+	 *            the latitude
 	 */
 	public void setGeometry(Double longitude, Double latitude) {
-		if(getGeometry() == null){
+		if (getGeometry() == null) {
 			setGeometry(new PointGeometry(longitude, latitude));
-		}
-		else{
+		} else {
 			getGeometry().setCoordinates(longitude, latitude);
 		}
 	}
 
 	/**
-	 * @param messageReceived sets the date when the message was received from the system
+	 * @param messageReceived
+	 *            sets the date when the message was received from the system
 	 */
 	public void setMessageReceived(Date messageReceived) {
 		this.messageReceived = messageReceived;
@@ -162,13 +203,20 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 
 	/**
 	 * Sets the message generated date as to strings
-	 * @param dateString the date string
-	 * @param timeString the time string
+	 * 
+	 * @param dateString
+	 *            the date string
+	 * @param timeString
+	 *            the time string
 	 */
 	public void setMessageGenerated(String dateString, String timeString) {
 		try {
-			Date date = DateUtils.parseDate(dateString + " " + timeString, "yyyy/MM/dd HH:mm:ss.S");
-			getProperties().put(DATE_TIME_MESSAGE_GENERATED_NAME, date);
+			if (dateString != null && timeString != null) {
+				Date date = DateUtils.parseDate(dateString + " " + timeString, "yyyy/MM/dd HH:mm:ss.S");
+				getProperties().put(DATE_TIME_MESSAGE_GENERATED_NAME, date);
+			} else {
+				getProperties().remove(DATE_TIME_MESSAGE_GENERATED_NAME);
+			}
 		} catch (ParseException e) {
 			// No Valid date,do Nothing
 		}
@@ -176,12 +224,18 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 
 	/**
 	 * Sets the message generated date
-	 * @param messageGenerated the daten when the message has been generated 
+	 * 
+	 * @param messageGenerated
+	 *            the daten when the message has been generated
 	 */
 	public void setMessageGenerated(Date messageGgenerated) {
+		if (messageGgenerated != null) {
 			getProperties().put(DATE_TIME_MESSAGE_GENERATED_NAME, messageGgenerated);
+		} else {
+			getProperties().remove(DATE_TIME_MESSAGE_GENERATED_NAME);
+		}
 	}
-	
+
 	/**
 	 * @return when the message was generated
 	 */

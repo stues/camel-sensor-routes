@@ -27,16 +27,16 @@ import net.opengis.sos.v_2_0_0.InsertObservationType.Observation;
 import org.apache.commons.collections4.CollectionUtils;
 
 import ch.trackdata.sbs1route.message.AbstractGeometry;
-import ch.trackdata.sbs1route.message.GeoJSONFeature;
+import ch.trackdata.sbs1route.message.Feature;
 
 /**
- * This Helper class provides a Method {@link #getInsertObservation} to transform a given {@link geoJSONFeature}
+ * This Helper class provides a Method {@link #getInsertObservation} to transform a given {@link Feature}
  * into a {@link JAXBElement} which contains a {@link InsertObservationType}
  * 
  * @author stue
  *
  */
-public class InserObservationJAXBHelper {
+public class InsertObservationJAXBHelper {
 
 	private static final DateFormat GML_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
@@ -48,12 +48,12 @@ public class InserObservationJAXBHelper {
 	 * Creates a new {@link InsertObservationType} as {@link JAXBElement} for the given feature with the given configuration
 	 * 
 	 * @param configuration the configuration
-	 * @param geoJSONFeature the feature
+	 * @param feature the feature
 	 * 
 	 * @return the {@link JAXBElement} which contains a {@link InsertObservationType}
 	 */
 	@SuppressWarnings("unchecked")
-	public static JAXBElement<InsertObservationType> getInsertObservation(InsertObservationSOSV2Configuration configuration, GeoJSONFeature<?> geoJSONFeature) {
+	public static JAXBElement<InsertObservationType> getInsertObservation(InsertObservationSOSV2Configuration configuration, Feature<?> feature) {
 
 		List<Observation> observations = new LinkedList<Observation>();
 		boolean firstEntry = true;
@@ -61,14 +61,14 @@ public class InserObservationJAXBHelper {
 			for (ObservedPropertyConfiguration<?> observedPropertyConfiguration : configuration.getObservedProperties()) {
 				
 				if(observedPropertyConfiguration.isCreateNullValueMessages() ||
-						observedPropertyConfiguration.getValue(geoJSONFeature) != null){
+						observedPropertyConfiguration.getValue(feature) != null){
 					
 					if (observedPropertyConfiguration instanceof MeasurementPropertyConfiguration) {
-						observations.add(getMeasurementObservation((MeasurementPropertyConfiguration) observedPropertyConfiguration, geoJSONFeature, firstEntry));
+						observations.add(getMeasurementObservation((MeasurementPropertyConfiguration) observedPropertyConfiguration, feature, firstEntry));
 					} else if (observedPropertyConfiguration instanceof AbstractGeometryPropertyConfiguration) {
-						observations.add(getGeometryObservation((AbstractGeometryPropertyConfiguration<? extends AbstractGeometry<?>>) observedPropertyConfiguration, geoJSONFeature, firstEntry));
+						observations.add(getGeometryObservation((AbstractGeometryPropertyConfiguration<? extends AbstractGeometry<?>>) observedPropertyConfiguration, feature, firstEntry));
 					} else if (observedPropertyConfiguration instanceof TextPropertyConfiguration) {
-						observations.add(getTextObservation((TextPropertyConfiguration) observedPropertyConfiguration, geoJSONFeature, firstEntry));
+						observations.add(getTextObservation((TextPropertyConfiguration) observedPropertyConfiguration, feature, firstEntry));
 					}
 					firstEntry = false;
 				}
@@ -89,10 +89,10 @@ public class InserObservationJAXBHelper {
 	 * Creates a new TextObservation for the given PropertyConfiguration
 	 * 
 	 * @param propertyConfiguration the property configuration
-	 * @param feature the GeoJSON feature
+	 * @param feature the feature
 	 * @return the generated Geometry Observation
 	 */
-	private static Observation getTextObservation(TextPropertyConfiguration propertyConfiguration, GeoJSONFeature<?> feature, boolean firstEntry) {
+	private static Observation getTextObservation(TextPropertyConfiguration propertyConfiguration, Feature<?> feature, boolean firstEntry) {
 		OMObservationType omObservation = new OMObservationType();
 		createObservationNoResult(propertyConfiguration.getObservationName(), propertyConfiguration.getProcedure(), propertyConfiguration.getObservedProperty(), feature,
 				propertyConfiguration.getFeatureOfInterestPrefix(), propertyConfiguration.getFeatureIdentPropertyName(), propertyConfiguration.getFeatureTitlePropertyName(),
@@ -112,10 +112,10 @@ public class InserObservationJAXBHelper {
 	 * Creates a new MeasurementObservation for the given PropertyConfiguration
 	 * 
 	 * @param propertyConfiguration the property configuration
-	 * @param feature the GeoJSON feature
+	 * @param feature the feature
 	 * @return the generated Geometry Observation
 	 */
-	private static Observation getMeasurementObservation(MeasurementPropertyConfiguration propertyConfiguration, GeoJSONFeature<?> feature, boolean firstEntry) {
+	private static Observation getMeasurementObservation(MeasurementPropertyConfiguration propertyConfiguration, Feature<?> feature, boolean firstEntry) {
 		OMObservationType omObservation = new OMObservationType();
 		createObservationNoResult(propertyConfiguration.getObservationName(), propertyConfiguration.getProcedure(), propertyConfiguration.getObservedProperty(), feature,
 				propertyConfiguration.getFeatureOfInterestPrefix(), propertyConfiguration.getFeatureIdentPropertyName(), propertyConfiguration.getFeatureTitlePropertyName(),
@@ -138,10 +138,10 @@ public class InserObservationJAXBHelper {
 	 * Creates a new GeometryObservation for the given PropertyConfiguration
 	 * 
 	 * @param propertyConfiguration the property configuration
-	 * @param feature the GeoJSON feature
+	 * @param feature the feature
 	 * @return the generated Geometry Observation
 	 */
-	private static Observation getGeometryObservation(AbstractGeometryPropertyConfiguration<? extends AbstractGeometry<?>> propertyConfiguration, GeoJSONFeature<?> feature, boolean firstEntry) {
+	private static Observation getGeometryObservation(AbstractGeometryPropertyConfiguration<? extends AbstractGeometry<?>> propertyConfiguration, Feature<?> feature, boolean firstEntry) {
 		OMObservationType omObservation = new OMObservationType();
 		createObservationNoResult(propertyConfiguration.getObservationName(), 
 				propertyConfiguration.getProcedure(), 
@@ -181,14 +181,14 @@ public class InserObservationJAXBHelper {
 	 * @param observationName the name of this observation
 	 * @param procedure the procedure
 	 * @param observedProperty the observed property
-	 * @param feature the GeoJSON feature
+	 * @param feature the feature
 	 * @param featureOfInterestPrefix the prefix of the feature of interest
 	 * @param featureIdentPropertyName the property name of the identifier of the feature of interest
 	 * @param featureTitlePropertyName the property name of the title of the feature of interest
 	 * @param firstEntry whether this is the first entry or not (important for references)
 	 * @param omObservation the object to fill
 	 */
-	private static void createObservationNoResult(String observationName, String procedure, String observedProperty, GeoJSONFeature<?> feature, String featureOfInterestPrefix,
+	private static void createObservationNoResult(String observationName, String procedure, String observedProperty, Feature<?> feature, String featureOfInterestPrefix,
 			String featureIdentPropertyName, String featureTitlePropertyName, boolean firstEntry, OMObservationType omObservation) {
 		omObservation.setId(observationName);
 		if (firstEntry) {
@@ -222,7 +222,7 @@ public class InserObservationJAXBHelper {
 	 * @param featureTitlePropertyName the property name of the title of the feature of interest
 	 * @return the created {@link FeaturePropertyType} instance
 	 */
-	private static FeaturePropertyType getFeatureOfInterestType(GeoJSONFeature<?> feature, 
+	private static FeaturePropertyType getFeatureOfInterestType(Feature<?> feature, 
 			String featureOfInterestPrefix, 
 			String featureIdentPropertyName, 
 			String featureTitlePropertyName) {

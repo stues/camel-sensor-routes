@@ -14,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class PolygonGeometry extends AbstractGeometry<List<List<Double[]>>> {
 
+	private static final long serialVersionUID = 1L;
+	
 	public static final String POLYGON_TYPE_STRING = "Polygon";
 
 	/**

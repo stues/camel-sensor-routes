@@ -11,10 +11,17 @@
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
        http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<bean id="sbs1Parser" class="ch.trackdata.sbs1route.SBS1Parser" />
+	<bean id="sbs1ProducerAdapter" class="ch.trackdata.sbs1route.SBS1ProducerAdapter">
+		<property name="producerTemplate" ref="sbs1Producer" />
+	</bean>
 
-	<bean id="bindyDataformat"
-		class="org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat">
+	<bean id="sbs1Processor" class="ch.trackdata.sbs1route.SBS1Processor" />
+	
+	<bean id="sbs1DataAggregatorProcessor" class="ch.trackdata.sbs1route.SBS1DataAggregatorProcessor">
+		<property name="cleanupInterval" value="${aggregator.cleanupInterval}" />
+	</bean>
+
+	<bean id="bindyDataformat" class="org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat">
 		<constructor-arg value="ch.trackdata.sbs1route.message" />
 	</bean>
 
@@ -22,13 +29,8 @@
 		<property name="enabled" value="${sbs1.enabled}" />
 		<property name="host" value="${sbs1.host}" />
 		<property name="port" value="${sbs1.port}" />
-		<property name="SBS1Parser" ref="sbs1Parser" />
+		<property name="SBS1ProducerAdapter" ref="sbs1ProducerAdapter" />
 	</bean>  
-
-	<bean id="sbs1Processor" class="ch.trackdata.sbs1route.SBS1Processor" />
-	<bean id="sbs1DataAggregatorProcessor" class="ch.trackdata.sbs1route.SBS1DataAggregatorProcessor">
-		<property name="cleanupInterval" value="${aggregator.cleanupInterval}" />
-	</bean>
 
 	<bean id="camelStartupListener" class="ch.trackdata.sbs1route.CamelStartupListener">
 		<property name="camelContext" ref="sbs1RouteCamelContext" />

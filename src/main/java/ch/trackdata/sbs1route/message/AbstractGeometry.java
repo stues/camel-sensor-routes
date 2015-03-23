@@ -21,8 +21,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(
     	value = PolygonGeometry.class,
     	name = PolygonGeometry.POLYGON_TYPE_STRING)})
-public abstract class AbstractGeometry<C> {
+public abstract class AbstractGeometry<C> implements Geometry<C> {
 
+	private static final long serialVersionUID = 1L;
+	
 	public static final String TYPE_PROPERTY_NAME = "type";
 	public static final String COORDINATES_PROPERTY_NAME = "coordinates";
 
@@ -31,22 +33,24 @@ public abstract class AbstractGeometry<C> {
 	private C coordinates;
 
 	/**
-	 * @return the coordinates
+	 * {@inheritDoc}
 	 */
+	@Override
 	public C getCoordinates() {
 		return coordinates;
 	}
 
 	/**
-	 * @param coordinates
-	 *            the coordinates to set
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setCoordinates(C coordinates) {
 		this.coordinates = coordinates;
 	}
 
 	/**
-	 * @return the type
+	 * {@inheritDoc}
 	 */
+	@Override
 	public abstract String getType();
 }

@@ -1,7 +1,7 @@
 package ch.trackdata.sbs1route.converter.insertobservation;
 
-import ch.trackdata.sbs1route.message.AbstractGeometry;
-import ch.trackdata.sbs1route.message.GeoJSONFeature;
+import ch.trackdata.sbs1route.message.Feature;
+import ch.trackdata.sbs1route.message.Geometry;
 
 /**
  * Extends the {@link AbstractPropertyConfiguration} with further attributes for
@@ -12,7 +12,7 @@ import ch.trackdata.sbs1route.message.GeoJSONFeature;
  * @param <T>
  *            the Type of Object which will be added as result
  */
-public class AbstractGeometryPropertyConfiguration<T extends AbstractGeometry<?>> extends AbstractPropertyConfiguration<T> {
+public class AbstractGeometryPropertyConfiguration<T extends Geometry<?>> extends AbstractPropertyConfiguration<T> {
 
 	private String geometryMeasurementPropertyName;
 
@@ -70,7 +70,7 @@ public class AbstractGeometryPropertyConfiguration<T extends AbstractGeometry<?>
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public T getValue(GeoJSONFeature<?> feature) {
+	public T getValue(Feature<?> feature) {
 		if (useFeatureGeometry) {
 			return (T) feature.getGeometry();
 		} else {

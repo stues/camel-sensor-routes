@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 @Converter
-public class StringToGeoJSONConverter {
+public class StringToGeoJSONFeatureConverter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FilterWebsocketProcessor.class);
 
