@@ -5,7 +5,6 @@ import java.util.Map;
 import org.apache.camel.Converter;
 import org.apache.commons.beanutils.BeanMap;
 
-import ch.trackdata.sbs1route.message.Feature;
 import ch.trackdata.sbs1route.message.GeoJSONFeature;
 import ch.trackdata.sbs1route.message.PointGeometry;
 import ch.trackdata.sbs1route.message.SBS1Message;
@@ -26,7 +25,7 @@ public class SBS1ToFeatureConverter {
 	 * @return the {@link GeoJSONFeature} object
 	 */
 	@Converter
-	public static Feature<PointGeometry> convert(SBS1Message sbs1Message) {
+	public static GeoJSONFeature<PointGeometry> convert(SBS1Message sbs1Message) {
 		Map<String, Object> properties = getProperties(sbs1Message);
 		PointGeometry pointGeometry;
 		if(sbs1Message.getLatitude() != null || sbs1Message.getLongitude() != null){

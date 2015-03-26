@@ -135,7 +135,7 @@
 
 		<camel:route>
 			<camel:from uri="direct:sbs1websocket" />
-			<convertBodyTo type="ch.trackdata.sbs1route.message.Feature" />
+			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
 			<!-- <process ref="sbs1DataAggregatorProcessor" />-->
 			<camel:to uri="direct:websocket" />
 		</camel:route>
