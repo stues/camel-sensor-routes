@@ -37,7 +37,7 @@
         <appender-ref ref="INSERT_OBSERVATION_LOGGER"/>
     </logger>
     
-    <root level="ERROR">
+    <root level="WARN">
     <appender-ref ref="CONSOLE"/>
     <appender-ref ref="FILE"/>
     </root>

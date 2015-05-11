@@ -40,6 +40,12 @@
 				<prop key="generator.amountOfTracks">20</prop>
 				<prop key="generator.updateInterval">200</prop>
 				<prop key="aggregator.cleanupInterval">30000</prop>
+				
+				<prop key="generator.useVariableInterval">false</prop>
+				<prop key="generator.variableInterval.startAmount">1</prop>
+				<prop key="generator.variableInterval.stepAmount">10</prop>
+				<prop key="generator.variableInterval.stepSize">1</prop>
+				<prop key="generator.variableInterval.stepDuration">30000</prop>
 			</props>
 		</property>
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
@@ -60,7 +66,9 @@
 		<property name="producerTemplate" ref="generatedTrackProducer" />
 		<property name="enabled" value="${generator.enabled}" />
 		<property name="amountOfTracks" value="${generator.amountOfTracks}" />
-		<property name="updateInterval" value="${generator.updateInterval}" />
+		<property name="useVariableInterval" value="${generator.useVariableInterval}" />
+		<property name="fixGeneratorInterval" ref="fixGeneratorInterval" />
+		<property name="variableGeneratorInterval" ref="variableGeneratorInterval" />
 		<property name="minLatitude" value="44" />
 		<property name="maxLatitude" value="49" />
 		<property name="minLongitude" value="4.5" />
@@ -69,7 +77,19 @@
 		<property name="maxSpeedDelta" value="40" />
 		<property name="maxHeadingDelta" value="40" />
 	</bean>
+	
+	<bean id="fixGeneratorInterval" class="ch.trackdata.sbs1route.generator.FixGeneratorInterval">
+		<property name="updateInterval" value="${generator.updateInterval}" />
+		<property name="randomTrackGenerator" ref="randomTrackGenerator" />
+	</bean>
 
+	<bean id="variableGeneratorInterval" class="ch.trackdata.sbs1route.generator.VariableGeneratorInterval">
+		<property name="startTrackAmount" value="${generator.variableInterval.startAmount}" />
+		<property name="amountOfSteps" value="${generator.variableInterval.stepAmount}" />
+		<property name="stepSize" value="${generator.variableInterval.stepSize}" />
+		<property name="stepDuration" value="${generator.variableInterval.stepDuration}" />
+		<property name="randomTrackGenerator" ref="randomTrackGenerator" />
+	</bean>
 
 	<camel:camelContext id="sbs1RouteCamelContext"
 		xmlns="http://camel.apache.org/schema/spring">

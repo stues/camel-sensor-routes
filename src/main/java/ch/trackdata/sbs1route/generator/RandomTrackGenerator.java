@@ -19,7 +19,7 @@ import ch.trackdata.sbs1route.message.TrackPositionMessage;
  * and moves them according the defined interval {@link #updateInterval}
  * the results are written into the producer {@link #producerTemplate}
  */
-public class RandomTrackGenerator implements InitializingBean {
+public class RandomTrackGenerator implements InitializingBean{
 
 	private static final double KNOTS_TO_KMH_FACTOR = 1.852;
 
@@ -44,8 +44,12 @@ public class RandomTrackGenerator implements InitializingBean {
 	
 	private boolean generating = false;
 
-	private int updateInterval;
-
+	private TrackGeneratorIntervalAware fixGeneratorInterval;
+	
+	private TrackGeneratorIntervalAware variableGeneratorInterval;
+	
+	private boolean useVariableInterval = false;
+	
 	private int amountOfTracks;
 
 	private Thread offlineSourceThread;
@@ -53,10 +57,9 @@ public class RandomTrackGenerator implements InitializingBean {
 	private ProducerTemplate producerTemplate;
 
 	private final Random random = new Random();
-
+	
 	/**
-	 * Called after all spring properties are set Instantiate the Array and
-	 * start the update thread
+	 * Instantiate the Array and start the update thread
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -131,7 +134,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	/**
 	 * Starts the Track Generation
 	 */
-	public void generateTracks() {
+	protected void generateTracks() {
 		LOGGER.info("Connecting Source");
 		if (isTrackGenerating() && offlineSourceThread != null) {
 			generating = false;
@@ -221,7 +224,7 @@ public class RandomTrackGenerator implements InitializingBean {
 		double currentLatitude = geometry.getLatitude();
 
 		final double kmhGroundSpeed = trackPosition.getGroundSpeed() * KNOTS_TO_KMH_FACTOR;
-		double absolutDistance = kmhGroundSpeed * (double) updateInterval / 3600000;
+		double absolutDistance = kmhGroundSpeed * (double) getUpdateInterval() / 3600000;
 
 		double heading = trackPosition.getHeading();
 		double latitudeDelta = absolutDistance * Math.cos(Math.toRadians(heading)) / 100.0;
@@ -265,14 +268,12 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the updateInterval
 	 */
 	public int getUpdateInterval() {
-		return updateInterval;
-	}
-
-	/**
-	 * @param updateInterval the updateInterval to set
-	 */
-	public void setUpdateInterval(int updateInterval) {
-		this.updateInterval = updateInterval;
+		if(useVariableInterval){
+			return variableGeneratorInterval.getUpdateInterval();
+		}
+		else{
+			return fixGeneratorInterval.getUpdateInterval();
+		}
 	}
 
 	/**
@@ -414,6 +415,50 @@ public class RandomTrackGenerator implements InitializingBean {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+	
+
+
+	/**
+	 * @return the fixGeneratorInterval
+	 */
+	public TrackGeneratorIntervalAware getFixGeneratorInterval() {
+		return fixGeneratorInterval;
+	}
+
+	/**
+	 * @param fixGeneratorInterval the fixGeneratorInterval to set
+	 */
+	public void setFixGeneratorInterval(TrackGeneratorIntervalAware fixGeneratorInterval) {
+		this.fixGeneratorInterval = fixGeneratorInterval;
+	}
+
+	/**
+	 * @return the variableGeneratorInterval
+	 */
+	public TrackGeneratorIntervalAware getVariableGeneratorInterval() {
+		return variableGeneratorInterval;
+	}
+
+	/**
+	 * @param variableGeneratorInterval the variableGeneratorInterval to set
+	 */
+	public void setVariableGeneratorInterval(TrackGeneratorIntervalAware variableGeneratorInterval) {
+		this.variableGeneratorInterval = variableGeneratorInterval;
+	}
+
+	/**
+	 * @return the useVariableInterval
+	 */
+	public boolean isUseVariableInterval() {
+		return useVariableInterval;
+	}
+
+	/**
+	 * @param useVariableInterval the useVariableInterval to set
+	 */
+	public void setUseVariableInterval(boolean useVariableInterval) {
+		this.useVariableInterval = useVariableInterval;
+	}
 
 	/**
 	 * Runnable which updates the Track Information from time to time
@@ -428,8 +473,8 @@ public class RandomTrackGenerator implements InitializingBean {
 		public void run() {
 			while (generating) {
 				try {
-					LOGGER.info("Tracks send - sleeping for " + updateInterval / 1000 + "s");
-					Thread.sleep(updateInterval);
+					LOGGER.info("Tracks send - sleeping for " + getUpdateInterval() / 1000 + "s");
+					Thread.sleep(getUpdateInterval());
 					for (TrackPositionMessage trackPosition: trackPositions) {
 						updateTrackPosition(trackPosition);
 					}
