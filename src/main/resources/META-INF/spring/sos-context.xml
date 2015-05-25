@@ -21,7 +21,7 @@
 		class="ch.trackdata.sbs1route.converter.insertobservation.TextPropertyConfiguration">
 		<property name="observationName" value="callsignObservation" />
 		<property name="procedure"
-			value="http://stue.ch/sensorobservation/procedure/flighttracking" />
+			value="http://stue.ch/sensorobservation/procedure/sbs-1" />
 		<property name="observedProperty"
 			value="http://stue.ch/sensorobservation/observableProperty/callsign" />
 		<property name="featureOfInterestPrefix" ref="featureOfInterestPrefix" />
@@ -44,7 +44,7 @@
 		class="ch.trackdata.sbs1route.converter.insertobservation.MeasurementPropertyConfiguration">
 		<property name="observationName" value="speedObservation" />
 		<property name="procedure"
-			value="http://stue.ch/sensorobservation/procedure/flighttracking" />
+			value="http://stue.ch/sensorobservation/procedure/sbs-1" />
 		<property name="observedProperty"
 			value="http://stue.ch/sensorobservation/observableProperty/speed" />
 		<property name="featureOfInterestPrefix" ref="featureOfInterestPrefix" />
@@ -69,7 +69,7 @@
 		class="ch.trackdata.sbs1route.converter.insertobservation.MeasurementPropertyConfiguration">
 		<property name="observationName" value="altitudeObservation" />
 		<property name="procedure"
-			value="http://stue.ch/sensorobservation/procedure/flighttracking" />
+			value="http://stue.ch/sensorobservation/procedure/sbs-1" />
 		<property name="observedProperty"
 			value="http://stue.ch/sensorobservation/observableProperty/altitude" />
 		<property name="featureOfInterestPrefix" ref="featureOfInterestPrefix" />
@@ -81,7 +81,7 @@
 			<util:constant
 				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
 		</property>
-		<property name="measureUom" value="urn:x-ogc:def:property:OGC::Altitude" />
+		<property name="measureUom" value="ft" />
 		<property name="featureMeasurementPropertyName">
 			<util:constant
 				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.ALTITUDE_PROPERTY_NAME" />
@@ -94,7 +94,7 @@
 		class="ch.trackdata.sbs1route.converter.insertobservation.MeasurementPropertyConfiguration">
 		<property name="observationName" value="headingObservation" />
 		<property name="procedure"
-			value="http://stue.ch/sensorobservation/procedure/flighttracking" />
+			value="http://stue.ch/sensorobservation/procedure/sbs-1" />
 		<property name="observedProperty"
 			value="http://stue.ch/sensorobservation/observableProperty/heading" />
 		<property name="featureOfInterestPrefix" ref="featureOfInterestPrefix" />
@@ -119,7 +119,7 @@
 		class="ch.trackdata.sbs1route.converter.insertobservation.PointGeometryPropertyConfiguration">
 		<property name="observationName" value="positionObservation" />
 		<property name="procedure"
-			value="http://stue.ch/sensorobservation/procedure/flighttracking" />
+			value="http://stue.ch/sensorobservation/procedure/sbs-1" />
 		<property name="observedProperty"
 			value="http://stue.ch/sensorobservation/observableProperty/position" />
 		<property name="featureOfInterestPrefix" ref="featureOfInterestPrefix" />
@@ -141,7 +141,7 @@
 		class="ch.trackdata.sbs1route.converter.insertobservation.InsertObservationSOSV2Configuration">
 		<property name="offerings">
 			<list>
-				<value>http://stue.ch/sensorobservation/offering/ads-b</value>
+				<value>http://stue.ch/sensorobservation/offering/flighttracking</value>
 			</list>
 		</property>
 		<property name="observedProperties">

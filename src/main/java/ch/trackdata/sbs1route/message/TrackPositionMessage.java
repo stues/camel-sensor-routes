@@ -25,7 +25,6 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	public static String ALTITUDE_PROPERTY_NAME = "altitude";
 	public static String HEADING_PROPERTY_NAME = "heading";
 	public static String GROUND_SPEED_NAME = "groundSpeed";
-	public static String IS_ON_GROUND_PROPERTY_NAME = "isOnGround";
 
 	private static String DATE_TIME_MESSAGE_GENERATED_NAME = "messageGenerated";
 
@@ -131,41 +130,6 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 			getProperties().put(GROUND_SPEED_NAME, groundSpeed);
 		} else {
 			getProperties().remove(GROUND_SPEED_NAME);
-		}
-	}
-
-	/**
-	 * @return true if aircraft on ground otherwise false
-	 */
-	@JsonIgnore
-	public Boolean isOnGround() {
-		Integer isOnGround = getProperty(IS_ON_GROUND_PROPERTY_NAME, Integer.class);
-		return isOnGround != null ? isOnGround != 0 ? true : false : false;
-	}
-
-	/**
-	 * @param isOnGround
-	 *            whether the aircraft is on ground or not (true if on ground
-	 *            otherwise false)
-	 */
-	public void setIsOnGround(Boolean isOnGround) {
-		if (isOnGround != null) {
-			setIsOnGround(isOnGround ? -1 : 0);
-		} else {
-			setIsOnGround((Integer) null);
-		}
-	}
-
-	/**
-	 * @param isOnGround
-	 *            whether the aircraft is on ground or not (-1 if on ground
-	 *            otherwise 0)
-	 */
-	public void setIsOnGround(Integer isOnGround) {
-		if (isOnGround != null) {
-			getProperties().put(IS_ON_GROUND_PROPERTY_NAME, isOnGround);
-		} else {
-			getProperties().remove(IS_ON_GROUND_PROPERTY_NAME);
 		}
 	}
 

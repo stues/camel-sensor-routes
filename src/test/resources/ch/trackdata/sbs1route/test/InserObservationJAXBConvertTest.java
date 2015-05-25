@@ -22,7 +22,7 @@ public class InserObservationJAXBConvertTest {
 	public static InsertObservationSOSV2Configuration getInsertObservationConfiguration() {
 		MeasurementPropertyConfiguration speedPropertyConfiguration = new MeasurementPropertyConfiguration();
 		speedPropertyConfiguration.setObservationName("speedObservation");
-		speedPropertyConfiguration.setProcedure("http://stue.ch/sensorobservation/procedure/flighttracking");
+		speedPropertyConfiguration.setProcedure("http://stue.ch/sensorobservation/procedure/sbs-1");
 		speedPropertyConfiguration.setObservedProperty("http://stue.ch/sensorobservation/observableProperty/speed");
 		speedPropertyConfiguration.setFeatureOfInterestPrefix(FEATURE_OF_INTEREST_HREF_PREFIX);
 		speedPropertyConfiguration.setFeatureIdentPropertyName(TrackPositionMessage.CALLSIGN_PROPERTY_NAME);
@@ -32,7 +32,7 @@ public class InserObservationJAXBConvertTest {
 
 		MeasurementPropertyConfiguration altitudePropertyConfiguration = new MeasurementPropertyConfiguration();
 		altitudePropertyConfiguration.setObservationName("altitudeObservation");
-		altitudePropertyConfiguration.setProcedure("http://stue.ch/sensorobservation/procedure/flighttracking");
+		altitudePropertyConfiguration.setProcedure("http://stue.ch/sensorobservation/procedure/sbs-1");
 		altitudePropertyConfiguration.setObservedProperty("http://stue.ch/sensorobservation/observableProperty/altitude");
 		altitudePropertyConfiguration.setFeatureOfInterestPrefix(FEATURE_OF_INTEREST_HREF_PREFIX);
 		altitudePropertyConfiguration.setFeatureIdentPropertyName(TrackPositionMessage.CALLSIGN_PROPERTY_NAME);
@@ -42,7 +42,7 @@ public class InserObservationJAXBConvertTest {
 
 		MeasurementPropertyConfiguration headingPropertyConfiguration = new MeasurementPropertyConfiguration();
 		headingPropertyConfiguration.setObservationName("headingObservation");
-		headingPropertyConfiguration.setProcedure("http://stue.ch/sensorobservation/procedure/flighttracking");
+		headingPropertyConfiguration.setProcedure("http://stue.ch/sensorobservation/procedure/sbs-1");
 		headingPropertyConfiguration.setObservedProperty("http://stue.ch/sensorobservation/observableProperty/heading");
 		headingPropertyConfiguration.setFeatureOfInterestPrefix(FEATURE_OF_INTEREST_HREF_PREFIX);
 		headingPropertyConfiguration.setFeatureIdentPropertyName(TrackPositionMessage.CALLSIGN_PROPERTY_NAME);
@@ -52,7 +52,7 @@ public class InserObservationJAXBConvertTest {
 
 		PointGeometryPropertyConfiguration positionPropertyConfiguration = new PointGeometryPropertyConfiguration();
 		positionPropertyConfiguration.setObservationName("positionObservation");
-		positionPropertyConfiguration.setProcedure("http://stue.ch/sensorobservation/procedure/flighttracking");
+		positionPropertyConfiguration.setProcedure("http://stue.ch/sensorobservation/procedure/sbs-1");
 		positionPropertyConfiguration.setObservedProperty("http://stue.ch/sensorobservation/observableProperty/position");
 		positionPropertyConfiguration.setFeatureOfInterestPrefix(FEATURE_OF_INTEREST_HREF_PREFIX);
 		positionPropertyConfiguration.setFeatureIdentPropertyName(TrackPositionMessage.CALLSIGN_PROPERTY_NAME);

@@ -90,7 +90,6 @@ public class RandomTrackGenerator implements InitializingBean{
 		trackPosition.setGeometry(getRandomPointPosition());
 		trackPosition.setMessageReceived(new Date());
 		trackPosition.setMessageGenerated(new Date());
-		trackPosition.setIsOnGround(false);
 		return trackPosition;
 	}
 
@@ -514,9 +513,6 @@ public class RandomTrackGenerator implements InitializingBean{
 			}
 			if(doRemoveProperty()){
 				trackPositionClone.setCallSign(null);
-			}
-			if(doRemoveProperty()){
-				trackPositionClone.setIsOnGround((Boolean)null);
 			}
 			return trackPositionClone;
 		}

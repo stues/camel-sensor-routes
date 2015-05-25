@@ -3,13 +3,16 @@ package ch.trackdata.sbs1route.converter.insertobservation;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import net.opengis.gml.v_3_2_1.BoundingShapeType;
 import net.opengis.gml.v_3_2_1.DirectPositionType;
+import net.opengis.gml.v_3_2_1.EnvelopeType;
 import net.opengis.gml.v_3_2_1.FeaturePropertyType;
 import net.opengis.gml.v_3_2_1.GeometryPropertyType;
 import net.opengis.gml.v_3_2_1.MeasureType;
@@ -18,6 +21,8 @@ import net.opengis.gml.v_3_2_1.ReferenceType;
 import net.opengis.gml.v_3_2_1.TimeInstantPropertyType;
 import net.opengis.gml.v_3_2_1.TimeInstantType;
 import net.opengis.gml.v_3_2_1.TimePositionType;
+import net.opengis.om.v_2_0_0.NamedValuePropertyType;
+import net.opengis.om.v_2_0_0.NamedValueType;
 import net.opengis.om.v_2_0_0.OMObservationType;
 import net.opengis.om.v_2_0_0.OMProcessPropertyType;
 import net.opengis.om.v_2_0_0.TimeObjectPropertyType;
@@ -30,27 +35,46 @@ import ch.trackdata.sbs1route.message.AbstractGeometry;
 import ch.trackdata.sbs1route.message.Feature;
 
 /**
- * This Helper class provides a Method {@link #getInsertObservation} to transform a given {@link Feature}
- * into a {@link JAXBElement} which contains a {@link InsertObservationType}
+ * This Helper class provides a Method {@link #getInsertObservation} to
+ * transform a given {@link Feature} into a {@link JAXBElement} which contains a
+ * {@link InsertObservationType}
  * 
  * @author stue
- *
+ * 
  */
 public class InsertObservationJAXBHelper {
+
+	private static final String SAMPLING_POSITION_TYPE_ID = "samplingPosition";
+
+	private static final String SAMPLING_GEOMETRY_IDENTIFIER = "http://www.opengis.net/def/param-name/OGC-OM/2.0/samplingGeometry";
 
 	private static final DateFormat GML_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
 	private static final net.opengis.om.v_2_0_0.ObjectFactory OM_OBJECT_FACTORY = new net.opengis.om.v_2_0_0.ObjectFactory();
 	private static final net.opengis.gml.v_3_2_1.ObjectFactory GML_OBJECT_FACTORY = new net.opengis.gml.v_3_2_1.ObjectFactory();
 	private static final net.opengis.sos.v_2_0_0.ObjectFactory SOS_OBJECT_FACTORY = new net.opengis.sos.v_2_0_0.ObjectFactory();
-	
+
 	/**
-	 * Creates a new {@link InsertObservationType} as {@link JAXBElement} for the given feature with the given configuration
+	 * Whether the boundedBy shape shall be added or not
+	 */
+	private static final boolean ENABLE_BOUNDED_BY = false;
+
+	/**
+	 * Whether the spatial property type shape shall be enabled or not
+	 */
+	private static final boolean SPATIAL_FILTERING = false;
+
+	/**
+	 * Creates a new {@link InsertObservationType} as {@link JAXBElement} for
+	 * the given feature with the given configuration
 	 * 
-	 * @param configuration the configuration
-	 * @param feature the feature
+	 * @param configuration
+	 *            the configuration
+	 * @param feature
+	 *            the feature
 	 * 
-	 * @return the {@link JAXBElement} which contains a {@link InsertObservationType}
+	 * @return the {@link JAXBElement} which contains a
+	 *         {@link InsertObservationType}
 	 */
 	@SuppressWarnings("unchecked")
 	public static JAXBElement<InsertObservationType> getInsertObservation(InsertObservationSOSV2Configuration configuration, Feature<?> feature) {
@@ -59,10 +83,9 @@ public class InsertObservationJAXBHelper {
 		boolean firstEntry = true;
 		if (CollectionUtils.isNotEmpty(configuration.getObservedProperties())) {
 			for (ObservedPropertyConfiguration<?> observedPropertyConfiguration : configuration.getObservedProperties()) {
-				
-				if(observedPropertyConfiguration.isCreateNullValueMessages() ||
-						observedPropertyConfiguration.getValue(feature) != null){
-					
+
+				if (observedPropertyConfiguration.isCreateNullValueMessages() || observedPropertyConfiguration.getValue(feature) != null) {
+
 					if (observedPropertyConfiguration instanceof MeasurementPropertyConfiguration) {
 						observations.add(getMeasurementObservation((MeasurementPropertyConfiguration) observedPropertyConfiguration, feature, firstEntry));
 					} else if (observedPropertyConfiguration instanceof AbstractGeometryPropertyConfiguration) {
@@ -88,15 +111,16 @@ public class InsertObservationJAXBHelper {
 	/**
 	 * Creates a new TextObservation for the given PropertyConfiguration
 	 * 
-	 * @param propertyConfiguration the property configuration
-	 * @param feature the feature
+	 * @param propertyConfiguration
+	 *            the property configuration
+	 * @param feature
+	 *            the feature
 	 * @return the generated Geometry Observation
 	 */
 	private static Observation getTextObservation(TextPropertyConfiguration propertyConfiguration, Feature<?> feature, boolean firstEntry) {
 		OMObservationType omObservation = new OMObservationType();
 		createObservationNoResult(propertyConfiguration.getObservationName(), propertyConfiguration.getProcedure(), propertyConfiguration.getObservedProperty(), feature,
-				propertyConfiguration.getFeatureOfInterestPrefix(), propertyConfiguration.getFeatureIdentPropertyName(), propertyConfiguration.getFeatureTitlePropertyName(),
-				firstEntry, omObservation);
+				propertyConfiguration.getFeatureOfInterestPrefix(), propertyConfiguration.getFeatureIdentPropertyName(), propertyConfiguration.getFeatureTitlePropertyName(), firstEntry, omObservation);
 
 		String value = propertyConfiguration.getValue(feature);
 		if (value != null) {
@@ -107,19 +131,20 @@ public class InsertObservationJAXBHelper {
 		observation.setOMObservation(omObservation);
 		return observation;
 	}
-	
+
 	/**
 	 * Creates a new MeasurementObservation for the given PropertyConfiguration
 	 * 
-	 * @param propertyConfiguration the property configuration
-	 * @param feature the feature
+	 * @param propertyConfiguration
+	 *            the property configuration
+	 * @param feature
+	 *            the feature
 	 * @return the generated Geometry Observation
 	 */
 	private static Observation getMeasurementObservation(MeasurementPropertyConfiguration propertyConfiguration, Feature<?> feature, boolean firstEntry) {
 		OMObservationType omObservation = new OMObservationType();
 		createObservationNoResult(propertyConfiguration.getObservationName(), propertyConfiguration.getProcedure(), propertyConfiguration.getObservedProperty(), feature,
-				propertyConfiguration.getFeatureOfInterestPrefix(), propertyConfiguration.getFeatureIdentPropertyName(), propertyConfiguration.getFeatureTitlePropertyName(),
-				firstEntry, omObservation);
+				propertyConfiguration.getFeatureOfInterestPrefix(), propertyConfiguration.getFeatureIdentPropertyName(), propertyConfiguration.getFeatureTitlePropertyName(), firstEntry, omObservation);
 
 		MeasureType measureType = GML_OBJECT_FACTORY.createMeasureType();
 		measureType.setUom(propertyConfiguration.getMeasureUom());
@@ -137,36 +162,54 @@ public class InsertObservationJAXBHelper {
 	/**
 	 * Creates a new GeometryObservation for the given PropertyConfiguration
 	 * 
-	 * @param propertyConfiguration the property configuration
-	 * @param feature the feature
+	 * @param propertyConfiguration
+	 *            the property configuration
+	 * @param feature
+	 *            the feature
 	 * @return the generated Geometry Observation
 	 */
 	private static Observation getGeometryObservation(AbstractGeometryPropertyConfiguration<? extends AbstractGeometry<?>> propertyConfiguration, Feature<?> feature, boolean firstEntry) {
 		OMObservationType omObservation = new OMObservationType();
-		createObservationNoResult(propertyConfiguration.getObservationName(), 
-				propertyConfiguration.getProcedure(), 
-				propertyConfiguration.getObservedProperty(), 
-				feature,
-				propertyConfiguration.getFeatureOfInterestPrefix(), 
-				propertyConfiguration.getFeatureIdentPropertyName(), 
-				propertyConfiguration.getFeatureTitlePropertyName(),
-				firstEntry, 
-				omObservation);
+		createObservationNoResult(propertyConfiguration.getObservationName(), propertyConfiguration.getProcedure(), propertyConfiguration.getObservedProperty(), feature,
+				propertyConfiguration.getFeatureOfInterestPrefix(), propertyConfiguration.getFeatureIdentPropertyName(), propertyConfiguration.getFeatureTitlePropertyName(), firstEntry, omObservation);
 
 		if (propertyConfiguration instanceof PointGeometryPropertyConfiguration) {
 			PointGeometryPropertyConfiguration pointPropertyConfiguration = (PointGeometryPropertyConfiguration) propertyConfiguration;
 			DirectPositionType positionType = GML_OBJECT_FACTORY.createDirectPositionType();
 			positionType.setSrsName(pointPropertyConfiguration.getSrsName());
-			positionType.setValue(Arrays.asList((Double[])feature.getGeometry().getCoordinates()));
+			positionType.setValue(Arrays.asList((Double[]) feature.getGeometry().getCoordinates()));
 
+			GeometryPropertyType resultPropertyType = GML_OBJECT_FACTORY.createGeometryPropertyType();
 			PointType pointType = GML_OBJECT_FACTORY.createPointType();
 			pointType.setId(pointPropertyConfiguration.getPointId());
 			pointType.setPos(positionType);
+			resultPropertyType.setAbstractGeometry(GML_OBJECT_FACTORY.createPoint(pointType));
+						
+			if (SPATIAL_FILTERING) {
+				NamedValueType namedValueType = OM_OBJECT_FACTORY.createNamedValueType();
 
-			GeometryPropertyType geometryPropertyType = GML_OBJECT_FACTORY.createGeometryPropertyType();
-			geometryPropertyType.setAbstractGeometry(GML_OBJECT_FACTORY.createPoint(pointType));
-			omObservation.setResult(geometryPropertyType);
+				ReferenceType referenceType = GML_OBJECT_FACTORY.createReferenceType();
+				referenceType.setHref(SAMPLING_GEOMETRY_IDENTIFIER);
+				namedValueType.setName(referenceType);
+				
+				GeometryPropertyType geometryPropertyType = (GeometryPropertyType) resultPropertyType.clone();
+				PointType geometryPointType = (PointType) pointType.clone();
+				geometryPointType.setId(SAMPLING_POSITION_TYPE_ID);
+				geometryPropertyType.setAbstractGeometry(GML_OBJECT_FACTORY.createPoint(geometryPointType));
 
+				namedValueType.setValue(geometryPropertyType);
+				
+				NamedValuePropertyType namedValuePropertyType = OM_OBJECT_FACTORY.createNamedValuePropertyType();
+				namedValuePropertyType.setNamedValue(namedValueType);
+				omObservation.setParameter(Collections.singletonList(namedValuePropertyType));
+			}
+			
+			omObservation.setResult(resultPropertyType);
+			
+			if (ENABLE_BOUNDED_BY) {
+				BoundingShapeType boundingShape = createBoundedByShape(pointPropertyConfiguration, positionType);
+				omObservation.setBoundedBy(boundingShape);
+			}
 		}
 
 		Observation observation = SOS_OBJECT_FACTORY.createInsertObservationTypeObservation();
@@ -174,19 +217,39 @@ public class InsertObservationJAXBHelper {
 		return observation;
 	}
 
+	private static BoundingShapeType createBoundedByShape(PointGeometryPropertyConfiguration pointPropertyConfiguration, DirectPositionType positionType) {
+		EnvelopeType envelopeType = GML_OBJECT_FACTORY.createEnvelopeType();
+		envelopeType.setSrsName(pointPropertyConfiguration.getSrsName());
+		envelopeType.setLowerCorner(positionType);
+		envelopeType.setUpperCorner(positionType);
+		BoundingShapeType boundingShape = GML_OBJECT_FACTORY.createBoundingShapeType();
+		boundingShape.setEnvelope(GML_OBJECT_FACTORY.createEnvelope(envelopeType));
+		return boundingShape;
+	}
+
 	/**
-	 * Fills the given omObservation instance with elements generated from the given parameters
-	 * no results are added to the omObservation
+	 * Fills the given omObservation instance with elements generated from the
+	 * given parameters no results are added to the omObservation
 	 * 
-	 * @param observationName the name of this observation
-	 * @param procedure the procedure
-	 * @param observedProperty the observed property
-	 * @param feature the feature
-	 * @param featureOfInterestPrefix the prefix of the feature of interest
-	 * @param featureIdentPropertyName the property name of the identifier of the feature of interest
-	 * @param featureTitlePropertyName the property name of the title of the feature of interest
-	 * @param firstEntry whether this is the first entry or not (important for references)
-	 * @param omObservation the object to fill
+	 * @param observationName
+	 *            the name of this observation
+	 * @param procedure
+	 *            the procedure
+	 * @param observedProperty
+	 *            the observed property
+	 * @param feature
+	 *            the feature
+	 * @param featureOfInterestPrefix
+	 *            the prefix of the feature of interest
+	 * @param featureIdentPropertyName
+	 *            the property name of the identifier of the feature of interest
+	 * @param featureTitlePropertyName
+	 *            the property name of the title of the feature of interest
+	 * @param firstEntry
+	 *            whether this is the first entry or not (important for
+	 *            references)
+	 * @param omObservation
+	 *            the object to fill
 	 */
 	private static void createObservationNoResult(String observationName, String procedure, String observedProperty, Feature<?> feature, String featureOfInterestPrefix,
 			String featureIdentPropertyName, String featureTitlePropertyName, boolean firstEntry, OMObservationType omObservation) {
@@ -204,7 +267,9 @@ public class InsertObservationJAXBHelper {
 
 	/**
 	 * Returns the OM process procedure for the given procedure
-	 * @param procedure the procedure string
+	 * 
+	 * @param procedure
+	 *            the procedure string
 	 * @return the generated {@link OMProcessPropertyType}
 	 */
 	private static OMProcessPropertyType getProcedure(String procedure) {
@@ -216,16 +281,17 @@ public class InsertObservationJAXBHelper {
 	/**
 	 * Returns the feature of interest for the given Parameters
 	 * 
-	 * @param feature the feature
-	 * @param featureOfInterestPrefix the prefix of the feature of interest
-	 * @param featureIdentPropertyName the property name of the identifier of the feature of interest
-	 * @param featureTitlePropertyName the property name of the title of the feature of interest
+	 * @param feature
+	 *            the feature
+	 * @param featureOfInterestPrefix
+	 *            the prefix of the feature of interest
+	 * @param featureIdentPropertyName
+	 *            the property name of the identifier of the feature of interest
+	 * @param featureTitlePropertyName
+	 *            the property name of the title of the feature of interest
 	 * @return the created {@link FeaturePropertyType} instance
 	 */
-	private static FeaturePropertyType getFeatureOfInterestType(Feature<?> feature, 
-			String featureOfInterestPrefix, 
-			String featureIdentPropertyName, 
-			String featureTitlePropertyName) {
+	private static FeaturePropertyType getFeatureOfInterestType(Feature<?> feature, String featureOfInterestPrefix, String featureIdentPropertyName, String featureTitlePropertyName) {
 		FeaturePropertyType featurePropertyType = GML_OBJECT_FACTORY.createFeaturePropertyType();
 		String identifier = feature.getProperty(featureIdentPropertyName, String.class);
 		featurePropertyType.setHref(featureOfInterestPrefix + identifier);
@@ -244,7 +310,8 @@ public class InsertObservationJAXBHelper {
 	/**
 	 * Returns a TimeObjectPropertyType for the given gmlId
 	 * 
-	 * @param gmlId the gmlId
+	 * @param gmlId
+	 *            the gmlId
 	 * @return the created {@link TimeObjectPropertyType} instance
 	 */
 	private static TimeObjectPropertyType getCurrentTimeObjectProperty(String gmlId) {
@@ -264,7 +331,8 @@ public class InsertObservationJAXBHelper {
 	/**
 	 * Returns a pheonmentTypeObject which references the given hrefId
 	 * 
-	 * @param hrefId the hrefId string
+	 * @param hrefId
+	 *            the hrefId string
 	 * @return the created {@link TimeObjectPropertyType}
 	 */
 	private static TimeObjectPropertyType getPhenomenTimeObjectPropertyHref(String hrefId) {
@@ -276,7 +344,8 @@ public class InsertObservationJAXBHelper {
 	/**
 	 * Returns a resultTimeObject which references the given hrefId
 	 * 
-	 * @param hrefId the hrefId string
+	 * @param hrefId
+	 *            the hrefId string
 	 * @return the created {@link TimeInstantPropertyType} instance
 	 */
 	private static TimeInstantPropertyType getResultTimeObjectPropertyHref(String hrefId) {
