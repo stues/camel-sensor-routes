@@ -37,6 +37,9 @@
 			<util:constant
 				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.CALLSIGN_PROPERTY_NAME" />
 		</property>
+		<property name="phenomenonTimePropertyName">
+		 	<util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME" />
+		</property>
 		<property name="createNullValueMessages" value="false" />
 	</bean>
 
@@ -62,6 +65,9 @@
 				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.GROUND_SPEED_NAME" />
 		</property>
 		<property name="featureMeasurementPropertyClazz" value="java.lang.Integer" />
+		<property name="phenomenonTimePropertyName">
+		 	<util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME" />
+		</property>
 		<property name="createNullValueMessages" value="false" />
 	</bean>
 
@@ -87,6 +93,9 @@
 				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.ALTITUDE_PROPERTY_NAME" />
 		</property>
 		<property name="featureMeasurementPropertyClazz" value="java.lang.Integer" />
+		<property name="phenomenonTimePropertyName">
+		 	<util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME" />
+		</property>
 		<property name="createNullValueMessages" value="false" />
 	</bean>
 
@@ -112,6 +121,9 @@
 				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEADING_PROPERTY_NAME" />
 		</property>
 		<property name="featureMeasurementPropertyClazz" value="java.lang.Integer" />
+		<property name="phenomenonTimePropertyName">
+		 	<util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME" />
+		</property>
 		<property name="createNullValueMessages" value="false" />
 	</bean>
 
@@ -134,14 +146,14 @@
 		<property name="useFeatureGeometry" value="true" />
 		<property name="srsName" value="http://www.opengis.net/def/crs/EPSG/0/4326" />
 		<property name="pointId" value="aircraftPosition" />
+		<property name="phenomenonTimePropertyName">
+		 	<util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME" />
+		</property>
 		<property name="createNullValueMessages" value="false" />
 	</bean>
 
 	<bean id="insertObservationConfiguration"
 		class="ch.trackdata.sbs1route.converter.insertobservation.InsertObservationSOSV2Configuration">
-		<property name="messageGeneratedPropertyName">
-		 	<util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME" />
-		</property>
 		<property name="offerings">
 			<list>
 				<value>http://stue.ch/sensorobservation/offering/flighttracking</value>
