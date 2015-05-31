@@ -25,8 +25,7 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	public static String ALTITUDE_PROPERTY_NAME = "altitude";
 	public static String HEADING_PROPERTY_NAME = "heading";
 	public static String GROUND_SPEED_NAME = "groundSpeed";
-
-	private static String DATE_TIME_MESSAGE_GENERATED_NAME = "messageGenerated";
+	public static String DATE_TIME_MESSAGE_GENERATED_NAME = "messageGenerated";
 
 	private Date messageReceived;
 
