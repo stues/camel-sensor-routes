@@ -20,7 +20,9 @@ public abstract class AbstractPropertyConfiguration<T> implements ObservedProper
 	private String featureIdentPropertyName;
 
 	private String featureTitlePropertyName;
-		
+	
+	private String phenomenonTimePropertyName;
+	
 	private boolean createNullValueMessages;
 	
 	/**
@@ -123,5 +125,19 @@ public abstract class AbstractPropertyConfiguration<T> implements ObservedProper
 	 */
 	public void setCreateNullValueMessages(boolean createNullValueMessages) {
 		this.createNullValueMessages = createNullValueMessages;
+	}
+
+	/**
+	 * @return the phenomenonTimePropertyName
+	 */
+	public String getPhenomenonTimePropertyName() {
+		return phenomenonTimePropertyName;
+	}
+
+	/**
+	 * @param phenomenonTimePropertyName the phenomenonTimePropertyName to set
+	 */
+	public void setPhenomenonTimePropertyName(String phenomenonTimePropertyName) {
+		this.phenomenonTimePropertyName = phenomenonTimePropertyName;
 	}
 }

@@ -127,6 +127,7 @@
 
 		<camel:route>
 			<camel:from uri="direct:trackgeneration" />
+			<camel:log message="${body}" logName="GEN_RECEIVED_FEATURE" />
 			<camel:multicast stopOnException="false">
 				<camel:when>
 					<simple>${properties:websocket.enabled}</simple>
@@ -144,7 +145,6 @@
 		<camel:route autoStartup="true">
 			<camel:from uri="direct:sbs1" />
 			<camel:unmarshal ref="bindyDataformat" />
-			<camel:log message="Converted: ${body}" />
 			<camel:process ref="sbs1Processor" />
 			<camel:multicast stopOnException="false">
 				<camel:to uri="direct:sbs1websocket" />
@@ -156,6 +156,7 @@
 		<camel:route>
 			<camel:from uri="direct:sbs1websocket" />
 			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
+			<camel:log message="${body}" logName="WS_RECEIVED_FEATURE" />
 			<!-- <process ref="sbs1DataAggregatorProcessor" />-->
 			<camel:to uri="direct:websocket" />
 		</camel:route>
@@ -174,6 +175,7 @@
 		<camel:route>
 			<camel:from uri="direct:sbs1sos" />
 			<convertBodyTo type="ch.trackdata.sbs1route.message.Feature" />
+			<camel:log message="${body}" logName="SOS_RECEIVED_FEATURE" />
 			<camel:to uri="direct:sos" />
 		</camel:route>
 

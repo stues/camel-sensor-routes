@@ -18,7 +18,7 @@ public class InsertObservationSOSV2Configuration {
 	private List<? extends ObservedPropertyConfiguration<?>> observedProperties;
 	
 	private List<String> offerings;
-	
+		
 	/**
 	 * @return the service
 	 */

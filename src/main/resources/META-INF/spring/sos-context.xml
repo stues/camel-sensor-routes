@@ -56,7 +56,7 @@
 			<util:constant
 				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
 		</property>
-		<property name="measureUom" value="urn:x-ogc:def:property:OGC::Speed" />
+		<property name="measureUom" value="[kn_i]" />
 		<property name="featureMeasurementPropertyName">
 			<util:constant
 				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.GROUND_SPEED_NAME" />
@@ -81,7 +81,7 @@
 			<util:constant
 				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
 		</property>
-		<property name="measureUom" value="ft" />
+		<property name="measureUom" value="[ft_i]" />
 		<property name="featureMeasurementPropertyName">
 			<util:constant
 				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.ALTITUDE_PROPERTY_NAME" />
@@ -106,7 +106,7 @@
 			<util:constant
 				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
 		</property>
-		<property name="measureUom" value="urn:x-ogc:def:property:OGC::Heading" />
+		<property name="measureUom" value="deg" />
 		<property name="featureMeasurementPropertyName">
 			<util:constant
 				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEADING_PROPERTY_NAME" />
@@ -139,6 +139,9 @@
 
 	<bean id="insertObservationConfiguration"
 		class="ch.trackdata.sbs1route.converter.insertobservation.InsertObservationSOSV2Configuration">
+		<property name="messageGeneratedPropertyName">
+		 	<util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME" />
+		</property>
 		<property name="offerings">
 			<list>
 				<value>http://stue.ch/sensorobservation/offering/flighttracking</value>
