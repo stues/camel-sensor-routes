@@ -2,8 +2,13 @@ package ch.trackdata.sbs1route.converter;
 
 import java.util.Map;
 
+import org.apache.camel.BeanInject;
 import org.apache.camel.Converter;
 import org.apache.commons.beanutils.BeanMap;
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.Predicate;
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 
 import ch.trackdata.sbs1route.message.GeoJSONFeature;
 import ch.trackdata.sbs1route.message.PointGeometry;
@@ -17,6 +22,12 @@ import ch.trackdata.sbs1route.message.SBS1Message;
 @Converter
 public class SBS1ToFeatureConverter {
 
+	@BeanInject("sbs1PropertyNamePredicate")
+	private Predicate<String> propertyNamePredicate;
+	
+	@BeanInject("sbs1ValuePredicate")
+	private Predicate<Object> valuePredicate;
+	
 	/**
 	 * Converts the given {@link SBS1Message} into a {@link GeoJSONFeature}
 	 * 
@@ -25,8 +36,11 @@ public class SBS1ToFeatureConverter {
 	 * @return the {@link GeoJSONFeature} object
 	 */
 	@Converter
-	public static GeoJSONFeature<PointGeometry> convert(SBS1Message sbs1Message) {
-		Map<String, Object> properties = getProperties(sbs1Message);
+	public GeoJSONFeature<PointGeometry> convert(SBS1Message sbs1Message) {
+		BidiMap<String, Object> properties = getProperties(sbs1Message);
+		CollectionUtils.filter(properties.values(), valuePredicate);
+		CollectionUtils.filter(properties.keySet(), propertyNamePredicate);
+		
 		PointGeometry pointGeometry;
 		if(sbs1Message.getLatitude() != null || sbs1Message.getLongitude() != null){
 			pointGeometry = new PointGeometry(sbs1Message.getLongitude(), sbs1Message.getLatitude());
@@ -44,7 +58,7 @@ public class SBS1ToFeatureConverter {
 	 * @return a map which contains property name to value entries
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static Map<String,Object> getProperties(SBS1Message sbs1Message) {
-		return (Map)new BeanMap(sbs1Message);
+	private static BidiMap<String,Object> getProperties(SBS1Message sbs1Message) {
+		return new DualHashBidiMap<String,Object>((Map)new BeanMap(sbs1Message));
 	}
 }

@@ -1,8 +1,12 @@
 package ch.trackdata.sbs1route.message;
 
+import java.text.ParseException;
+import java.util.Date;
+
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.time.DateUtils;
 
 /**
  * SBS1-Object with all provided fields
@@ -75,6 +79,8 @@ public class SBS1Message {
 
 	@DataField(pos = 22)
 	private Integer isOnGround;
+
+	private Date messageGenerated;
 
 	/**
 	 * @return the messageType
@@ -404,6 +410,43 @@ public class SBS1Message {
 	 */
 	public void setIsOnGround(Integer isOnGround) {
 		this.isOnGround = isOnGround;
+	}
+
+	/**
+	 * @return the messageGenerated
+	 */
+	public Date getMessageGenerated() {
+		return messageGenerated;
+	}
+
+	/**
+	 * @param messageGenerated
+	 *            the messageGenerated to set
+	 */
+	public void setMessageGenerated(Date messageGenerated) {
+		this.messageGenerated = messageGenerated;
+	}
+
+	/**
+	 * Updates the message generated date value
+	 */
+	protected void updateMessageGenerated() {
+		try {
+			if (dateMessageGenerated != null && timeMessageGenerated != null) {
+				Date date = DateUtils.parseDate(dateMessageGenerated + " " + timeMessageGenerated, "yyyy/MM/dd HH:mm:ss.S");
+				messageGenerated = date;
+			}
+		} catch (ParseException e) {
+			// No Valid date,do Nothing
+		}
+	}
+
+	/**
+	 * Update values within this Message after Object is generated and filled
+	 * with values
+	 */
+	public void updateValues() {
+		updateMessageGenerated();
 	}
 
 	/**

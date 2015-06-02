@@ -11,6 +11,33 @@
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
        http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd">
 
+	<bean id="sbs1PropertyNamePredicate" class="org.apache.commons.collections4.functors.AnyPredicate">
+		<constructor-arg index="0">
+			<list>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.CALLSIGN_PROPERTY_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.ALTITUDE_PROPERTY_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEADING_PROPERTY_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.GROUND_SPEED_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME"/></constructor-arg>
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<util:constant id="sbs1ValuePredicate" static-field="org.apache.commons.collections4.functors.NotNullPredicate.INSTANCE"/>
+
 	<bean id="sbs1ProducerAdapter" class="ch.trackdata.sbs1route.SBS1ProducerAdapter">
 		<property name="producerTemplate" ref="sbs1Producer" />
 	</bean>
