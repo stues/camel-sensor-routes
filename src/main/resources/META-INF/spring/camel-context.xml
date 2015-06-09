@@ -25,21 +25,24 @@
 				<prop key="sos.host">${localaddress}</prop>
 				<prop key="sos.port">8080</prop>
 				<prop key="sos.path">/52n-sos-webapp/sos/pox</prop>
+				<prop key="sos.minproperties">2</prop>
 
 				<prop key="websocket.enabled">true</prop>
 				<prop key="websocket.host">${localaddress}</prop>
 				<prop key="websocket.port">8443</prop>
 				<prop key="websocket.path">/clientTrackData</prop>
+				<prop key="websocket.minproperties">2</prop>
 
 				<prop key="sbs1.enabled">true</prop>
-				<prop key="sbs1.host"><!-- The SBS1 Station IP -->
-				</prop>
+				<prop key="sbs1.host"><!-- The SBS1 Station IP --></prop>
 				<prop key="sbs1.port">30003</prop>
+				
+				<prop key="aggregator.cleanupInterval">30000</prop>
 
 				<prop key="generator.enabled">false</prop>
 				<prop key="generator.amountOfTracks">20</prop>
 				<prop key="generator.updateInterval">200</prop>
-				<prop key="aggregator.cleanupInterval">30000</prop>
+				<prop key="generator.initialDelay">10000</prop>
 				
 				<prop key="generator.useVariableInterval">false</prop>
 				<prop key="generator.variableInterval.startAmount">1</prop>
@@ -80,15 +83,16 @@
 	
 	<bean id="fixGeneratorInterval" class="ch.trackdata.sbs1route.generator.FixGeneratorInterval">
 		<property name="updateInterval" value="${generator.updateInterval}" />
-		<property name="randomTrackGenerator" ref="randomTrackGenerator" />
+		<property name="initialDelay" value="${generator.initialDelay}" />
 	</bean>
 
 	<bean id="variableGeneratorInterval" class="ch.trackdata.sbs1route.generator.VariableGeneratorInterval">
+		<property name="enabled" value="${generator.useVariableInterval}" />
+		<property name="initialDelay" value="${generator.initialDelay}" />
 		<property name="startTrackAmount" value="${generator.variableInterval.startAmount}" />
 		<property name="amountOfSteps" value="${generator.variableInterval.stepAmount}" />
 		<property name="stepSize" value="${generator.variableInterval.stepSize}" />
 		<property name="stepDuration" value="${generator.variableInterval.stepDuration}" />
-		<property name="randomTrackGenerator" ref="randomTrackGenerator" />
 	</bean>
 
 	<camel:camelContext id="sbs1RouteCamelContext"
@@ -156,9 +160,15 @@
 		<camel:route>
 			<camel:from uri="direct:sbs1websocket" />
 			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
-			<camel:log message="${body}" logName="WS_RECEIVED_FEATURE" />
-			<!-- <process ref="sbs1DataAggregatorProcessor" />-->
-			<camel:to uri="direct:websocket" />
+			<camel:when>
+				<simple>${body.geometry} != null 
+					|| ${body.properties.size} >= ${properties:websocket.minproperties}</simple>
+				<camel:log message="${body}" logName="WS_RECEIVED_FEATURE" />
+				<camel:to uri="direct:websocket" />
+			</camel:when>
+			<camel:otherwise>
+				<camel:stop />
+			</camel:otherwise>
 		</camel:route>
 
 		<camel:route>
@@ -175,8 +185,16 @@
 		<camel:route>
 			<camel:from uri="direct:sbs1sos" />
 			<convertBodyTo type="ch.trackdata.sbs1route.message.Feature" />
-			<camel:log message="${body}" logName="SOS_RECEIVED_FEATURE" />
-			<camel:to uri="direct:sos" />
+			
+			<camel:when>
+				<simple>${body.geometry} != null 
+					|| ${body.properties.size} >= ${properties:sos.minproperties}</simple>
+				<camel:log message="${body}" logName="SOS_RECEIVED_FEATURE" />
+				<camel:to uri="direct:sos" />
+			</camel:when>
+			<camel:otherwise>
+				<camel:stop />
+			</camel:otherwise>
 		</camel:route>
 
 		<camel:route>

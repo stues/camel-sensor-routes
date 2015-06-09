@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 
 /**
  * This interface describes Classes which can be asked for a update interval
@@ -15,7 +14,7 @@ import org.springframework.beans.factory.InitializingBean;
  * @author stue
  * 
  */
-public class VariableGeneratorInterval implements TrackGeneratorIntervalAware, InitializingBean {
+public class VariableGeneratorInterval extends AbstractGeneratorInterval {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(VariableGeneratorInterval.class);
 
@@ -33,8 +32,8 @@ public class VariableGeneratorInterval implements TrackGeneratorIntervalAware, I
 
 	private AtomicInteger currentUpdateIntervall;
 
-	private RandomTrackGenerator randomTrackGenerator;
-
+	private boolean enabled;
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -124,42 +123,47 @@ public class VariableGeneratorInterval implements TrackGeneratorIntervalAware, I
 	}
 
 	/**
-	 * @return the randomTrackGenerator
+	 * Do configure and start variable interval
 	 */
-	public RandomTrackGenerator getRandomTrackGenerator() {
-		return randomTrackGenerator;
+	@Override
+	public void doStartInterval(final RandomTrackGenerator randomTrackGenerator) {
+		if(isEnabled()){
+			currentStep = 1;
+			currentUpdateIntervall = new AtomicInteger((int) ((double) 1000 / startTrackAmount));
+			if (isConfigured()) {
+				updateTimer = new Timer();
+				updateTimer.schedule(new TimerTask() {
+	
+					@Override
+					public void run() {
+						if (currentStep < amountOfSteps) {
+							int currentStepSize = startTrackAmount + (++currentStep * stepSize);
+							int newUpdateIntervall = (int) ((double) 1000 / currentStepSize);
+							currentUpdateIntervall.set(newUpdateIntervall);
+							LOGGER.warn("The new upate intervall is: " + newUpdateIntervall + "ms Next Step incease is in " + stepDuration + "ms");
+						} else {
+							updateTimer.cancel();
+							randomTrackGenerator.setEnabled(false);
+						}
+					}
+				}, stepDuration, stepDuration);
+				
+				randomTrackGenerator.generateTracks();
+			}
+		}		
 	}
 
 	/**
-	 * @param randomTrackGenerator
-	 *            the randomTrackGenerator to set
+	 * @return the enabled
 	 */
-	public void setRandomTrackGenerator(RandomTrackGenerator randomTrackGenerator) {
-		this.randomTrackGenerator = randomTrackGenerator;
+	public boolean isEnabled() {
+		return enabled;
 	}
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		currentStep = 1;
-		currentUpdateIntervall = new AtomicInteger((int) ((double) 1000 / startTrackAmount));
-//		randomTrackGenerator.setEnabled(true);
-		if (isConfigured()) {
-			updateTimer = new Timer();
-			updateTimer.schedule(new TimerTask() {
-
-				@Override
-				public void run() {
-					if (currentStep < amountOfSteps) {
-						int currentStepSize = startTrackAmount + (++currentStep * stepSize);
-						int newUpdateIntervall = (int) ((double) 1000 / currentStepSize);
-						currentUpdateIntervall.set(newUpdateIntervall);
-						LOGGER.warn("The new upate intervall is: " + newUpdateIntervall + "ms Next Step incease is in " + stepDuration + "ms");
-					} else {
-						updateTimer.cancel();
-						randomTrackGenerator.setEnabled(false);
-					}
-				}
-			}, stepDuration, stepDuration);
-		}
+	/**
+	 * @param enabled the enabled to set
+	 */
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }

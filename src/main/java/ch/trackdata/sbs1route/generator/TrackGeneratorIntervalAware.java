@@ -18,4 +18,9 @@ public interface TrackGeneratorIntervalAware {
 	 * @return whether this interval is configured or not;
 	 */
 	public boolean isConfigured();
+	
+	/**
+	 * Is called by the Track Generator to notify the interval to start
+	 */
+	public void start(RandomTrackGenerator randomTrackGenerator);
 }

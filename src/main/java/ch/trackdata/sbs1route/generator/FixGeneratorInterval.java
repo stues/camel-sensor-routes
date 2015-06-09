@@ -1,20 +1,16 @@
 package ch.trackdata.sbs1route.generator;
 
-import org.springframework.beans.factory.InitializingBean;
 
 /**
- * This interface describes Classes which can be asked for a update interval
- * duration
+ * This {@link TrackGeneratorIntervalAware} defines a Fix update interval
  * 
  * @author stue
  * 
  */
-public class FixGeneratorInterval implements TrackGeneratorIntervalAware, InitializingBean {
+public class FixGeneratorInterval extends AbstractGeneratorInterval {
 
 	private int updateInterval = -1;
 	
-	private RandomTrackGenerator randomTrackGenerator;
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -36,21 +32,10 @@ public class FixGeneratorInterval implements TrackGeneratorIntervalAware, Initia
 	}
 	
 	/**
-	 * @return the randomTrackGenerator
+	 * Start Track generation immediately
 	 */
-	public RandomTrackGenerator getRandomTrackGenerator() {
-		return randomTrackGenerator;
-	}
-
-	/**
-	 * @param randomTrackGenerator the randomTrackGenerator to set
-	 */
-	public void setRandomTrackGenerator(RandomTrackGenerator randomTrackGenerator) {
-		this.randomTrackGenerator = randomTrackGenerator;
-	}
-	
 	@Override
-	public void afterPropertiesSet() throws Exception {
-//		randomTrackGenerator.setEnabled(true);
+	public void doStartInterval(RandomTrackGenerator randomTrackGenerator) {
+		randomTrackGenerator.generateTracks();
 	}
 }

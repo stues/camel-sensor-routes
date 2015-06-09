@@ -75,7 +75,7 @@
 		<appender-ref ref="WS_RECEIVED_FEATURE_LOGGER" />
 	</logger>
 
-	<root level="WARN">
+	<root level="INFO">
 		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="FILE" />
 	</root>

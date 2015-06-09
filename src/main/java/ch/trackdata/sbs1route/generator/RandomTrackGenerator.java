@@ -71,7 +71,7 @@ public class RandomTrackGenerator implements InitializingBean{
 				trackPositions.add(trackPosition);
 			}
 	
-			generateTracks();
+			getUpdateIntervalAware().start(this);
 		}
 	}
 
@@ -133,7 +133,7 @@ public class RandomTrackGenerator implements InitializingBean{
 	/**
 	 * Starts the Track Generation
 	 */
-	protected void generateTracks() {
+	public void generateTracks() {
 		LOGGER.info("Connecting Source");
 		if (isTrackGenerating() && offlineSourceThread != null) {
 			generating = false;
@@ -267,12 +267,19 @@ public class RandomTrackGenerator implements InitializingBean{
 	 * @return the updateInterval
 	 */
 	public int getUpdateInterval() {
+		return getUpdateIntervalAware().getUpdateInterval();
+	}
+	
+	/**
+	 * @return the current update interval aware instance
+	 */
+	public TrackGeneratorIntervalAware getUpdateIntervalAware(){
 		if(useVariableInterval){
-			return variableGeneratorInterval.getUpdateInterval();
+			return variableGeneratorInterval;
 		}
 		else{
-			return fixGeneratorInterval.getUpdateInterval();
-		}
+			return fixGeneratorInterval;
+		}		
 	}
 
 	/**
@@ -477,7 +484,6 @@ public class RandomTrackGenerator implements InitializingBean{
 					for (TrackPositionMessage trackPosition: trackPositions) {
 						updateTrackPosition(trackPosition);
 					}
-					LOGGER.info("Sending Tracks");
 					
 					TrackPositionMessage trackPosition = trackPositions.get(currentTrack);
 					
