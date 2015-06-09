@@ -135,10 +135,8 @@ public class RandomTrackGenerator implements InitializingBean{
 	 */
 	public void generateTracks() {
 		LOGGER.info("Connecting Source");
-		if (isTrackGenerating() && offlineSourceThread != null) {
-			generating = false;
-			offlineSourceThread.interrupt();
-			offlineSourceThread = null;
+		if (isTrackGenerating()) {
+			disconnectSource();
 		}
 		generating = true;
 		offlineSourceThread = new Thread(new GeneratorRunnable());
@@ -157,7 +155,11 @@ public class RandomTrackGenerator implements InitializingBean{
 	 * Stops offline source generating and updating tracks.
 	 */
 	public void disconnectSource() {
-		generating = true;
+		if (isTrackGenerating() && offlineSourceThread != null) {
+			offlineSourceThread.interrupt();
+			offlineSourceThread = null;
+		}
+		generating = false;
 	}
 
 	/**
@@ -492,7 +494,7 @@ public class RandomTrackGenerator implements InitializingBean{
 					currentTrack = ++currentTrack%amountOfTracks;
 					
 				} catch (InterruptedException e) {
-					LOGGER.warn("Problems with thread ", e);
+					LOGGER.debug("Thread has been interrupted", e);
 				} catch (Exception e) {
 					LOGGER.warn("General Exception", e);
 				}

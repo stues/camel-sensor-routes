@@ -43,12 +43,14 @@
 				<prop key="generator.amountOfTracks">20</prop>
 				<prop key="generator.updateInterval">200</prop>
 				<prop key="generator.initialDelay">10000</prop>
+				<prop key="generator.duration">0</prop>
 				
 				<prop key="generator.useVariableInterval">false</prop>
 				<prop key="generator.variableInterval.startAmount">1</prop>
 				<prop key="generator.variableInterval.stepAmount">10</prop>
 				<prop key="generator.variableInterval.stepSize">1</prop>
 				<prop key="generator.variableInterval.stepDuration">30000</prop>
+				<prop key="generator.variableInterval.delayBetweenSteps">2000</prop>
 			</props>
 		</property>
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
@@ -84,6 +86,7 @@
 	<bean id="fixGeneratorInterval" class="ch.trackdata.sbs1route.generator.FixGeneratorInterval">
 		<property name="updateInterval" value="${generator.updateInterval}" />
 		<property name="initialDelay" value="${generator.initialDelay}" />
+		<property name="duration" value="${generator.duration}" />
 	</bean>
 
 	<bean id="variableGeneratorInterval" class="ch.trackdata.sbs1route.generator.VariableGeneratorInterval">
@@ -93,6 +96,7 @@
 		<property name="amountOfSteps" value="${generator.variableInterval.stepAmount}" />
 		<property name="stepSize" value="${generator.variableInterval.stepSize}" />
 		<property name="stepDuration" value="${generator.variableInterval.stepDuration}" />
+		<property name="delayBetweenSteps" value="${generator.variableInterval.delayBetweenSteps}" />
 	</bean>
 
 	<camel:camelContext id="sbs1RouteCamelContext"

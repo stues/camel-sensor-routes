@@ -44,9 +44,11 @@
 
 	<bean id="sbs1Processor" class="ch.trackdata.sbs1route.SBS1Processor" />
 	
-	<bean id="sbs1DataAggregatorProcessor" class="ch.trackdata.sbs1route.SBS1DataAggregatorProcessor">
-		<property name="cleanupInterval" value="${aggregator.cleanupInterval}" />
-	</bean>
+	<!-- 
+		<bean id="sbs1DataAggregatorProcessor" class="ch.trackdata.sbs1route.SBS1DataAggregatorProcessor">
+			<property name="cleanupInterval" value="${aggregator.cleanupInterval}" />
+		</bean>
+	 -->
 
 	<bean id="bindyDataformat" class="org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat">
 		<constructor-arg value="ch.trackdata.sbs1route.message" />
