@@ -31,13 +31,13 @@
 				<prop key="websocket.host">${localaddress}</prop>
 				<prop key="websocket.port">8443</prop>
 				<prop key="websocket.path">/clientTrackData</prop>
-				<prop key="websocket.minproperties">2</prop>
 
 				<prop key="sbs1.enabled">true</prop>
 				<prop key="sbs1.host"><!-- The SBS1 Station IP -->
 				</prop>
 				<prop key="sbs1.port">30003</prop>
 
+				<prop key="filter.minproperties">3</prop>
 				<prop key="filter.duplicates.cleanupInterval">30000</prop>
 
 				<prop key="generator.enabled">false</prop>
@@ -162,7 +162,7 @@
 			<camel:process ref="filterDuplicateValueProcessor"></camel:process>
 			<camel:when>
 				<simple>${body.geometry} != null 
-					|| ${body.properties.size} >= ${properties:websocket.minproperties}</simple>
+					|| ${body.properties.size} >= ${properties:filter.minproperties}</simple>
 				<camel:log message="${body}" logName="RECEIVED_FEATURE" />
 				<camel:multicast stopOnException="false">
 					<camel:to uri="direct:websocket" />
