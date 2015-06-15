@@ -91,7 +91,8 @@ public class FilterDuplicateValueProcessor implements Processor {
 	 * @param cachedFeature the cached feature
 	 * @return the updated feature
 	 */
-	private GeoJSONFeature<?> updateFeature(GeoJSONFeature<?> feature, GeoJSONFeature<?> cachedFeature) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private GeoJSONFeature<?> updateFeature(GeoJSONFeature feature, GeoJSONFeature cachedFeature) {
 
 		Map<String, Object> featureProperties = feature.getProperties();
 		Map<String, Object> cachedProperties = cachedFeature.getProperties();
@@ -109,6 +110,17 @@ public class FilterDuplicateValueProcessor implements Processor {
 			if(!(property.equals(idProperty) || property.equals(comparableDateProperty))){
 				cachedProperties.put(property, featureProperties.get(property));
 			}
+		}
+
+		if(cachedFeature.getGeometry() != null){
+			if(feature.getGeometry() != null){
+				if(feature.getGeometry().equals(cachedFeature.getGeometry())){
+					feature.setGeometry(null);
+				}
+			}
+		}
+		else{
+			cachedFeature.setGeometry(feature.getGeometry());
 		}
 		
 		return feature;

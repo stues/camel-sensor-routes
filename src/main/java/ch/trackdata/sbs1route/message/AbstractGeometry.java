@@ -28,7 +28,6 @@ public abstract class AbstractGeometry<C> implements Geometry<C> {
 	public static final String TYPE_PROPERTY_NAME = "type";
 	public static final String COORDINATES_PROPERTY_NAME = "coordinates";
 
-
 	@JsonProperty(COORDINATES_PROPERTY_NAME)
 	private C coordinates;
 
@@ -53,4 +52,48 @@ public abstract class AbstractGeometry<C> implements Geometry<C> {
 	 */
 	@Override
 	public abstract String getType();
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((coordinates == null) ? 0 : coordinates.hashCode());
+		result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		AbstractGeometry<?> other = (AbstractGeometry<?>) obj;
+		if (coordinates == null) {
+			if (other.coordinates != null) {
+				return false;
+			}
+		} else if (!coordinates.equals(other.coordinates)) {
+			return false;
+		}
+		if (getType() == null) {
+			if (other.getType() != null) {
+				return false;
+			}
+		} else if (!getType().equals(other.getType())) {
+			return false;
+		}
+		return true;
+	}
 }
