@@ -16,7 +16,7 @@ import ch.trackdata.sbs1route.message.SBS1Message;
 public class SBS1Processor implements Processor {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(SBS1Processor.class);
-
+	
 	/**
 	 * {@inheritDoc}
 	 */

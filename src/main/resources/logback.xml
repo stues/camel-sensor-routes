@@ -51,28 +51,16 @@
 		<appender-ref ref="GEN_RECEIVED_FEATURE_LOGGER" />
 	</logger>
 
-	<appender class="ch.qos.logback.core.FileAppender" name="SOS_RECEIVED_FEATURE_LOGGER">
-		<file>datareceiver-SOS_RECEIVED_FEATURE.log</file>
+	<appender class="ch.qos.logback.core.FileAppender" name="RECEIVED_FEATURE_LOGGER">
+		<file>datareceiver-RECEIVED_FEATURE.log</file>
 		<append>false</append>
 		<encoder>
 			<pattern>%m%n</pattern>
 		</encoder>
 	</appender>
 
-	<logger additivity="false" level="INFO" name="SOS_RECEIVED_FEATURE">
-		<appender-ref ref="SOS_RECEIVED_FEATURE_LOGGER" />
-	</logger>
-
-	<appender class="ch.qos.logback.core.FileAppender" name="WS_RECEIVED_FEATURE_LOGGER">
-		<file>datareceiver-WS_RECEIVED_FEATURE.log</file>
-		<append>false</append>
-		<encoder>
-			<pattern>%m%n</pattern>
-		</encoder>
-	</appender>
-
-	<logger additivity="false" level="INFO" name="WS_RECEIVED_FEATURE">
-		<appender-ref ref="WS_RECEIVED_FEATURE_LOGGER" />
+	<logger additivity="false" level="INFO" name="RECEIVED_FEATURE">
+		<appender-ref ref="RECEIVED_FEATURE_LOGGER" />
 	</logger>
 
 	<root level="INFO">

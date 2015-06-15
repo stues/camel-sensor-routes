@@ -44,11 +44,11 @@
 
 	<bean id="sbs1Processor" class="ch.trackdata.sbs1route.SBS1Processor" />
 	
-	<!-- 
-		<bean id="sbs1DataAggregatorProcessor" class="ch.trackdata.sbs1route.SBS1DataAggregatorProcessor">
-			<property name="cleanupInterval" value="${aggregator.cleanupInterval}" />
-		</bean>
-	 -->
+	<bean id="filterDuplicateValueProcessor" class="ch.trackdata.sbs1route.FilterDuplicateValueProcessor">
+		<property name="cleanupInterval" value="${filter.duplicates.cleanupInterval}" />
+		<property name="idProperty"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME"/></property>
+		<property name="comparableDateProperty"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME"/></property>
+	</bean>
 
 	<bean id="bindyDataformat" class="org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat">
 		<constructor-arg value="ch.trackdata.sbs1route.message" />

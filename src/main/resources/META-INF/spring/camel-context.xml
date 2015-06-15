@@ -34,17 +34,18 @@
 				<prop key="websocket.minproperties">2</prop>
 
 				<prop key="sbs1.enabled">true</prop>
-				<prop key="sbs1.host"><!-- The SBS1 Station IP --></prop>
+				<prop key="sbs1.host"><!-- The SBS1 Station IP -->
+				</prop>
 				<prop key="sbs1.port">30003</prop>
-				
-				<prop key="aggregator.cleanupInterval">30000</prop>
+
+				<prop key="filter.duplicates.cleanupInterval">30000</prop>
 
 				<prop key="generator.enabled">false</prop>
 				<prop key="generator.amountOfTracks">20</prop>
 				<prop key="generator.updateInterval">200</prop>
 				<prop key="generator.initialDelay">10000</prop>
 				<prop key="generator.duration">0</prop>
-				
+
 				<prop key="generator.useVariableInterval">false</prop>
 				<prop key="generator.variableInterval.startAmount">1</prop>
 				<prop key="generator.variableInterval.stepAmount">10</prop>
@@ -82,21 +83,23 @@
 		<property name="maxSpeedDelta" value="40" />
 		<property name="maxHeadingDelta" value="40" />
 	</bean>
-	
+
 	<bean id="fixGeneratorInterval" class="ch.trackdata.sbs1route.generator.FixGeneratorInterval">
 		<property name="updateInterval" value="${generator.updateInterval}" />
 		<property name="initialDelay" value="${generator.initialDelay}" />
 		<property name="duration" value="${generator.duration}" />
 	</bean>
 
-	<bean id="variableGeneratorInterval" class="ch.trackdata.sbs1route.generator.VariableGeneratorInterval">
+	<bean id="variableGeneratorInterval"
+		class="ch.trackdata.sbs1route.generator.VariableGeneratorInterval">
 		<property name="enabled" value="${generator.useVariableInterval}" />
 		<property name="initialDelay" value="${generator.initialDelay}" />
 		<property name="startTrackAmount" value="${generator.variableInterval.startAmount}" />
 		<property name="amountOfSteps" value="${generator.variableInterval.stepAmount}" />
 		<property name="stepSize" value="${generator.variableInterval.stepSize}" />
 		<property name="stepDuration" value="${generator.variableInterval.stepDuration}" />
-		<property name="delayBetweenSteps" value="${generator.variableInterval.delayBetweenSteps}" />
+		<property name="delayBetweenSteps"
+			value="${generator.variableInterval.delayBetweenSteps}" />
 	</bean>
 
 	<camel:camelContext id="sbs1RouteCamelContext"
@@ -107,7 +110,8 @@
 
 		<camel:template id="sbs1Producer" defaultEndpoint="direct:sbs1" />
 
-		<camel:template id="generatedTrackProducer"	defaultEndpoint="direct:trackgeneration" />
+		<camel:template id="generatedTrackProducer"
+			defaultEndpoint="direct:trackgeneration" />
 
 		<!-- Websocket Endpoint -->
 		<camel:endpoint id="websocketClientJSONEndpoint"
@@ -130,8 +134,8 @@
 			/> <loop> <constant>99999</constant> <split streaming="true"> <tokenize token="\n" 
 			/> <delay asyncDelayed="true"> <constant>1000</constant> </delay> <convertBodyTo 
 			type="ch.trackdata.sbs1route.message.GeoJSONFeature" /> <multicast stopOnException="false"> 
-			<camel:to ref="websocketClientJSONEndpoint" /> <to uri="direct:sbs1sos" /> </multicast> 
-			<camel:stop /> </split> </loop> </camel:route> -->
+			<camel:to ref="websocketClientJSONEndpoint" /> <to uri="direct:sbs1sos" /> 
+			</multicast> <camel:stop /> </split> </loop> </camel:route> -->
 
 		<camel:route>
 			<camel:from uri="direct:trackgeneration" />
@@ -144,7 +148,7 @@
 				<camel:otherwise>
 					<camel:stop />
 				</camel:otherwise>
-				
+
 				<camel:to uri="direct:sos" />
 			</camel:multicast>
 		</camel:route>
@@ -154,25 +158,22 @@
 			<camel:from uri="direct:sbs1" />
 			<camel:unmarshal ref="bindyDataformat" />
 			<camel:process ref="sbs1Processor" />
-			<camel:multicast stopOnException="false">
-				<camel:to uri="direct:sbs1websocket" />
-				<camel:to uri="direct:sbs1sos" />
-			</camel:multicast>
-			<camel:stop />
-		</camel:route>
-
-		<camel:route>
-			<camel:from uri="direct:sbs1websocket" />
 			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
+			<camel:process ref="filterDuplicateValueProcessor"></camel:process>
 			<camel:when>
 				<simple>${body.geometry} != null 
 					|| ${body.properties.size} >= ${properties:websocket.minproperties}</simple>
-				<camel:log message="${body}" logName="WS_RECEIVED_FEATURE" />
-				<camel:to uri="direct:websocket" />
+				<camel:log message="${body}" logName="RECEIVED_FEATURE" />
+				<camel:multicast stopOnException="false">
+					<camel:to uri="direct:websocket" />
+					<camel:to uri="direct:sos" />
+				</camel:multicast>
 			</camel:when>
 			<camel:otherwise>
 				<camel:stop />
 			</camel:otherwise>
+
+			<camel:stop />
 		</camel:route>
 
 		<camel:route>
@@ -180,21 +181,6 @@
 			<camel:when>
 				<simple>${properties:websocket.enabled}</simple>
 				<camel:to ref="websocketClientJSONEndpoint" />
-			</camel:when>
-			<camel:otherwise>
-				<camel:stop />
-			</camel:otherwise>
-		</camel:route>
-
-		<camel:route>
-			<camel:from uri="direct:sbs1sos" />
-			<convertBodyTo type="ch.trackdata.sbs1route.message.Feature" />
-			
-			<camel:when>
-				<simple>${body.geometry} != null 
-					|| ${body.properties.size} >= ${properties:sos.minproperties}</simple>
-				<camel:log message="${body}" logName="SOS_RECEIVED_FEATURE" />
-				<camel:to uri="direct:sos" />
 			</camel:when>
 			<camel:otherwise>
 				<camel:stop />
