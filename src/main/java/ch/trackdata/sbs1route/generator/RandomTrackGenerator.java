@@ -482,7 +482,10 @@ public class RandomTrackGenerator implements InitializingBean{
 			while (generating) {
 				try {
 					LOGGER.info("Tracks send - sleeping for " + getUpdateInterval() / 1000 + "s");
-					Thread.sleep(getUpdateInterval());
+					int updateDuration = getUpdateInterval(); 
+					if(updateDuration > 0){
+						Thread.sleep(getUpdateInterval());
+					}
 					for (TrackPositionMessage trackPosition: trackPositions) {
 						updateTrackPosition(trackPosition);
 					}

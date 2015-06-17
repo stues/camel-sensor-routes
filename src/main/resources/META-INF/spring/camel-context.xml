@@ -172,8 +172,6 @@
 			<camel:otherwise>
 				<camel:stop />
 			</camel:otherwise>
-
-			<camel:stop />
 		</camel:route>
 
 		<camel:route>
