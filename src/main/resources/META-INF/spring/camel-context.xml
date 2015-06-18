@@ -45,7 +45,8 @@
 				<prop key="generator.updateInterval">200</prop>
 				<prop key="generator.initialDelay">10000</prop>
 				<prop key="generator.duration">0</prop>
-
+				<prop key="generator.trackAmountPerInterval">1</prop>
+				
 				<prop key="generator.useVariableInterval">false</prop>
 				<prop key="generator.variableInterval.startAmount">1</prop>
 				<prop key="generator.variableInterval.stepAmount">10</prop>
@@ -88,6 +89,7 @@
 		<property name="updateInterval" value="${generator.updateInterval}" />
 		<property name="initialDelay" value="${generator.initialDelay}" />
 		<property name="duration" value="${generator.duration}" />
+		<property name="trackAmount" value="${generator.trackAmountPerInterval}" />
 	</bean>
 
 	<bean id="variableGeneratorInterval"
@@ -98,8 +100,8 @@
 		<property name="amountOfSteps" value="${generator.variableInterval.stepAmount}" />
 		<property name="stepSize" value="${generator.variableInterval.stepSize}" />
 		<property name="stepDuration" value="${generator.variableInterval.stepDuration}" />
-		<property name="delayBetweenSteps"
-			value="${generator.variableInterval.delayBetweenSteps}" />
+		<property name="delayBetweenSteps" value="${generator.variableInterval.delayBetweenSteps}" />
+		<property name="trackAmount" value="${generator.trackAmountPerInterval}" />
 	</bean>
 
 	<camel:camelContext id="sbs1RouteCamelContext"

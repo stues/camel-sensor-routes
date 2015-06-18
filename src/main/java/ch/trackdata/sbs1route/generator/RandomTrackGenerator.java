@@ -244,7 +244,10 @@ public class RandomTrackGenerator implements InitializingBean{
 		double currentLongitude = geometry.getLongitude();
 		double currentLatitude = geometry.getLatitude();
 		
-		if ((currentLatitude < minLatitude) || (currentLatitude > maxLatitude) || (currentLongitude < minLongitude) || (currentLongitude > maxLongitude)) {
+		if ((currentLatitude < minLatitude) 
+				|| (currentLatitude > maxLatitude) 
+				|| (currentLongitude < minLongitude) 
+				|| (currentLongitude > maxLongitude)) {
 			int heading = trackPosition.getHeading();
 			if (random.nextBoolean()) {
 				heading += 45;
@@ -270,6 +273,13 @@ public class RandomTrackGenerator implements InitializingBean{
 	 */
 	public int getUpdateInterval() {
 		return getUpdateIntervalAware().getUpdateInterval();
+	}
+	
+	/**
+	 * @return the updateInterval
+	 */
+	public int getTrackAmountPerInterval() {
+		return getUpdateIntervalAware().getTrackAmount();
 	}
 	
 	/**
@@ -481,21 +491,25 @@ public class RandomTrackGenerator implements InitializingBean{
 		public void run() {
 			while (generating) {
 				try {
-					LOGGER.info("Tracks send - sleeping for " + getUpdateInterval() / 1000 + "s");
-					int updateDuration = getUpdateInterval(); 
+					int updateDuration = getUpdateInterval();
+					if(LOGGER.isInfoEnabled()){
+						LOGGER.info("Tracks send - sleeping for " + updateDuration / 1000 + "s");
+					} 
 					if(updateDuration > 0){
 						Thread.sleep(getUpdateInterval());
 					}
+					
+					
 					for (TrackPositionMessage trackPosition: trackPositions) {
 						updateTrackPosition(trackPosition);
 					}
 					
-					TrackPositionMessage trackPosition = trackPositions.get(currentTrack);
-					
-					producerTemplate.sendBody(removeSomeProperties(trackPosition));
-					
-					currentTrack = ++currentTrack%amountOfTracks;
-					
+					int trackAmountPerInterval = getTrackAmountPerInterval();
+					for(int i= 0; i < trackAmountPerInterval; i++){
+						TrackPositionMessage trackPosition = trackPositions.get(currentTrack);
+						producerTemplate.sendBody(removeSomeProperties(trackPosition));
+						currentTrack = ++currentTrack%amountOfTracks;
+					}
 				} catch (InterruptedException e) {
 					LOGGER.debug("Thread has been interrupted", e);
 				} catch (Exception e) {

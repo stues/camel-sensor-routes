@@ -22,10 +22,15 @@ public abstract class AbstractGeneratorInterval implements TrackGeneratorInterva
 	
 	protected Timer timer;
 	
+	private int trackAmount;
+	
 	public AbstractGeneratorInterval(){
 		timer = new Timer();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void start(final RandomTrackGenerator randomTrackGenerator) {
 		if(isConfigured()){
@@ -49,15 +54,23 @@ public abstract class AbstractGeneratorInterval implements TrackGeneratorInterva
 		}
 	}
 
+	/**
+	 * Starts the interval on the given {@link RandomTrackGenerator}
+	 * @param randomTrackGenerator the random track generator
+	 */
 	private void startInterval(final RandomTrackGenerator randomTrackGenerator) {
 		LOGGER.info("Initial Delay is over start Random Track Generation");
 		if(duration > 0){
-			LOGGER.info("Random Track Generator will be disconnected after {}ms", duration);
+			if(LOGGER.isInfoEnabled()){
+				LOGGER.info("Random Track Generator will be disconnected after {}ms", duration);
+			}
 			timer.schedule(new TimerTask() {
 
 				@Override
 				public void run() {
-					LOGGER.info("Disconnect Random Track Generator");
+					if(LOGGER.isInfoEnabled()){
+						LOGGER.info("Disconnect Random Track Generator");
+					}
 					randomTrackGenerator.disconnectSource();
 				}
 			}, duration);
@@ -98,5 +111,19 @@ public abstract class AbstractGeneratorInterval implements TrackGeneratorInterva
 	 */
 	public void setDuration(int duration) {
 		this.duration = duration;
+	}
+
+	/**
+	 * @return the trackAmount
+	 */
+	public int getTrackAmount() {
+		return trackAmount;
+	}
+
+	/**
+	 * @param trackAmount the trackAmount to set
+	 */
+	public void setTrackAmount(int trackAmount) {
+		this.trackAmount = trackAmount;
 	}
 }

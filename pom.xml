@@ -57,7 +57,7 @@
 			<artifactId>netty-all</artifactId>
 			<version>5.0.0.Alpha1</version>
 		</dependency>
-		
+
 		<!-- jackson dependency -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -173,6 +173,9 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
+					<excludes>
+			        	<exclude>**/sbs1route-config.properties</exclude>
+			        </excludes>
 					<useUniqueVersions>false</useUniqueVersions>
 					<archive>
 						<manifest>
@@ -184,7 +187,6 @@
 					</archive>
 				</configuration>
 			</plugin>
-
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -199,12 +201,8 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>
-											org.apache.maven.plugins
-										</groupId>
-										<artifactId>
-											maven-dependency-plugin
-										</artifactId>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
 										<versionRange>[2.8,)</versionRange>
 										<goals>
 											<goal>copy-dependencies</goal>

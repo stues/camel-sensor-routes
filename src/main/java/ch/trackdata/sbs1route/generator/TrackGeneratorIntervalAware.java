@@ -15,6 +15,11 @@ public interface TrackGeneratorIntervalAware {
 	public int getUpdateInterval();
 
 	/**
+	 * @return the amount of tracks which shall be generated during the current interval
+	 */
+	public int getTrackAmount();
+	
+	/**
 	 * @return whether this interval is configured or not;
 	 */
 	public boolean isConfigured();
