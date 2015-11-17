@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>ch.stue</groupId>
-  <artifactId>camel-stue</artifactId>
-  <packaging>pom</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <parent>
+    <groupId>ch.stue.transmitter</groupId>
+    <artifactId>transmitter-route</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
 
-  <name>Camel Stue</name>
-  <description>The main maven module to be able to create a route with classes from the different packages</description>
+  <artifactId>transmitter-route-websocket</artifactId>
+
+  <packaging>jar</packaging>
+
+  <name>Transmitter route - Websocket</name>
+  <description>A Camel Spring route to send data through a websocket</description>
   <url>http://www.stue.ch</url>
 
   <properties>
@@ -17,13 +21,28 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
-  <modules>
-    <module>common</module>
-    <module>receiver-route</module>
-    <module>transmitter-route</module>
-    <module>main</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>ch.stue</groupId>
+      <artifactId>common</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
 
+    <!-- camel dependencies -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-websocket</artifactId>
+      <version>2.15.0</version>
+    </dependency>
+
+    <!-- JTS -->
+    <dependency>
+      <groupId>com.vividsolutions</groupId>
+      <artifactId>jts</artifactId>
+      <version>1.11</version>
+    </dependency>
+
+  </dependencies>
   <build>
     <defaultGoal>install</defaultGoal>
     <plugins>
@@ -93,7 +112,7 @@
     <pluginManagement>
       <plugins>
         <!--This plugin's configuration is used to store Eclipse m2e settings 
-          only. It has no influence on the Maven build itself. -->
+					only. It has no influence on the Maven build itself. -->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
           <artifactId>lifecycle-mapping</artifactId>

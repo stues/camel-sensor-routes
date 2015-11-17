@@ -3,13 +3,13 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>ch.stue</groupId>
-  <artifactId>camel-stue</artifactId>
+  <groupId>ch.stue.receiver</groupId>
+  <artifactId>receiver-route</artifactId>
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
 
-  <name>Camel Stue</name>
-  <description>The main maven module to be able to create a route with classes from the different packages</description>
+  <name>Receiver routes</name>
+  <description>Contains camel routes which may receive data</description>
   <url>http://www.stue.ch</url>
 
   <properties>
@@ -18,10 +18,8 @@
   </properties>
 
   <modules>
-    <module>common</module>
-    <module>receiver-route</module>
-    <module>transmitter-route</module>
-    <module>main</module>
+    <module>aisroute</module>
+    <module>sbs1route</module>
   </modules>
 
   <build>
@@ -43,12 +41,6 @@
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
-      </plugin>
-      <!-- allows the route to be ran via 'mvn camel:run' -->
-      <plugin>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-maven-plugin</artifactId>
-        <version>2.12.2</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

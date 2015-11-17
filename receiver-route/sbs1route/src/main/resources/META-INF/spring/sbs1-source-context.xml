@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configures the Camel Context -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<bean id="sbs1PropertyNamePredicate" class="org.apache.commons.collections4.functors.AnyPredicate">
+		<constructor-arg index="0">
+			<list>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.CALLSIGN_PROPERTY_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.ALTITUDE_PROPERTY_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEADING_PROPERTY_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.GROUND_SPEED_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME"/></constructor-arg>
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<util:constant id="sbs1ValuePredicate" static-field="org.apache.commons.collections4.functors.NotNullPredicate.INSTANCE"/>
+
+	<bean id="sbs1ProducerAdapter" class="ch.trackdata.sbs1route.SBS1ProducerAdapter">
+		<property name="producerTemplate" ref="sbs1Producer" />
+	</bean>
+
+	<bean id="sbs1Processor" class="ch.trackdata.sbs1route.SBS1Processor" />
+	
+	<bean id="filterDuplicateValueProcessor" class="ch.trackdata.sbs1route.FilterDuplicateValueProcessor">
+		<property name="cleanupInterval" value="${filter.duplicates.cleanupInterval}" />
+		<property name="idProperty"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME"/></property>
+		<property name="comparableDateProperty"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME"/></property>
+	</bean>
+
+	<bean id="bindyDataformat" class="org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat">
+		<constructor-arg value="ch.trackdata.sbs1route.message" />
+	</bean>
+
+	<bean id="sbs1DataReceiver" class="ch.trackdata.sbs1route.SBS1DataReceiver">
+		<property name="enabled" value="${sbs1.enabled}" />
+		<property name="host" value="${sbs1.host}" />
+		<property name="port" value="${sbs1.port}" />
+		<property name="SBS1ProducerAdapter" ref="sbs1ProducerAdapter" />
+	</bean>  
+
+	<bean id="camelStartupListener" class="ch.trackdata.sbs1route.CamelStartupListener">
+		<property name="camelContext" ref="sbs1RouteCamelContext" />
+		<property name="sbs1DataReceiver" ref="sbs1DataReceiver" />
+	</bean>
+</beans>

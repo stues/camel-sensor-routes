@@ -3,13 +3,18 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>ch.stue</groupId>
-  <artifactId>camel-stue</artifactId>
-  <packaging>pom</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <parent>
+    <groupId>ch.stue.transmitter</groupId>
+    <artifactId>transmitter-route</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
 
-  <name>Camel Stue</name>
-  <description>The main maven module to be able to create a route with classes from the different packages</description>
+  <artifactId>transmitter-route-sos</artifactId>
+
+  <packaging>jar</packaging>
+
+  <name>Transmitter route - SOS</name>
+  <description>A Camel Spring route to send feature data to a Sensor Observation Service</description>
   <url>http://www.stue.ch</url>
 
   <properties>
@@ -17,12 +22,31 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
-  <modules>
-    <module>common</module>
-    <module>receiver-route</module>
-    <module>transmitter-route</module>
-    <module>main</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>ch.stue</groupId>
+      <artifactId>common</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <!-- camel dependencies -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-jaxb</artifactId>
+      <version>2.15.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-http</artifactId>
+      <version>2.15.0</version>
+    </dependency>
+    <!-- jv-net -->
+    <dependency>
+      <groupId>org.jvnet.ogc</groupId>
+      <artifactId>sos-v_2_0_0-schema</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <defaultGoal>install</defaultGoal>
@@ -93,7 +117,7 @@
     <pluginManagement>
       <plugins>
         <!--This plugin's configuration is used to store Eclipse m2e settings 
-          only. It has no influence on the Maven build itself. -->
+					only. It has no influence on the Maven build itself. -->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
           <artifactId>lifecycle-mapping</artifactId>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configures the Camel Context -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<bean id="aisPropertyNamePredicate" class="org.apache.commons.collections4.functors.AnyPredicate">
+		<constructor-arg index="0">
+			<list>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.CALLSIGN_PROPERTY_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.ALTITUDE_PROPERTY_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEADING_PROPERTY_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.GROUND_SPEED_NAME"/></constructor-arg>
+				</bean>
+				<bean class="org.apache.commons.collections4.functors.EqualPredicate">
+					<constructor-arg index="0"><util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME"/></constructor-arg>
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<util:constant id="aisValuePredicate" static-field="org.apache.commons.collections4.functors.NotNullPredicate.INSTANCE"/>
+
+	<bean id="aisProcessor" class="ch.trackdata.aisroute.AISProcessor" />
+</beans>
