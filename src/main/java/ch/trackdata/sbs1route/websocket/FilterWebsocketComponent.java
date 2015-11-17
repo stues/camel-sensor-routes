@@ -29,11 +29,10 @@ public class FilterWebsocketComponent extends WebsocketComponent {
 	 */
     @Override
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
-
-        SSLContextParameters sslContextParameters = resolveAndRemoveReferenceParameter(parameters, "sslContextParametersRef", SSLContextParameters.class);
-        if (sslContextParameters == null) {
-            sslContextParameters = resolveAndRemoveReferenceParameter(parameters, "sslContextParameters", SSLContextParameters.class);
-        }
+		SSLContextParameters sslContextParameters = (SSLContextParameters) resolveAndRemoveReferenceParameter(parameters, "sslContextParametersRef", SSLContextParameters.class);
+		if (sslContextParameters == null) {
+			sslContextParameters = (SSLContextParameters) resolveAndRemoveReferenceParameter(parameters, "sslContextParameters", SSLContextParameters.class);
+		}
         Boolean enableJmx = getAndRemoveParameter(parameters, "enableJmx", Boolean.class);
         String staticResources = getAndRemoveParameter(parameters, "staticResources", String.class);
         MemoryWebsocketStore websocketStore = resolveAndRemoveReferenceParameter(parameters, "websocketStore", MemoryWebsocketStore.class);
@@ -42,37 +41,33 @@ public class FilterWebsocketComponent extends WebsocketComponent {
 
         WebsocketEndpoint endpoint = createWebsocketEndpoint(websocketStore, uri, remaining, parameters);
 
-        if (enableJmx != null) {
-            endpoint.setEnableJmx(enableJmx);
-        } else {
-            endpoint.setEnableJmx(isEnableJmx());
-        }
+		if (enableJmx != null)
+			endpoint.setEnableJmx(enableJmx.booleanValue());
+		else {
+			endpoint.setEnableJmx(isEnableJmx());
+		}
 
-        // prefer to use endpoint configured over component configured
-        if (sslContextParameters == null) {
-            // fallback to component configured
-            sslContextParameters = getSslContextParameters();
-        }
+		if (sslContextParameters == null) {
+			sslContextParameters = getSslContextParameters();
+		}
 
-        if (sslContextParameters != null) {
-            endpoint.setSslContextParameters(sslContextParameters);
-        }
+		if (sslContextParameters != null) {
+			endpoint.setSslContextParameters(sslContextParameters);
+		}
 
-        // prefer to use endpoint configured over component configured
-        if (staticResources == null) {
-            // fallback to component configured
-            staticResources = getStaticResources();
-        }
+		if (staticResources == null) {
+			staticResources = getStaticResources();
+		}
 
-        if (staticResources != null) {
-            endpoint.setStaticResources(staticResources);
-        }
+		if (staticResources != null) {
+			endpoint.setStaticResources(staticResources);
+		}
 
-        endpoint.setSslContextParameters(sslContextParameters);
-        endpoint.setPort(port);
-        endpoint.setHost(host);
+		endpoint.setSslContextParameters(sslContextParameters);
+		endpoint.setPort(port);
+		endpoint.setHost(host);
 
-        setProperties(endpoint, parameters);
+		setProperties(endpoint, parameters);
         return endpoint;
     }
 

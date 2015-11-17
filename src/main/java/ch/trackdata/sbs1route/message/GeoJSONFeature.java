@@ -66,7 +66,7 @@ public class GeoJSONFeature<T extends AbstractGeometry<?>> implements Feature<T>
 	public T getGeometry() {
 		return (T) geometry;
 	}
-
+	
 	/**
 	 * @param geometry
 	 *            the geometry to set
