@@ -13,223 +13,28 @@
 
 	<context:annotation-config />
 
-	<bean
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations" value="classpath*:sbs1route-config.properties" />
-		<property name="properties">
-			<props>
-				<prop key="localaddress"><!-- The local IP-Address -->
-				</prop>
+	<import resource="classpath:META-INF/spring/sos-context.xml" />
+	<import resource="classpath:META-INF/spring/websocket-context.xml" />
+	<import resource="classpath:META-INF/spring/sbs1-context.xml" />
+	<import resource="classpath:META-INF/spring/ais-context.xml" />
 
-				<prop key="sos.enabled">true</prop>
-				<prop key="sos.host">${localaddress}</prop>
-				<prop key="sos.port">8080</prop>
-				<prop key="sos.path">/52n-sos-webapp/sos/pox</prop>
-				<prop key="sos.minproperties">2</prop>
-
-				<prop key="websocket.enabled">true</prop>
-				<prop key="websocket.host">${localaddress}</prop>
-				<prop key="websocket.port">8443</prop>
-				<prop key="websocket.path">/clientTrackData</prop>
-
-				<prop key="sbs1.enabled">true</prop>
-				<prop key="sbs1.host"><!-- The SBS1 Station IP -->
-				</prop>
-				<prop key="sbs1.port">30003</prop>
-
-				<prop key="filter.minproperties">3</prop>
-				<prop key="filter.duplicates.cleanupInterval">30000</prop>
-
-				<prop key="generator.enabled">false</prop>
-				<prop key="generator.amountOfTracks">20</prop>
-				<prop key="generator.updateInterval">200</prop>
-				<prop key="generator.initialDelay">10000</prop>
-				<prop key="generator.duration">0</prop>
-				<prop key="generator.trackAmountPerInterval">1</prop>
-
-				<prop key="generator.useVariableInterval">false</prop>
-				<prop key="generator.variableInterval.startAmount">1</prop>
-				<prop key="generator.variableInterval.stepAmount">10</prop>
-				<prop key="generator.variableInterval.stepSize">1</prop>
-				<prop key="generator.variableInterval.stepDuration">30000</prop>
-				<prop key="generator.variableInterval.delayBetweenSteps">2000</prop>
-			</props>
-		</property>
-		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
-	</bean>
-
-	<import resource="sos-context.xml" />
-	<import resource="sbs1-source-context.xml" />
-	<import resource="ais-source-context.xml" />
-
-	<bean id="websocketStore"
-		class="org.apache.camel.component.websocket.MemoryWebsocketStore" />
-
-	<bean name="filterWebsocketProcessor"
-		class="ch.trackdata.sbs1route.websocket.FilterWebsocketProcessor">
-		<property name="websocketStore" ref="websocketStore" />
-	</bean>
-
-	<bean id="randomTrackGenerator" class="ch.trackdata.sbs1route.generator.RandomTrackGenerator">
-		<property name="producerTemplate" ref="generatedTrackProducer" />
-		<property name="enabled" value="${generator.enabled}" />
-		<property name="amountOfTracks" value="${generator.amountOfTracks}" />
-		<property name="useVariableInterval" value="${generator.useVariableInterval}" />
-		<property name="fixGeneratorInterval" ref="fixGeneratorInterval" />
-		<property name="variableGeneratorInterval" ref="variableGeneratorInterval" />
-		<property name="minLatitude" value="44" />
-		<property name="maxLatitude" value="49" />
-		<property name="minLongitude" value="4.5" />
-		<property name="maxLongitude" value="14" />
-		<property name="maxAltitudeDelta" value="40" />
-		<property name="maxSpeedDelta" value="40" />
-		<property name="maxHeadingDelta" value="40" />
-	</bean>
-
-	<bean id="fixGeneratorInterval" class="ch.trackdata.sbs1route.generator.FixGeneratorInterval">
-		<property name="updateInterval" value="${generator.updateInterval}" />
-		<property name="initialDelay" value="${generator.initialDelay}" />
-		<property name="duration" value="${generator.duration}" />
-		<property name="trackAmount" value="${generator.trackAmountPerInterval}" />
-	</bean>
-
-	<bean id="variableGeneratorInterval"
-		class="ch.trackdata.sbs1route.generator.VariableGeneratorInterval">
-		<property name="enabled" value="${generator.useVariableInterval}" />
-		<property name="initialDelay" value="${generator.initialDelay}" />
-		<property name="startTrackAmount" value="${generator.variableInterval.startAmount}" />
-		<property name="amountOfSteps" value="${generator.variableInterval.stepAmount}" />
-		<property name="stepSize" value="${generator.variableInterval.stepSize}" />
-		<property name="stepDuration" value="${generator.variableInterval.stepDuration}" />
-		<property name="delayBetweenSteps"
-			value="${generator.variableInterval.delayBetweenSteps}" />
-		<property name="trackAmount" value="${generator.trackAmountPerInterval}" />
-	</bean>
-
-	<camel:camelContext id="sbs1RouteCamelContext"
+	<camel:camelContext id="stueCamelContext"
 		xmlns="http://camel.apache.org/schema/spring">
 
-		<propertyPlaceholder id="properties"
-			location="sbs1route-config.properties" />
-
-		<camel:template id="sbs1Producer" defaultEndpoint="direct:sbs1" />
-
-		<camel:template id="generatedTrackProducer"
-			defaultEndpoint="direct:trackgeneration" />
-
-		<!-- Websocket Endpoint -->
-		<camel:endpoint id="websocketClientJSONEndpoint"
-			uri="filterwebsocket://${websocket.host}:${websocket.port}${websocket.path}?websocketStore=#websocketStore&amp;sendToAll=true" />
-
-
-		<!-- Sensor Observation Service Endpoint -->
-		<camel:endpoint id="sosEndpoint"
-			uri="http://${sos.host}:${sos.port}${sos.path}" />
-
 		<camel:route autoStartup="true">
-			<camel:from uri="websocketClientJSONEndpoint" />
-			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
-			<camel:process ref="filterWebsocketProcessor"></camel:process>
-			<log message="Converted: ${body}" />
-			<camel:stop />
-		</camel:route>
-
-		<camel:route>
-			<camel:from uri="direct:trackgeneration" />
-			<camel:log message="${body}" logName="GEN_RECEIVED_FEATURE" />
+			<camel:from uri="direct:sbs1_out" />
 			<camel:multicast stopOnException="false">
-				<camel:when>
-					<simple>${properties:websocket.enabled}</simple>
-					<camel:to ref="websocketClientJSONEndpoint" />
-				</camel:when>
-				<camel:otherwise>
-					<camel:stop />
-				</camel:otherwise>
-
-				<camel:to uri="direct:sos" />
+				<camel:to uri="direct:websocket_in" />
+				<camel:to uri="direct:sos_in" />
 			</camel:multicast>
 		</camel:route>
 
-
 		<camel:route autoStartup="true">
-			<camel:from uri="direct:sbs1" />
-			<camel:unmarshal ref="bindyDataformat" />
-			<camel:process ref="sbs1Processor" />
-			<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
-			<camel:process ref="filterDuplicateValueProcessor"></camel:process>
-			<camel:when>
-				<simple>${body.geometry} != null 
-					|| ${body.properties.size} >= ${properties:filter.minproperties}</simple>
-				<camel:log message="${body}" logName="RECEIVED_FEATURE" />
-				<camel:multicast stopOnException="false">
-					<camel:to uri="direct:websocket" />
-					<camel:to uri="direct:sos" />
-				</camel:multicast>
-			</camel:when>
-			<camel:otherwise>
-				<camel:stop />
-			</camel:otherwise>
-		</camel:route>
-
-		<camel:route>
-			<camel:from uri="direct:websocket" />
-			<camel:when>
-				<simple>${properties:websocket.enabled}</simple>
-				<camel:to ref="websocketClientJSONEndpoint" />
-			</camel:when>
-			<camel:otherwise>
-				<camel:stop />
-			</camel:otherwise>
-		</camel:route>
-
-		<camel:route>
-			<camel:from uri="direct:sos" />
-			<camel:choice>
-				<camel:when>
-					<simple>${properties:sos.enabled}</simple>
-					<convertBodyTo type="javax.xml.bind.JAXBElement" />
-					<marshal>
-						<jaxb id="myJaxb" prettyPrint="false"
-							contextPath="net.opengis.sos.v_2_0_0:net.opengis.swe.v_2_0_0:net.opengis.filter.v_2_0_0" />
-					</marshal>
-					<setHeader headerName="CamelHttpMethod">
-						<constant>POST</constant>
-					</setHeader>
-					<setHeader headerName="Content-Type">
-						<simple>application/xml</simple>
-					</setHeader>
-					<log message="${body}" logName="SOS_INSERTOBSERVATION" />
-					<to uri="sosEndpoint" />
-				</camel:when>
-				<camel:otherwise>
-					<camel:stop />
-				</camel:otherwise>
-			</camel:choice>
-		</camel:route>
-
-		<camel:route>
-			<camel:from uri="direct:ais" />
-			<camel:process ref="aisProcessor" />
-			<camel:when>
-				<simple>
-				${body} != null
-				</simple>
-				<convertBodyTo type="ch.trackdata.sbs1route.message.GeoJSONFeature" />
-				<camel:log message="${body}" logName="RECEIVED_FEATURE" />
-				<camel:multicast stopOnException="false">
-					<camel:to uri="direct:websocket" />
-					<camel:to uri="direct:sos" />
-				</camel:multicast>
-			</camel:when>
-			<camel:otherwise>
-				<camel:stop />
-			</camel:otherwise>
-		</camel:route>
-
-		<camel:route autoStartup="true">
-			<camel:from
-				uri="stream:file?fileName=src/main/resources/ais.txt&amp;scanStream=true" />
-			<to uri="direct:ais" />
+			<camel:from uri="direct:ais_out" />
+			<camel:multicast stopOnException="false">
+				<camel:to uri="direct:websocket_in" />
+				<camel:to uri="direct:sos_in" />
+			</camel:multicast>
 		</camel:route>
 
 	</camel:camelContext>

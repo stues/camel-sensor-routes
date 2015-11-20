@@ -3,11 +3,16 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>ch.stue.transmitter</groupId>
-  <artifactId>transmitter-route</artifactId>
-  <packaging>pom</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <parent>
+    <groupId>ch.stue</groupId>
+    <artifactId>camel-sensor-routes</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
 
+  <artifactId>transmitter-route</artifactId>
+
+  <packaging>pom</packaging>
+  
   <name>Transmitter routes</name>
   <description>Contains camel routes which may transmit data</description>
   <url>http://www.stue.ch</url>

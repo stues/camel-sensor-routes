@@ -11,162 +11,57 @@
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
        http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd">
 
+	<context:annotation-config />
 
-	<!-- Insert Observation configuration -->
-	<bean id="featureOfInterestPrefix" class="java.lang.String">
-		<constructor-arg value="http://stue.ch/sensorobservation/foi/aircraft/" />
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath*:sosroute-config.properties" />
+		<property name="properties">
+			<props>
+				<prop key="sos.enabled">true</prop>
+				<prop key="sos.host">${sos.host}</prop>
+				<prop key="sos.port">8080</prop>
+				<prop key="sos.path">/52n-sos-webapp/sos/pox</prop>
+			</props>
+		</property>
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 	</bean>
 
-	<bean id="callsignObservationConfiguration"
-		class="ch.trackdata.sbs1route.converter.insertobservation.TextPropertyConfiguration">
-		<property name="observationName" value="callsignObservation" />
-		<property name="procedure"
-			value="http://stue.ch/sensorobservation/procedure/sbs-1" />
-		<property name="observedProperty"
-			value="http://stue.ch/sensorobservation/observableProperty/callsign" />
-		<property name="featureOfInterestPrefix" ref="featureOfInterestPrefix" />
-		<property name="featureIdentPropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
-		</property>
-		<property name="featureTitlePropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
-		</property>
-		<property name="featureTextPropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.CALLSIGN_PROPERTY_NAME" />
-		</property>
-		<property name="phenomenonTimePropertyName">
-		 	<util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME" />
-		</property>
-		<property name="createNullValueMessages" value="false" />
-	</bean>
+	<import resource="sos-config-context.xml" />
 
-	<bean id="speedObservationConfiguration"
-		class="ch.trackdata.sbs1route.converter.insertobservation.MeasurementPropertyConfiguration">
-		<property name="observationName" value="speedObservation" />
-		<property name="procedure"
-			value="http://stue.ch/sensorobservation/procedure/sbs-1" />
-		<property name="observedProperty"
-			value="http://stue.ch/sensorobservation/observableProperty/speed" />
-		<property name="featureOfInterestPrefix" ref="featureOfInterestPrefix" />
-		<property name="featureIdentPropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
-		</property>
-		<property name="featureTitlePropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
-		</property>
-		<property name="measureUom" value="[kn_i]" />
-		<property name="featureMeasurementPropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.GROUND_SPEED_NAME" />
-		</property>
-		<property name="featureMeasurementPropertyClazz" value="java.lang.Integer" />
-		<property name="phenomenonTimePropertyName">
-		 	<util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME" />
-		</property>
-		<property name="createNullValueMessages" value="false" />
-	</bean>
+	<camel:camelContext id="stueCamelContext"
+		xmlns="http://camel.apache.org/schema/spring">
 
-	<bean id="altitudeObservationConfiguration"
-		class="ch.trackdata.sbs1route.converter.insertobservation.MeasurementPropertyConfiguration">
-		<property name="observationName" value="altitudeObservation" />
-		<property name="procedure"
-			value="http://stue.ch/sensorobservation/procedure/sbs-1" />
-		<property name="observedProperty"
-			value="http://stue.ch/sensorobservation/observableProperty/altitude" />
-		<property name="featureOfInterestPrefix" ref="featureOfInterestPrefix" />
-		<property name="featureIdentPropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
-		</property>
-		<property name="featureTitlePropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
-		</property>
-		<property name="measureUom" value="[ft_i]" />
-		<property name="featureMeasurementPropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.ALTITUDE_PROPERTY_NAME" />
-		</property>
-		<property name="featureMeasurementPropertyClazz" value="java.lang.Integer" />
-		<property name="phenomenonTimePropertyName">
-		 	<util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME" />
-		</property>
-		<property name="createNullValueMessages" value="false" />
-	</bean>
+		<propertyPlaceholder id="properties" location="sosroute-config.properties" />
 
-	<bean id="headingObservationConfiguration"
-		class="ch.trackdata.sbs1route.converter.insertobservation.MeasurementPropertyConfiguration">
-		<property name="observationName" value="headingObservation" />
-		<property name="procedure"
-			value="http://stue.ch/sensorobservation/procedure/sbs-1" />
-		<property name="observedProperty"
-			value="http://stue.ch/sensorobservation/observableProperty/heading" />
-		<property name="featureOfInterestPrefix" ref="featureOfInterestPrefix" />
-		<property name="featureIdentPropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
-		</property>
-		<property name="featureTitlePropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
-		</property>
-		<property name="measureUom" value="deg" />
-		<property name="featureMeasurementPropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEADING_PROPERTY_NAME" />
-		</property>
-		<property name="featureMeasurementPropertyClazz" value="java.lang.Integer" />
-		<property name="phenomenonTimePropertyName">
-		 	<util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME" />
-		</property>
-		<property name="createNullValueMessages" value="false" />
-	</bean>
+		<!-- Sensor Observation Service Endpoint -->
+		<camel:endpoint id="sosEndpoint" uri="http://${sos.host}:${sos.port}${sos.path}" />
 
-	<bean id="positionObservationConfiguration"
-		class="ch.trackdata.sbs1route.converter.insertobservation.PointGeometryPropertyConfiguration">
-		<property name="observationName" value="positionObservation" />
-		<property name="procedure"
-			value="http://stue.ch/sensorobservation/procedure/sbs-1" />
-		<property name="observedProperty"
-			value="http://stue.ch/sensorobservation/observableProperty/position" />
-		<property name="featureOfInterestPrefix" ref="featureOfInterestPrefix" />
-		<property name="featureIdentPropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
-		</property>
-		<property name="featureTitlePropertyName">
-			<util:constant
-				static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.HEX_PROPERTY_NAME" />
-		</property>
-		<property name="useFeatureGeometry" value="true" />
-		<property name="srsName" value="http://www.opengis.net/def/crs/EPSG/0/4326" />
-		<property name="pointId" value="aircraftPosition" />
-		<property name="phenomenonTimePropertyName">
-		 	<util:constant static-field="ch.trackdata.sbs1route.message.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME" />
-		</property>
-		<property name="createNullValueMessages" value="false" />
-	</bean>
+		<camel:route>
+			<camel:from uri="direct:sos_in" />
+			<camel:choice>
+				<camel:when>
+					<simple>${properties:sos.enabled}</simple>
+					<convertBodyTo type="javax.xml.bind.JAXBElement" />
+					<marshal>
+						<jaxb id="myJaxb" prettyPrint="false"
+							contextPath="net.opengis.sos.v_2_0_0:net.opengis.swe.v_2_0_0:net.opengis.filter.v_2_0_0" />
+					</marshal>
+					<setHeader headerName="CamelHttpMethod">
+						<constant>POST</constant>
+					</setHeader>
+					<setHeader headerName="Content-Type">
+						<simple>application/xml</simple>
+					</setHeader>
+					<log message="${body}" logName="SOS_INSERTOBSERVATION" />
+					<to uri="sosEndpoint" />
+				</camel:when>
+				<camel:otherwise>
+					<camel:stop />
+				</camel:otherwise>
+			</camel:choice>
+		</camel:route>
 
-	<bean id="insertObservationConfiguration"
-		class="ch.trackdata.sbs1route.converter.insertobservation.InsertObservationSOSV2Configuration">
-		<property name="offerings">
-			<list>
-				<value>http://stue.ch/sensorobservation/offering/flighttracking</value>
-			</list>
-		</property>
-		<property name="observedProperties">
-			<list>
-				<ref bean="callsignObservationConfiguration" />
-				<ref bean="speedObservationConfiguration" />
-				<ref bean="altitudeObservationConfiguration" />
-				<ref bean="headingObservationConfiguration" />
-				<ref bean="positionObservationConfiguration" />
-			</list>
-		</property>
-	</bean>
+	</camel:camelContext>
+
 </beans>

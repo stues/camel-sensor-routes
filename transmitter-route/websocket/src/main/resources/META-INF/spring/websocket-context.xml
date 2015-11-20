@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configures the Camel Context -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<context:annotation-config />
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath*:websocket-config.properties" />
+		<property name="properties">
+			<props>
+				<prop key="websocket.enabled">true</prop>
+				<prop key="websocket.host">${websocket.host}</prop>
+				<prop key="websocket.port">8443</prop>
+				<prop key="websocket.path">/clientTrackData</prop>
+			</props>
+		</property>
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+	</bean>
+
+	<bean id="websocketStore" class="org.apache.camel.component.websocket.MemoryWebsocketStore" />
+
+	<bean name="filterWebsocketProcessor" class="ch.stue.domain.transmitter.websocket.FilterWebsocketProcessor">
+		<property name="websocketStore" ref="websocketStore" />
+	</bean>
+
+	<camel:camelContext id="stueCamelContext" xmlns="http://camel.apache.org/schema/spring">
+
+		<propertyPlaceholder id="properties" location="websocket-config.properties" />
+
+		<!-- Websocket Endpoint -->
+		<camel:endpoint id="websocketClientJSONEndpoint" uri="filterwebsocket://${websocket.host}:${websocket.port}${websocket.path}?websocketStore=#websocketStore&amp;sendToAll=true" />
+
+		<camel:route autoStartup="true">
+			<camel:from uri="websocketClientJSONEndpoint" />
+			<convertBodyTo type="ch.stue.domain.GeoJSONFeature" />
+			<camel:process ref="filterWebsocketProcessor"></camel:process>
+			<log message="Converted: ${body}" />
+			<camel:stop />
+		</camel:route>
+
+		<camel:route>
+			<camel:from uri="direct:websocket_in" />
+			<camel:when>
+				<simple>${properties:websocket.enabled}</simple>
+				<camel:to ref="websocketClientJSONEndpoint" />
+			</camel:when>
+			<camel:otherwise>
+				<camel:stop />
+			</camel:otherwise>
+		</camel:route>
+
+	</camel:camelContext>
+
+</beans>

@@ -1,2 +1,2 @@
-ch.trackdata.sbs1route.converter.StringToGeoJSONFeatureConverter,
-ch.trackdata.sbs1route.converter.GeoJSONFeatureToStringConverter
+ch.stue.domain.transmitter.websocket.converter.StringToGeoJSONFeatureConverter,
+ch.stue.domain.transmitter.websocket.converter.GeoJSONFeatureToStringConverter

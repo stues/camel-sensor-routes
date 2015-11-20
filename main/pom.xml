@@ -17,6 +17,27 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
   <dependencies>
+    <dependency>
+      <groupId>ch.stue</groupId>
+      <artifactId>receiver-route-aisroute</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.stue</groupId>
+      <artifactId>receiver-route-sbs1route</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.stue</groupId>
+      <artifactId>transmitter-route-websocket</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.stue</groupId>
+      <artifactId>transmitter-route-sos</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    
     <!-- camel dependencies -->
     <dependency>
       <groupId>org.apache.camel</groupId>
@@ -27,59 +48,6 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test-spring</artifactId>
       <version>2.15.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-bindy</artifactId>
-      <version>2.15.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-websocket</artifactId>
-      <version>2.15.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-stream</artifactId>
-      <version>2.15.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-jaxb</artifactId>
-      <version>2.15.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-http</artifactId>
-      <version>2.15.0</version>
-    </dependency>
-    <!-- netty dependency -->
-    <dependency>
-      <groupId>io.netty</groupId>
-      <artifactId>netty-all</artifactId>
-      <version>5.0.0.Alpha1</version>
-    </dependency>
-    <!-- jackson dependency -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>2.3.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
-      <version>2.3.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.3.1</version>
-    </dependency>
-    <!-- jv-net -->
-    <dependency>
-      <groupId>org.jvnet.ogc</groupId>
-      <artifactId>sos-v_2_0_0-schema</artifactId>
-      <version>1.1.0</version>
     </dependency>
     <!-- apache commons -->
     <dependency>
@@ -107,18 +75,6 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>1.0.13</version>
-    </dependency>
-    <!-- JTS -->
-    <dependency>
-      <groupId>com.vividsolutions</groupId>
-      <artifactId>jts</artifactId>
-      <version>1.11</version>
-    </dependency>
-    <!-- AIS -->
-    <dependency>
-      <groupId>nl.esi.metis</groupId>
-      <artifactId>EsiAisParser</artifactId>
-      <version>0.30</version>
     </dependency>
   </dependencies>
   <build>

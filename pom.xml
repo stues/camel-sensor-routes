@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>ch.stue</groupId>
-  <artifactId>camel-stue</artifactId>
+  <artifactId>camel-sensor-routes</artifactId>
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
 
@@ -15,9 +15,26 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    
+    <stue.version>1.0-SNAPSHOT</stue.version>
+
+    <!-- maven plugin versions -->
+    <resource.plugin.version>2.6</resource.plugin.version>
+    <compiler.plugin.version>2.5.1</compiler.plugin.version>
+    <compiler.plugin.source.version>1.6</compiler.plugin.source.version>
+    <compiler.plugin.target.version>1.6</compiler.plugin.target.version>
+
+    <camel.version>2.15.0</camel.version>
+    <jackson.version>2.3.1</jackson.version>
+    <commons.lang.version>3.3.2</commons.lang.version>
+    <commons.beanutils.version>1.9.2</commons.beanutils.version>
+    <commons.collections4.version>4.0</commons.collections4.version>
+    <slf4j.version>1.7.5</slf4j.version>
+    <logback.version>1.0.13</logback.version>
   </properties>
 
   <modules>
+    <module>domain</module>
     <module>common</module>
     <module>receiver-route</module>
     <module>transmitter-route</module>
@@ -90,36 +107,6 @@
         </configuration>
       </plugin>
     </plugins>
-    <pluginManagement>
-      <plugins>
-        <!--This plugin's configuration is used to store Eclipse m2e settings 
-          only. It has no influence on the Maven build itself. -->
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <versionRange>[2.8,)</versionRange>
-                    <goals>
-                      <goal>copy-dependencies</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore/>
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
   </build>
 </project>
 
