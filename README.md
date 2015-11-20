@@ -1,5 +1,5 @@
-camel-sbs1route
-===============
+camel-sensor-routes
+===================
 
 A camel route that 
 - converts SBS1 Data from a TCP Channel into GeoJSON Features 
