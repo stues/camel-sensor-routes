@@ -15,6 +15,7 @@
 
 	<bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
 		<property name="locations" value="classpath*:sosroute-config.properties" />
 		<property name="properties">
 			<props>
@@ -29,39 +30,34 @@
 
 	<import resource="sos-config-context.xml" />
 
-	<camel:camelContext id="stueCamelContext"
-		xmlns="http://camel.apache.org/schema/spring">
+	<camel:endpoint id="sosEndpoint" uri="http://${sos.host}:${sos.port}${sos.path}" />
 
-		<propertyPlaceholder id="properties" location="sosroute-config.properties" />
+	<camel:routeContext id="stueSOSRoutes" xmlns="http://camel.apache.org/schema/spring">
+
+		<!-- <propertyPlaceholder id="properties" location="sosroute-config.properties" />  -->
 
 		<!-- Sensor Observation Service Endpoint -->
-		<camel:endpoint id="sosEndpoint" uri="http://${sos.host}:${sos.port}${sos.path}" />
 
 		<camel:route>
 			<camel:from uri="direct:sos_in" />
-			<camel:choice>
-				<camel:when>
-					<simple>${properties:sos.enabled}</simple>
-					<convertBodyTo type="javax.xml.bind.JAXBElement" />
-					<marshal>
-						<jaxb id="myJaxb" prettyPrint="false"
-							contextPath="net.opengis.sos.v_2_0_0:net.opengis.swe.v_2_0_0:net.opengis.filter.v_2_0_0" />
-					</marshal>
-					<setHeader headerName="CamelHttpMethod">
-						<constant>POST</constant>
-					</setHeader>
-					<setHeader headerName="Content-Type">
-						<simple>application/xml</simple>
-					</setHeader>
-					<log message="${body}" logName="SOS_INSERTOBSERVATION" />
-					<to uri="sosEndpoint" />
-				</camel:when>
-				<camel:otherwise>
-					<camel:stop />
-				</camel:otherwise>
-			</camel:choice>
+			<camel:filter>
+				<simple>${properties:sos.enabled}</simple>
+				<convertBodyTo type="javax.xml.bind.JAXBElement" />
+				<marshal>
+					<jaxb id="myJaxb" prettyPrint="false"
+						contextPath="net.opengis.sos.v_2_0_0:net.opengis.swe.v_2_0_0:net.opengis.filter.v_2_0_0" />
+				</marshal>
+				<setHeader headerName="CamelHttpMethod">
+					<constant>POST</constant>
+				</setHeader>
+				<setHeader headerName="Content-Type">
+					<simple>application/xml</simple>
+				</setHeader>
+				<log message="${body}" logName="SOS_INSERTOBSERVATION" />
+				<to uri="sosEndpoint" />
+			</camel:filter>
 		</camel:route>
 
-	</camel:camelContext>
+	</camel:routeContext>
 
 </beans>

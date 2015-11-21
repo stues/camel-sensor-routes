@@ -1,1 +1,1 @@
-class=ch.trackdata.sbs1route.websocket.FilterWebsocketComponent
+class=ch.stue.domain.transmitter.websocket.FilterWebsocketComponent

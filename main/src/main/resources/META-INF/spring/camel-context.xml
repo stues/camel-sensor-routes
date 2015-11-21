@@ -18,8 +18,22 @@
 	<import resource="classpath:META-INF/spring/sbs1-context.xml" />
 	<import resource="classpath:META-INF/spring/ais-context.xml" />
 
-	<camel:camelContext id="stueCamelContext"
-		xmlns="http://camel.apache.org/schema/spring">
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
+		<property name="locations" value="classpath*:stue-config.properties" />
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+	</bean>
+
+	<camel:camelContext id="stueCamelContext" xmlns="http://camel.apache.org/schema/spring">
+		
+		<camel:propertyPlaceholder id="properties" location="stue-config.properties" />
+		
+		<camel:routeContextRef ref="stueAISRoutes" />
+		<camel:routeContextRef ref="stueSBS1Routes" />
+		
+		<camel:routeContextRef ref="stueSOSRoutes" />
+		<camel:routeContextRef ref="stueWebsocketRoutes" />
 
 		<camel:route autoStartup="true">
 			<camel:from uri="direct:sbs1_out" />

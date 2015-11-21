@@ -13,8 +13,9 @@
 
 	<context:annotation-config />
 
-	<bean
+	<bean id="sbs1Properties"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
 		<property name="locations" value="classpath*:sbs1route-config.properties" />
 		<property name="properties">
 			<props>
@@ -81,48 +82,34 @@
 		<property name="trackAmount" value="${generator.trackAmountPerInterval}" />
 	</bean>
 
-	<camel:camelContext id="stueCamelContext"
-		xmlns="http://camel.apache.org/schema/spring">
+	<camel:template id="sbs1Producer" defaultEndpoint="direct:sbs1_in" />
 
-		<propertyPlaceholder id="properties" location="sbs1route-config.properties" />
+	<camel:template id="generatedTrackProducer" defaultEndpoint="direct:trackgeneration" />
 
-		<camel:template id="sbs1Producer" defaultEndpoint="direct:sbs1_in" />
+	<camel:routeContext id="stueSBS1Routes" xmlns="http://camel.apache.org/schema/spring">
 
-		<camel:template id="generatedTrackProducer" defaultEndpoint="direct:trackgeneration" />
+		<!-- <propertyPlaceholder id="properties" location="sbs1route-config.properties" />  -->
 
-		<camel:route>
+		<camel:route startupOrder="100" autoStartup="true">
 			<camel:from uri="direct:trackgeneration" />
 			<camel:log message="${body}" logName="GEN_RECEIVED_FEATURE" />
-			<camel:multicast stopOnException="false">
-				<camel:when>
-					<simple>${properties:websocket.enabled}</simple>
-					<camel:to ref="websocketClientJSONEndpoint" />
-				</camel:when>
-				<camel:otherwise>
-					<camel:stop />
-				</camel:otherwise>
-
-				<camel:to uri="direct:sos" />
-			</camel:multicast>
+			<camel:to uri="direct:sbs1_out" />
 		</camel:route>
 
-		<camel:route autoStartup="true">
+		<camel:route autoStartup="false">
 			<camel:from uri="direct:sbs1_in" />
 			<camel:unmarshal ref="bindyDataformat" />
 			<camel:process ref="sbs1Processor" />
 			<convertBodyTo type="ch.stue.domain.GeoJSONFeature" />
 			<camel:process ref="filterDuplicateValueProcessor"></camel:process>
-			<camel:when>
+			<camel:filter>
 				<simple>${body.geometry} != null 
 					|| ${body.properties.size} >= ${properties:filter.minproperties}</simple>
 				<camel:log message="${body}" logName="RECEIVED_FEATURE" />
 				<camel:to uri="direct:sbs1_out" />
-			</camel:when>
-			<camel:otherwise>
-				<camel:stop />
-			</camel:otherwise>
+			</camel:filter>
 		</camel:route>
 
-	</camel:camelContext>
+	</camel:routeContext>
 
 </beans>

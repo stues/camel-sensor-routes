@@ -1,8 +1,11 @@
 package ch.stue.domain.transmitter.websocket;
 
+import java.util.Collections;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.camel.component.websocket.NodeSynchronization;
+import org.apache.camel.component.websocket.WebSocketFactory;
 import org.apache.camel.component.websocket.WebsocketComponentServlet;
 import org.eclipse.jetty.websocket.WebSocket;
 
@@ -22,7 +25,7 @@ public class FilterWebsocketComponentServlet extends WebsocketComponentServlet {
 	 * @param sync the node synchronization object
 	 */
 	public FilterWebsocketComponentServlet(NodeSynchronization sync) {
-		super(sync);
+		super(sync, Collections.<String, WebSocketFactory>emptyMap());
 		this.sync = sync;
 	}
 	

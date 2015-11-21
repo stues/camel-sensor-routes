@@ -15,41 +15,39 @@
 
 	<bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
 		<property name="locations" value="classpath*:aisroute-config.properties" />
 		<property name="properties">
 			<props>
-				<prop key="ais.sourcename">src/main/resources/ais.txt</prop>			
+				<prop key="ais.enabled">false</prop>
+				<prop key="ais.sourcename">/dev/ttyACM0</prop>			
 			</props>
 		</property>
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 	</bean>
 
 	<import resource="ais-config-context.xml" />
+	
+	<camel:routeContext id="stueAISRoutes" xmlns="http://camel.apache.org/schema/spring">
 
-
-	<camel:camelContext id="stueCamelContext" xmlns="http://camel.apache.org/schema/spring">
-
-		<propertyPlaceholder id="properties" location="aisroute-config.properties" />
+		<!-- <propertyPlaceholder id="properties" location="aisroute-config.properties" />  -->
 		
-		<camel:route>
+		<camel:route autoStartup="false">
 			<camel:from uri="direct:ais_in" />
 			<camel:process ref="aisProcessor" />
-			<camel:when>
+			<camel:filter>
 				<simple>${body} != null</simple>
 				<convertBodyTo type="ch.stue.domain.GeoJSONFeature" />
 				<camel:log message="${body}" logName="RECEIVED_FEATURE" />
 				<camel:to uri="direct:ais_out" />
-			</camel:when>
-			<camel:otherwise>
-				<camel:stop />
-			</camel:otherwise>
+			</camel:filter>
 		</camel:route>
 
-		<camel:route autoStartup="true">
+		<camel:route autoStartup="false">
 			<camel:from	uri="stream:file?fileName=${ais.sourceName}&amp;scanStream=true" />
 			<to uri="direct:ais_in" />
 		</camel:route>
 
-	</camel:camelContext>
+	</camel:routeContext>
 
 </beans>

@@ -46,12 +46,12 @@
 	
 	<bean id="filterDuplicateValueProcessor" class="ch.stue.common.processor.FilterDuplicateValueProcessor">
 		<property name="cleanupInterval" value="${filter.duplicates.cleanupInterval}" />
-		<property name="idProperty"><util:constant static-field="ch.stue.receiver.sbs1.domain.HEX_PROPERTY_NAME"/></property>
+		<property name="idProperty"><util:constant static-field="ch.stue.receiver.sbs1.domain.TrackPositionMessage.HEX_PROPERTY_NAME"/></property>
 		<property name="comparableDateProperty"><util:constant static-field="ch.stue.receiver.sbs1.domain.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME"/></property>
 	</bean>
 
 	<bean id="bindyDataformat" class="org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat">
-		<constructor-arg value="ch.stue.receiver.sbs1.domain" />
+		<constructor-arg value="ch.stue.receiver.sbs1.domain.SBS1Message" />
 	</bean>
 
 	<bean id="sbs1DataReceiver" class="ch.stue.receiver.sbs1.SBS1DataReceiver">
@@ -62,7 +62,7 @@
 	</bean>  
 
 	<bean id="camelStartupListener" class="ch.stue.receiver.sbs1.CamelStartupListener">
-		<property name="camelContext" ref="sbs1RouteCamelContext" />
+		<property name="camelContext" ref="stueCamelContext" />
 		<property name="sbs1DataReceiver" ref="sbs1DataReceiver" />
 	</bean>
 </beans>

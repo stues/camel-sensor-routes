@@ -24,7 +24,7 @@
     <compiler.plugin.source.version>1.6</compiler.plugin.source.version>
     <compiler.plugin.target.version>1.6</compiler.plugin.target.version>
 
-    <camel.version>2.15.0</camel.version>
+    <camel.version>2.16.0</camel.version>
     <jackson.version>2.3.1</jackson.version>
     <commons.lang.version>3.3.2</commons.lang.version>
     <commons.beanutils.version>1.9.2</commons.beanutils.version>

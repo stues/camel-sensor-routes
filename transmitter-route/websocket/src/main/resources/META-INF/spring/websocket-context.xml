@@ -15,6 +15,7 @@
 
 	<bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
 		<property name="locations" value="classpath*:websocket-config.properties" />
 		<property name="properties">
 			<props>
@@ -33,12 +34,12 @@
 		<property name="websocketStore" ref="websocketStore" />
 	</bean>
 
-	<camel:camelContext id="stueCamelContext" xmlns="http://camel.apache.org/schema/spring">
+	<!-- Websocket Endpoint -->
+	<camel:endpoint id="websocketClientJSONEndpoint" uri="filterwebsocket://${websocket.host}:${websocket.port}${websocket.path}?websocketStore=#websocketStore&amp;sendToAll=true" />
 
-		<propertyPlaceholder id="properties" location="websocket-config.properties" />
+	<camel:routeContext id="stueWebsocketRoutes" xmlns="http://camel.apache.org/schema/spring">
 
-		<!-- Websocket Endpoint -->
-		<camel:endpoint id="websocketClientJSONEndpoint" uri="filterwebsocket://${websocket.host}:${websocket.port}${websocket.path}?websocketStore=#websocketStore&amp;sendToAll=true" />
+		<!-- <propertyPlaceholder id="properties" location="websocket-config.properties" />  -->
 
 		<camel:route autoStartup="true">
 			<camel:from uri="websocketClientJSONEndpoint" />
@@ -50,15 +51,15 @@
 
 		<camel:route>
 			<camel:from uri="direct:websocket_in" />
-			<camel:when>
+			<camel:filter>
 				<simple>${properties:websocket.enabled}</simple>
 				<camel:to ref="websocketClientJSONEndpoint" />
-			</camel:when>
+			</camel:filter>
 			<camel:otherwise>
 				<camel:stop />
 			</camel:otherwise>
 		</camel:route>
 
-	</camel:camelContext>
+	</camel:routeContext>
 
 </beans>
