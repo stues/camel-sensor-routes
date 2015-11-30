@@ -1,0 +1,2 @@
+ch.stue.domain.transmitter.websocket.converter.StringToGeoJSONFeatureConverter,
+ch.stue.domain.transmitter.websocket.converter.GeoJSONFeatureToStringConverter

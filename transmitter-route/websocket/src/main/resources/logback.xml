@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%p] %c [%t] - %m%n</pattern>
+		</encoder>
+	</appender>
+	<appender class="ch.qos.logback.core.FileAppender" name="FILE">
+		<file>datareceiver.log</file>
+		<append>false</append>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%p] %c [%t] - %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender class="ch.qos.logback.core.FileAppender" name="MSG_JSON_LOGGER">
+		<file>datareceiver-JSON.log</file>
+		<append>false</append>
+		<encoder>
+			<pattern>%m%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger additivity="false" level="INFO" name="JSON">
+		<appender-ref ref="MSG_JSON_LOGGER" />
+	</logger>
+
+	<appender class="ch.qos.logback.core.FileAppender" name="INSERT_OBSERVATION_LOGGER">
+		<file>datareceiver-SOS_INSERTOBSERVATION.log</file>
+		<append>false</append>
+		<encoder>
+			<pattern>%d{dd.MM.yyyy HH:mm:ss.SSS}: %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger additivity="false" level="INFO" name="SOS_INSERTOBSERVATION">
+		<appender-ref ref="INSERT_OBSERVATION_LOGGER" />
+	</logger>
+
+
+	<!-- Received Objects -->
+	<appender class="ch.qos.logback.core.FileAppender" name="GEN_RECEIVED_FEATURE_LOGGER">
+		<file>datareceiver-GEN_RECEIVED_FEATURE.log</file>
+		<append>false</append>
+		<encoder>
+			<pattern>%m%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger additivity="false" level="INFO" name="GEN_RECEIVED_FEATURE">
+		<appender-ref ref="GEN_RECEIVED_FEATURE_LOGGER" />
+	</logger>
+
+	<appender class="ch.qos.logback.core.FileAppender" name="RECEIVED_FEATURE_LOGGER">
+		<file>datareceiver-RECEIVED_FEATURE.log</file>
+		<append>false</append>
+		<encoder>
+			<pattern>%m%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger additivity="false" level="INFO" name="RECEIVED_FEATURE">
+		<appender-ref ref="RECEIVED_FEATURE_LOGGER" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="FILE" />
+	</root>
+</configuration>

@@ -1,4 +1,0 @@
-ch.trackdata.sbs1route.converter.SBS1ToFeatureConverter,
-ch.trackdata.sbs1route.converter.FeatureToInsertObservationConverter,
-ch.trackdata.sbs1route.converter.StringToGeoJSONFeatureConverter,
-ch.trackdata.sbs1route.converter.GeoJSONFeatureToStringConverter

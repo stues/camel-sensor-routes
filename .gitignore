@@ -4,3 +4,6 @@
 **/.settings
 **/*.log
 **/*~
+common/bin
+domain/bin
+
