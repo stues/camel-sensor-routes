@@ -9,3 +9,4 @@ A camel route that
 - allows websocket filtering on client level
 
 Use org.apache.camel.spring.Main to start in debugger.
+

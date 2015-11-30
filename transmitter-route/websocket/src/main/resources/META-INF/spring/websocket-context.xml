@@ -16,7 +16,7 @@
 	<bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="ignoreUnresolvablePlaceholders" value="true"/>
-		<property name="locations" value="classpath*:websocket-config.properties" />
+		<property name="locations" value="classpath*:websocketroute-config.properties" />
 		<property name="properties">
 			<props>
 				<prop key="websocket.enabled">true</prop>

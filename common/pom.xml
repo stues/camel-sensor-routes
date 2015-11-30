@@ -104,20 +104,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.4</version>
+        <version>${jar.plugin.version}</version>
         <configuration>
-          <excludes>
-            <exclude>**/sbs1route-config.properties</exclude>
-          </excludes>
           <useUniqueVersions>false</useUniqueVersions>
-          <archive>
-            <manifest>
-              <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
-              <useUniqueVersions>false</useUniqueVersions>
-              <mainClass>org.apache.camel.spring.Main</mainClass>
-            </manifest>
-          </archive>
         </configuration>
       </plugin>
     </plugins>
@@ -136,7 +125,7 @@
                   <pluginExecutionFilter>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <versionRange>[2.8,)</versionRange>
+                    <versionRange>[${dependency.plugin.version},)</versionRange>
                     <goals>
                       <goal>copy-dependencies</goal>
                     </goals>

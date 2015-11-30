@@ -26,12 +26,12 @@
       <dependency>
       <groupId>ch.stue</groupId>
       <artifactId>stue-domain</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${stue.version}</version>
     </dependency>
     <dependency>
       <groupId>ch.stue</groupId>
       <artifactId>stue-common</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${stue.version}</version>
     </dependency>
 
     <!-- AIS parser -->
@@ -55,16 +55,16 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.5.1</version>
+        <version>${compiler.plugin.version}</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>${compiler.plugin.source.version}</source>
+          <target>${compiler.plugin.target.version}</target>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
+        <version>${resource.plugin.version}</version>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
@@ -73,12 +73,11 @@
       <plugin>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-maven-plugin</artifactId>
-        <version>2.12.2</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.8</version>
+        <version>${dependency.plugin.version}</version>
         <executions>
           <execution>
             <id>copy-dependencies</id>
@@ -98,10 +97,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.4</version>
+        <version>${jar.plugin.version}</version>
         <configuration>
           <excludes>
-            <exclude>**/sbs1route-config.properties</exclude>
+            <exclude>**/aisroute-config.properties</exclude>
           </excludes>
           <useUniqueVersions>false</useUniqueVersions>
           <archive>
@@ -130,7 +129,7 @@
                   <pluginExecutionFilter>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <versionRange>[2.8,)</versionRange>
+                    <versionRange>[${dependency.plugin.version},)</versionRange>
                     <goals>
                       <goal>copy-dependencies</goal>
                     </goals>
