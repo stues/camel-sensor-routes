@@ -45,7 +45,7 @@
 	<bean id="sbs1Processor" class="ch.stue.receiver.sbs1.SBS1Processor" />
 	
 	<bean id="filterDuplicateValueProcessor" class="ch.stue.common.processor.FilterDuplicateValueProcessor">
-		<property name="cleanupInterval" value="${filter.duplicates.cleanupInterval}" />
+		<property name="cleanupInterval" value="${sbs1.filter.duplicates.cleanupInterval}" />
 		<property name="idProperty"><util:constant static-field="ch.stue.receiver.sbs1.domain.TrackPositionMessage.HEX_PROPERTY_NAME"/></property>
 		<property name="comparableDateProperty"><util:constant static-field="ch.stue.receiver.sbs1.domain.TrackPositionMessage.DATE_TIME_MESSAGE_GENERATED_NAME"/></property>
 	</bean>
@@ -59,10 +59,5 @@
 		<property name="host" value="${sbs1.host}" />
 		<property name="port" value="${sbs1.port}" />
 		<property name="SBS1ProducerAdapter" ref="sbs1ProducerAdapter" />
-	</bean>  
-
-	<bean id="camelStartupListener" class="ch.stue.receiver.sbs1.CamelStartupListener">
-		<property name="camelContext" ref="stueCamelContext" />
-		<property name="sbs1DataReceiver" ref="sbs1DataReceiver" />
 	</bean>
 </beans>

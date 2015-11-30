@@ -23,22 +23,22 @@
 				<prop key="sbs1.host"><!-- The SBS1 Station IP --></prop>
 				<prop key="sbs1.port">30003</prop>
 
-				<prop key="filter.minproperties">3</prop>
-				<prop key="filter.duplicates.cleanupInterval">30000</prop>
+				<prop key="sbs1.filter.minproperties">3</prop>
+				<prop key="sbs1.filter.duplicates.cleanupInterval">30000</prop>
 
-				<prop key="generator.enabled">false</prop>
-				<prop key="generator.amountOfTracks">20</prop>
-				<prop key="generator.updateInterval">200</prop>
-				<prop key="generator.initialDelay">10000</prop>
-				<prop key="generator.duration">0</prop>
-				<prop key="generator.trackAmountPerInterval">1</prop>
+				<prop key="sbs1.generator.enabled">false</prop>
+				<prop key="sbs1.generator.amountOfTracks">20</prop>
+				<prop key="sbs1.generator.updateInterval">200</prop>
+				<prop key="sbs1.generator.initialDelay">10000</prop>
+				<prop key="sbs1.generator.duration">0</prop>
+				<prop key="sbs1.generator.trackAmountPerInterval">1</prop>
 
-				<prop key="generator.useVariableInterval">false</prop>
-				<prop key="generator.variableInterval.startAmount">1</prop>
-				<prop key="generator.variableInterval.stepAmount">10</prop>
-				<prop key="generator.variableInterval.stepSize">1</prop>
-				<prop key="generator.variableInterval.stepDuration">30000</prop>
-				<prop key="generator.variableInterval.delayBetweenSteps">2000</prop>
+				<prop key="sbs1.generator.useVariableInterval">false</prop>
+				<prop key="sbs1.generator.variableInterval.startAmount">1</prop>
+				<prop key="sbs1.generator.variableInterval.stepAmount">10</prop>
+				<prop key="sbs1.generator.variableInterval.stepSize">1</prop>
+				<prop key="sbs1.generator.variableInterval.stepDuration">30000</prop>
+				<prop key="sbs1.generator.variableInterval.delayBetweenSteps">2000</prop>
 			</props>
 		</property>
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
@@ -48,9 +48,9 @@
 
 	<bean id="randomTrackGenerator" class="ch.stue.receiver.sbs1.generator.RandomTrackGenerator">
 		<property name="producerTemplate" ref="generatedTrackProducer" />
-		<property name="enabled" value="${generator.enabled}" />
-		<property name="amountOfTracks" value="${generator.amountOfTracks}" />
-		<property name="useVariableInterval" value="${generator.useVariableInterval}" />
+		<property name="enabled" value="${sbs1.generator.enabled}" />
+		<property name="amountOfTracks" value="${sbs1.generator.amountOfTracks}" />
+		<property name="useVariableInterval" value="${sbs1.generator.useVariableInterval}" />
 		<property name="fixGeneratorInterval" ref="fixGeneratorInterval" />
 		<property name="variableGeneratorInterval" ref="variableGeneratorInterval" />
 		<property name="minLatitude" value="44" />
@@ -63,40 +63,44 @@
 	</bean>
 
 	<bean id="fixGeneratorInterval" class="ch.stue.receiver.sbs1.generator.FixGeneratorInterval">
-		<property name="updateInterval" value="${generator.updateInterval}" />
-		<property name="initialDelay" value="${generator.initialDelay}" />
-		<property name="duration" value="${generator.duration}" />
-		<property name="trackAmount" value="${generator.trackAmountPerInterval}" />
+		<property name="updateInterval" value="${sbs1.generator.updateInterval}" />
+		<property name="initialDelay" value="${sbs1.generator.initialDelay}" />
+		<property name="duration" value="${sbs1.generator.duration}" />
+		<property name="trackAmount" value="${sbs1.generator.trackAmountPerInterval}" />
 	</bean>
 
 	<bean id="variableGeneratorInterval"
 		class="ch.stue.receiver.sbs1.generator.VariableGeneratorInterval">
-		<property name="enabled" value="${generator.useVariableInterval}" />
-		<property name="initialDelay" value="${generator.initialDelay}" />
-		<property name="startTrackAmount" value="${generator.variableInterval.startAmount}" />
-		<property name="amountOfSteps" value="${generator.variableInterval.stepAmount}" />
-		<property name="stepSize" value="${generator.variableInterval.stepSize}" />
-		<property name="stepDuration" value="${generator.variableInterval.stepDuration}" />
+		<property name="enabled" value="${sbs1.generator.useVariableInterval}" />
+		<property name="initialDelay" value="${sbs1.generator.initialDelay}" />
+		<property name="startTrackAmount" value="${sbs1.generator.variableInterval.startAmount}" />
+		<property name="amountOfSteps" value="${sbs1.generator.variableInterval.stepAmount}" />
+		<property name="stepSize" value="${sbs1.generator.variableInterval.stepSize}" />
+		<property name="stepDuration" value="${sbs1.generator.variableInterval.stepDuration}" />
 		<property name="delayBetweenSteps"
-			value="${generator.variableInterval.delayBetweenSteps}" />
-		<property name="trackAmount" value="${generator.trackAmountPerInterval}" />
+			value="${sbs1.generator.variableInterval.delayBetweenSteps}" />
+		<property name="trackAmount" value="${sbs1.generator.trackAmountPerInterval}" />
+	</bean>
+
+	<bean id="sbs1GeneratorStartupListener" class="ch.stue.receiver.sbs1.SBS1GeneratorStartupListener">
+		<property name="camelContext" ref="stueCamelContext" />
+		<property name="randomTrackGenerator" ref="randomTrackGenerator" />
+		<property name="startGenerator" value="${sbs1.generator.enabled}" />
+	</bean>
+
+	<bean id="sbs1StartupListener" class="ch.stue.receiver.sbs1.SBS1StartupListener">
+		<property name="camelContext" ref="stueCamelContext" />
+		<property name="sbs1DataReceiver" ref="sbs1DataReceiver" />
+		<property name="startRoutes" value="${sbs1.enabled}" />
 	</bean>
 
 	<camel:template id="sbs1Producer" defaultEndpoint="direct:sbs1_in" />
 
-	<camel:template id="generatedTrackProducer" defaultEndpoint="direct:trackgeneration" />
+	<camel:template id="generatedTrackProducer" defaultEndpoint="direct:sbs1_out?failIfNoConsumers=false" />
 
 	<camel:routeContext id="stueSBS1Routes" xmlns="http://camel.apache.org/schema/spring">
 
-		<!-- <propertyPlaceholder id="properties" location="sbs1route-config.properties" />  -->
-
-		<camel:route startupOrder="100" autoStartup="true">
-			<camel:from uri="direct:trackgeneration" />
-			<camel:log message="${body}" logName="GEN_RECEIVED_FEATURE" />
-			<camel:to uri="direct:sbs1_out" />
-		</camel:route>
-
-		<camel:route autoStartup="false">
+		<camel:route id="sbs1ProcessRoute" autoStartup="{{sbs1.enabled}}">
 			<camel:from uri="direct:sbs1_in" />
 			<camel:unmarshal ref="bindyDataformat" />
 			<camel:process ref="sbs1Processor" />
@@ -104,9 +108,9 @@
 			<camel:process ref="filterDuplicateValueProcessor"></camel:process>
 			<camel:filter>
 				<simple>${body.geometry} != null 
-					|| ${body.properties.size} >= ${properties:filter.minproperties}</simple>
+					|| ${body.properties.size} >= ${properties:sbs1.filter.minproperties}</simple>
 				<camel:log message="${body}" logName="RECEIVED_FEATURE" />
-				<camel:to uri="direct:sbs1_out" />
+				<camel:to uri="direct:sbs1_out?failIfNoConsumers=false" />
 			</camel:filter>
 		</camel:route>
 

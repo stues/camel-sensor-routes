@@ -34,28 +34,22 @@
 
 	<camel:routeContext id="stueSOSRoutes" xmlns="http://camel.apache.org/schema/spring">
 
-		<!-- <propertyPlaceholder id="properties" location="sosroute-config.properties" />  -->
-
 		<!-- Sensor Observation Service Endpoint -->
-
-		<camel:route>
+		<camel:route id="sosRoute" autoStartup="{{sos.enabled}}">
 			<camel:from uri="direct:sos_in" />
-			<camel:filter>
-				<simple>${properties:sos.enabled}</simple>
-				<convertBodyTo type="javax.xml.bind.JAXBElement" />
-				<marshal>
-					<jaxb id="myJaxb" prettyPrint="false"
-						contextPath="net.opengis.sos.v_2_0_0:net.opengis.swe.v_2_0_0:net.opengis.filter.v_2_0_0" />
-				</marshal>
-				<setHeader headerName="CamelHttpMethod">
-					<constant>POST</constant>
-				</setHeader>
-				<setHeader headerName="Content-Type">
-					<simple>application/xml</simple>
-				</setHeader>
-				<log message="${body}" logName="SOS_INSERTOBSERVATION" />
-				<to uri="sosEndpoint" />
-			</camel:filter>
+			<convertBodyTo type="javax.xml.bind.JAXBElement" />
+			<marshal>
+				<jaxb id="myJaxb" prettyPrint="false"
+					contextPath="net.opengis.sos.v_2_0_0:net.opengis.swe.v_2_0_0:net.opengis.filter.v_2_0_0" />
+			</marshal>
+			<setHeader headerName="CamelHttpMethod">
+				<constant>POST</constant>
+			</setHeader>
+			<setHeader headerName="Content-Type">
+				<simple>application/xml</simple>
+			</setHeader>
+			<log message="${body}" logName="SOS_INSERTOBSERVATION" />
+			<to uri="sosEndpoint" />
 		</camel:route>
 
 	</camel:routeContext>

@@ -39,9 +39,7 @@
 
 	<camel:routeContext id="stueWebsocketRoutes" xmlns="http://camel.apache.org/schema/spring">
 
-		<!-- <propertyPlaceholder id="properties" location="websocket-config.properties" />  -->
-
-		<camel:route autoStartup="true">
+		<camel:route id="websocketInputRoute" autoStartup="{{websocket.enabled}}">
 			<camel:from uri="websocketClientJSONEndpoint" />
 			<convertBodyTo type="ch.stue.domain.GeoJSONFeature" />
 			<camel:process ref="filterWebsocketProcessor"></camel:process>
@@ -49,7 +47,7 @@
 			<camel:stop />
 		</camel:route>
 
-		<camel:route>
+		<camel:route id="websocketRoute" autoStartup="{{websocket.enabled}}">
 			<camel:from uri="direct:websocket_in" />
 			<camel:filter>
 				<simple>${properties:websocket.enabled}</simple>

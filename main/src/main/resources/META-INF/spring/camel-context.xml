@@ -35,19 +35,19 @@
 		<camel:routeContextRef ref="stueSOSRoutes" />
 		<camel:routeContextRef ref="stueWebsocketRoutes" />
 
-		<camel:route autoStartup="true">
+		<camel:route autoStartup="{{sbs1.enabled}}">
 			<camel:from uri="direct:sbs1_out" />
 			<camel:multicast stopOnException="false">
-				<camel:to uri="direct:websocket_in" />
-				<camel:to uri="direct:sos_in" />
+				<camel:to uri="direct:websocket_in?failIfNoConsumers=false" />
+				<camel:to uri="direct:sos_in?failIfNoConsumers=false" />
 			</camel:multicast>
 		</camel:route>
 
-		<camel:route autoStartup="true">
+		<camel:route autoStartup="{{ais.enabled}}">
 			<camel:from uri="direct:ais_out" />
 			<camel:multicast stopOnException="false">
-				<camel:to uri="direct:websocket_in" />
-				<camel:to uri="direct:sos_in" />
+				<camel:to uri="direct:websocket_in?failIfNoConsumers=false" />
+				<camel:to uri="direct:sos_in?failIfNoConsumers=false" />
 			</camel:multicast>
 		</camel:route>
 

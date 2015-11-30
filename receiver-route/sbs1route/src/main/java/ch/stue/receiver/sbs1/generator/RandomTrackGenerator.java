@@ -16,10 +16,10 @@ import ch.stue.receiver.sbs1.domain.TrackPositionMessage;
 
 /**
  * This Class instantiates a defined amount of tracks {@link #amountOfTracks}
- * and moves them according the defined interval {@link #updateInterval}
- * the results are written into the producer {@link #producerTemplate}
+ * and moves them according the defined interval {@link #updateInterval} the
+ * results are written into the producer {@link #producerTemplate}
  */
-public class RandomTrackGenerator implements InitializingBean{
+public class RandomTrackGenerator implements InitializingBean {
 
 	private static final double KNOTS_TO_KMH_FACTOR = 1.852;
 
@@ -35,21 +35,21 @@ public class RandomTrackGenerator implements InitializingBean{
 	private int maxAltitudeDelta = 4000;
 	private int maxSpeedDelta = 40;
 	private int maxHeadingDelta = 40;
-	
+
 	private boolean enabled = true;
-	
+
 	private List<TrackPositionMessage> trackPositions = null;
 
 	private int currentTrack;
-	
+
 	private boolean generating = false;
 
 	private TrackGeneratorIntervalAware fixGeneratorInterval;
-	
+
 	private TrackGeneratorIntervalAware variableGeneratorInterval;
-	
+
 	private boolean useVariableInterval = false;
-	
+
 	private int amountOfTracks;
 
 	private Thread offlineSourceThread;
@@ -57,22 +57,27 @@ public class RandomTrackGenerator implements InitializingBean{
 	private ProducerTemplate producerTemplate;
 
 	private final Random random = new Random();
-	
+
 	/**
 	 * Instantiate the Array and start the update thread
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if(isEnabled() && amountOfTracks > 0){
+		if (isEnabled() && amountOfTracks > 0) {
 			trackPositions = new ArrayList<TrackPositionMessage>(amountOfTracks);
-	
+
 			for (int i = 0; i < amountOfTracks; i++) {
 				TrackPositionMessage trackPosition = createRandomTrackPosition();
 				trackPositions.add(trackPosition);
 			}
-	
-			getUpdateIntervalAware().start(this);
 		}
+	}
+
+	/**
+	 * Starts the generator
+	 */
+	public void startGenerator() {
+		getUpdateIntervalAware().start(this);
 	}
 
 	/**
@@ -99,7 +104,7 @@ public class RandomTrackGenerator implements InitializingBean{
 	protected String getRandomHexIdent() {
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < 2; i++) {
-			builder.append((char)('A' + random.nextInt(('Z'-'A')+1)));
+			builder.append((char) ('A' + random.nextInt(('Z' - 'A') + 1)));
 		}
 		builder.append(random.nextInt(10000));
 		return builder.toString();
@@ -111,7 +116,7 @@ public class RandomTrackGenerator implements InitializingBean{
 	protected String getRandomCallSign() {
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < 3; i++) {
-			builder.append((char)('A' + random.nextInt(('Z'-'A')+1)));
+			builder.append((char) ('A' + random.nextInt(('Z' - 'A') + 1)));
 		}
 		builder.append(random.nextInt(1000));
 		return builder.toString();
@@ -163,8 +168,10 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * move and update the given trackPosition according the attributes 
-	 * @param trackPosition the trackPosition to move
+	 * move and update the given trackPosition according the attributes
+	 * 
+	 * @param trackPosition
+	 *            the trackPosition to move
 	 */
 	private void updateTrackPosition(TrackPositionMessage trackPosition) {
 		updateHeading(trackPosition);
@@ -177,47 +184,56 @@ public class RandomTrackGenerator implements InitializingBean{
 
 	/**
 	 * Returns the new value +- half of the max delta
-	 * @param value the value
-	 * @param maxDelta the maximum delta
+	 * 
+	 * @param value
+	 *            the value
+	 * @param maxDelta
+	 *            the maximum delta
 	 * @return the calculated random value
 	 */
-	private int getRandomValue(int value, int maxDelta){
-		return value + (int)( Math.random() * maxDelta - (maxDelta / 2));
+	private int getRandomValue(int value, int maxDelta) {
+		return value + (int) (Math.random() * maxDelta - (maxDelta / 2));
 	}
-	
+
 	/**
 	 * Update the altitude of the given TrackPosition
-	 * @param trackPosition the trackPosition to update
+	 * 
+	 * @param trackPosition
+	 *            the trackPosition to update
 	 */
 	private void updateAltitude(TrackPositionMessage trackPosition) {
-		int halfMaxAltitudeDelta = maxAltitudeDelta/2;
+		int halfMaxAltitudeDelta = maxAltitudeDelta / 2;
 		int trackAltitude = getRandomValue(trackPosition.getAltitude(), maxAltitudeDelta);
 
 		if (trackAltitude < halfMaxAltitudeDelta) {
 			trackAltitude = halfMaxAltitudeDelta;
-		} else if (trackAltitude > maxAltitudeDelta*10) {
-			trackAltitude = maxAltitudeDelta*10;
+		} else if (trackAltitude > maxAltitudeDelta * 10) {
+			trackAltitude = maxAltitudeDelta * 10;
 		}
 		trackPosition.setAltitude(trackAltitude);
 	}
-	
+
 	/**
 	 * Update the ground speed of the given TrackPosition
-	 * @param trackPosition the trackPosition to update
+	 * 
+	 * @param trackPosition
+	 *            the trackPosition to update
 	 */
 	private void updateGroundSpeed(TrackPositionMessage trackPosition) {
 		int speedKnots = getRandomValue(trackPosition.getGroundSpeed(), maxSpeedDelta);
 		if (speedKnots < maxSpeedDelta) {
 			speedKnots = maxSpeedDelta;
-		} else if (speedKnots > maxSpeedDelta*20) {
-			speedKnots = maxSpeedDelta*20;
+		} else if (speedKnots > maxSpeedDelta * 20) {
+			speedKnots = maxSpeedDelta * 20;
 		}
 		trackPosition.setGroundSpeed(speedKnots);
 	}
-	
+
 	/**
 	 * Update the position of the given TrackPosition
-	 * @param trackPosition the trackPosition to update
+	 * 
+	 * @param trackPosition
+	 *            the trackPosition to update
 	 */
 	private void updatePosition(TrackPositionMessage trackPosition) {
 		PointGeometry geometry = (PointGeometry) trackPosition.getGeometry();
@@ -236,18 +252,17 @@ public class RandomTrackGenerator implements InitializingBean{
 
 	/**
 	 * Update the heading of the given TrackPosition
-	 * @param trackPosition the trackPosition to update
+	 * 
+	 * @param trackPosition
+	 *            the trackPosition to update
 	 */
 	private void updateHeading(TrackPositionMessage trackPosition) {
-		
+
 		PointGeometry geometry = (PointGeometry) trackPosition.getGeometry();
 		double currentLongitude = geometry.getLongitude();
 		double currentLatitude = geometry.getLatitude();
-		
-		if ((currentLatitude < minLatitude) 
-				|| (currentLatitude > maxLatitude) 
-				|| (currentLongitude < minLongitude) 
-				|| (currentLongitude > maxLongitude)) {
+
+		if ((currentLatitude < minLatitude) || (currentLatitude > maxLatitude) || (currentLongitude < minLongitude) || (currentLongitude > maxLongitude)) {
 			int heading = trackPosition.getHeading();
 			if (random.nextBoolean()) {
 				heading += 45;
@@ -256,8 +271,8 @@ public class RandomTrackGenerator implements InitializingBean{
 			}
 			trackPosition.setHeading(heading % 360);
 		} else {
-			if (random.nextInt(100)>=99) {
-				int heading = getRandomValue(trackPosition.getHeading(),maxHeadingDelta);
+			if (random.nextInt(100) >= 99) {
+				int heading = getRandomValue(trackPosition.getHeading(), maxHeadingDelta);
 				if (heading <= 0) {
 					heading += 360;
 				} else if (heading > 360) {
@@ -274,24 +289,23 @@ public class RandomTrackGenerator implements InitializingBean{
 	public int getUpdateInterval() {
 		return getUpdateIntervalAware().getUpdateInterval();
 	}
-	
+
 	/**
 	 * @return the updateInterval
 	 */
 	public int getTrackAmountPerInterval() {
 		return getUpdateIntervalAware().getTrackAmount();
 	}
-	
+
 	/**
 	 * @return the current update interval aware instance
 	 */
-	public TrackGeneratorIntervalAware getUpdateIntervalAware(){
-		if(useVariableInterval){
+	public TrackGeneratorIntervalAware getUpdateIntervalAware() {
+		if (useVariableInterval) {
 			return variableGeneratorInterval;
-		}
-		else{
+		} else {
 			return fixGeneratorInterval;
-		}		
+		}
 	}
 
 	/**
@@ -302,7 +316,8 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * @param producerTemplate the producerTemplate to set
+	 * @param producerTemplate
+	 *            the producerTemplate to set
 	 */
 	public void setProducerTemplate(ProducerTemplate producerTemplate) {
 		this.producerTemplate = producerTemplate;
@@ -314,9 +329,10 @@ public class RandomTrackGenerator implements InitializingBean{
 	public double getMinLatitude() {
 		return minLatitude;
 	}
-	
+
 	/**
-	 * @param minLatitude the minLatitude to set
+	 * @param minLatitude
+	 *            the minLatitude to set
 	 */
 	public void setMinLatitude(double minLatitude) {
 		this.minLatitude = minLatitude;
@@ -330,7 +346,8 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * @param maxLatitude the maxLatitude to set
+	 * @param maxLatitude
+	 *            the maxLatitude to set
 	 */
 	public void setMaxLatitude(double maxLatitude) {
 		this.maxLatitude = maxLatitude;
@@ -344,7 +361,8 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * @param minLongitude the minLongitude to set
+	 * @param minLongitude
+	 *            the minLongitude to set
 	 */
 	public void setMinLongitude(double minLongitude) {
 		this.minLongitude = minLongitude;
@@ -358,7 +376,8 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * @param maxLongitude the maxLongitude to set
+	 * @param maxLongitude
+	 *            the maxLongitude to set
 	 */
 	public void setMaxLongitude(double maxLongitude) {
 		this.maxLongitude = maxLongitude;
@@ -372,7 +391,8 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * @param maxAltitudeDelta the maxAltitudeDelta to set
+	 * @param maxAltitudeDelta
+	 *            the maxAltitudeDelta to set
 	 */
 	public void setMaxAltitudeDelta(int maxAltitudeDelta) {
 		this.maxAltitudeDelta = maxAltitudeDelta;
@@ -386,7 +406,8 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * @param maxSpeedDelta the maxSpeedDelta to set
+	 * @param maxSpeedDelta
+	 *            the maxSpeedDelta to set
 	 */
 	public void setMaxSpeedDelta(int maxSpeedDelta) {
 		this.maxSpeedDelta = maxSpeedDelta;
@@ -400,7 +421,8 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * @param amountOfTracks the amountOfTracks to set
+	 * @param amountOfTracks
+	 *            the amountOfTracks to set
 	 */
 	public void setAmountOfTracks(int amountOfTracks) {
 		this.amountOfTracks = amountOfTracks;
@@ -414,7 +436,8 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * @param maxHeadingDelta the maxHeadingDelta to set
+	 * @param maxHeadingDelta
+	 *            the maxHeadingDelta to set
 	 */
 	public void setMaxHeadingDelta(int maxHeadingDelta) {
 		this.maxHeadingDelta = maxHeadingDelta;
@@ -428,13 +451,12 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * @param enabled the enabled to set
+	 * @param enabled
+	 *            the enabled to set
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-	
-
 
 	/**
 	 * @return the fixGeneratorInterval
@@ -444,7 +466,8 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * @param fixGeneratorInterval the fixGeneratorInterval to set
+	 * @param fixGeneratorInterval
+	 *            the fixGeneratorInterval to set
 	 */
 	public void setFixGeneratorInterval(TrackGeneratorIntervalAware fixGeneratorInterval) {
 		this.fixGeneratorInterval = fixGeneratorInterval;
@@ -458,7 +481,8 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * @param variableGeneratorInterval the variableGeneratorInterval to set
+	 * @param variableGeneratorInterval
+	 *            the variableGeneratorInterval to set
 	 */
 	public void setVariableGeneratorInterval(TrackGeneratorIntervalAware variableGeneratorInterval) {
 		this.variableGeneratorInterval = variableGeneratorInterval;
@@ -472,7 +496,8 @@ public class RandomTrackGenerator implements InitializingBean{
 	}
 
 	/**
-	 * @param useVariableInterval the useVariableInterval to set
+	 * @param useVariableInterval
+	 *            the useVariableInterval to set
 	 */
 	public void setUseVariableInterval(boolean useVariableInterval) {
 		this.useVariableInterval = useVariableInterval;
@@ -492,23 +517,22 @@ public class RandomTrackGenerator implements InitializingBean{
 			while (generating) {
 				try {
 					int updateDuration = getUpdateInterval();
-					if(LOGGER.isInfoEnabled()){
+					if (LOGGER.isInfoEnabled()) {
 						LOGGER.info("Tracks send - sleeping for " + updateDuration / 1000 + "s");
-					} 
-					if(updateDuration > 0){
-						Thread.sleep(getUpdateInterval());
 					}
-					
-					
-					for (TrackPositionMessage trackPosition: trackPositions) {
+					if (updateDuration > 0) {
+						Thread.sleep(updateDuration);
+					}
+
+					for (TrackPositionMessage trackPosition : trackPositions) {
 						updateTrackPosition(trackPosition);
 					}
-					
+
 					int trackAmountPerInterval = getTrackAmountPerInterval();
-					for(int i= 0; i < trackAmountPerInterval; i++){
+					for (int i = 0; i < trackAmountPerInterval; i++) {
 						TrackPositionMessage trackPosition = trackPositions.get(currentTrack);
 						producerTemplate.sendBody(removeSomeProperties(trackPosition));
-						currentTrack = ++currentTrack%amountOfTracks;
+						currentTrack = ++currentTrack % amountOfTracks;
 					}
 				} catch (InterruptedException e) {
 					LOGGER.debug("Thread has been interrupted", e);
@@ -519,36 +543,37 @@ public class RandomTrackGenerator implements InitializingBean{
 		}
 
 		/**
-		 * Does clone the given {@link TrackPositionMessage} and remove some random properties
+		 * Does clone the given {@link TrackPositionMessage} and remove some
+		 * random properties
 		 * 
-		 * @param trackPosition the trackPosition
-		 * @return a clone of the given trackPosition with less properties 
+		 * @param trackPosition
+		 *            the trackPosition
+		 * @return a clone of the given trackPosition with less properties
 		 */
 		private TrackPositionMessage removeSomeProperties(TrackPositionMessage trackPosition) {
 			TrackPositionMessage trackPositionClone = SerializationUtils.clone(trackPosition);
-			
-			if(doRemoveProperty()){
+
+			if (doRemoveProperty()) {
 				trackPositionClone.setGeometry(null);
 			}
-			if(doRemoveProperty()){
+			if (doRemoveProperty()) {
 				trackPositionClone.setHeading(null);
 			}
-			if(doRemoveProperty()){
+			if (doRemoveProperty()) {
 				trackPositionClone.setAltitude(null);
 			}
-			if(doRemoveProperty()){
+			if (doRemoveProperty()) {
 				trackPositionClone.setCallSign(null);
 			}
 			return trackPositionClone;
 		}
-		
+
 		/**
 		 * @return does randomly return true
 		 */
 		private boolean doRemoveProperty() {
-			return random.nextInt(5)>=4;
+			return random.nextInt(5) >= 4;
 		}
 	}
-
 
 }

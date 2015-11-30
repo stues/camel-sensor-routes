@@ -13,8 +13,7 @@
 
 	<context:annotation-config />
 
-	<bean
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="ignoreUnresolvablePlaceholders" value="true"/>
 		<property name="locations" value="classpath*:aisroute-config.properties" />
 		<property name="properties">
@@ -29,10 +28,9 @@
 	<import resource="ais-config-context.xml" />
 	
 	<camel:routeContext id="stueAISRoutes" xmlns="http://camel.apache.org/schema/spring">
-
-		<!-- <propertyPlaceholder id="properties" location="aisroute-config.properties" />  -->
 		
-		<camel:route autoStartup="false">
+		<!-- AIS Process route -->
+		<camel:route id="aisProcessRoute" autoStartup="{{ais.enabled}}">
 			<camel:from uri="direct:ais_in" />
 			<camel:process ref="aisProcessor" />
 			<camel:filter>
@@ -43,11 +41,12 @@
 			</camel:filter>
 		</camel:route>
 
-		<camel:route autoStartup="false">
+		<!-- Raw AIS input route -->
+		<camel:route id="aisrawInputRoute" autoStartup="{{ais.enabled}}">
 			<camel:from	uri="stream:file?fileName=${ais.sourceName}&amp;scanStream=true" />
 			<to uri="direct:ais_in" />
 		</camel:route>
 
 	</camel:routeContext>
-
+	
 </beans>
