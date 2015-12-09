@@ -1,6 +1,7 @@
 package ch.stue.transmitter.sos.converter.insertobservation;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -72,11 +73,17 @@ public class InsertObservationSOSV2Configuration implements ResourceLoaderAware,
 	public void setOfferings(List<String> offerings) {
 		this.offerings = offerings;
 	}
-		
+	
+	/**
+	 * @param resourceLoader the resourceLoader to set
+	 */
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
 	}
-		
+
+	/**
+	 * @return the resourceLoader
+	 */
 	public Resource getResource(String location){
 		return resourceLoader.getResource(location);
 	}
@@ -101,7 +108,9 @@ public class InsertObservationSOSV2Configuration implements ResourceLoaderAware,
 		Resource resource = getResource(getJsonConfig());
 		InputStream inputStream = resource.getInputStream();
 		ObjectMapper mapper = new ObjectMapper();
-		AbstractPropertyConfiguration<?>[] test = mapper.readValue(inputStream, AbstractPropertyConfiguration[].class);
-		test.toString();
+		AbstractPropertyConfiguration<?>[] propertyConfiguration = mapper.readValue(inputStream, AbstractPropertyConfiguration[].class);
+		if(propertyConfiguration != null){
+			setObservedProperties(Arrays.asList(propertyConfiguration));
+		}
 	}
 }
