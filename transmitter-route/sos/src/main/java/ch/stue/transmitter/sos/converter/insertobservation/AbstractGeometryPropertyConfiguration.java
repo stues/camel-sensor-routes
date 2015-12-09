@@ -13,7 +13,7 @@ import ch.stue.domain.Geometry;
  *            the Type of Object which will be added as result
  */
 public class AbstractGeometryPropertyConfiguration<T extends Geometry<?>> extends AbstractPropertyConfiguration<T> {
-
+	
 	private String geometryMeasurementPropertyName;
 
 	private Class<T> geometryMeasurementPropertyClazz;

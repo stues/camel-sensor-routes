@@ -154,6 +154,7 @@
 
 	<bean id="insertObservationConfiguration"
 		class="ch.stue.transmitter.sos.converter.insertobservation.InsertObservationSOSV2Configuration">
+		<property name="jsonConfig" value="sbs1sos-config.json" />
 		<property name="offerings">
 			<list>
 				<value>http://stue.ch/sensorobservation/offering/flighttracking</value>

@@ -10,6 +10,8 @@ import ch.stue.domain.Feature;
  */
 public class TextPropertyConfiguration extends AbstractPropertyConfiguration<String> {
 
+	public static final String TEXT_TYPE_STRING = "Text";
+	
 	private String featureTextPropertyName;
 
 	/**

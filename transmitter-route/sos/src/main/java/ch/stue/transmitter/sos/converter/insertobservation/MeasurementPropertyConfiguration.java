@@ -11,6 +11,8 @@ import ch.stue.domain.Feature;
  */
 public class MeasurementPropertyConfiguration extends AbstractPropertyConfiguration<Number> {
 
+	public static final String MEASUREMENT_TYPE_STRING = "Measurement";
+	
 	private String featureMeasurementPropertyName;
 
 	private String measureUom;

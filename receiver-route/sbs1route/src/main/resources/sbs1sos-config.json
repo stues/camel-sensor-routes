@@ -1,0 +1,16 @@
+[
+{
+	"type": "Measurement",
+	"observationName": "speedObservation",
+	"procedure": "http://stue.ch/sensorobservation/procedure/sbs-1",
+	"observedProperty": "http://stue.ch/sensorobservation/observableProperty/speed",
+	"featureOfInterestPrefix": "http://stue.ch/sensorobservation/foi/aircraft/",
+	"featureIdentPropertyName": "hexIdent",
+	"featureTitlePropertyName": "hexIdent",
+	"measureUom": "[kn_i]",
+	"featureMeasurementPropertyName": "groundSpeed",
+	"featureMeasurementPropertyClazz": "java.lang.Integer",
+	"phenomenonTimePropertyName": "messageGenerated",
+	"createNullValueMessages": false
+}
+]

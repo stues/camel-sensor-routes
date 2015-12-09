@@ -10,6 +10,8 @@ import ch.stue.domain.PointGeometry;
  */
 public class PointGeometryPropertyConfiguration extends AbstractGeometryPropertyConfiguration<PointGeometry> {
 
+	public static final String POINT_GEOMETRY_TYPE_STRING = "PointGeometry";
+	
 	private String srsName;
 	
 	private String pointId;
