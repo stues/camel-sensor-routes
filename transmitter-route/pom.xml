@@ -25,6 +25,7 @@
   <modules>
     <module>websocket</module>
     <module>sos</module>
+    <module>wfs</module>
   </modules>
 </project>
 

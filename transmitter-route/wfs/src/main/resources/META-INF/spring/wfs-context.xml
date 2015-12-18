@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configures the Camel Context -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<context:annotation-config />
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations" value="classpath*:wfsroute-config.properties" />
+		<property name="properties">
+			<props>
+				<prop key="wfs.enabled">false</prop>
+				<prop key="wfs.host">127.0.0.1</prop>
+				<prop key="wfs.port">80</prop>
+				<prop key="wfs.path">/wfs</prop>
+				<prop key="wfs.workspace">${wfs.workspace}</prop>
+				<prop key="wfs.layer">${wfs.layer}</prop>
+			</props>
+		</property>
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+	</bean>
+
+
+	<camel:endpoint id="wfsEndpoint" uri="wfs://${wfs.host}:${wfs.port}${wfs.path}?workspace=${wfs.workspace}&amp;layer=${wfs.layer}" />
+	
+	<camel:routeContext id="stueWFSRoutes" xmlns="http://camel.apache.org/schema/spring">
+
+		<!-- WFS Route -->
+		<camel:route id="wfsRoute" autoStartup="{{wfs.enabled}}">
+			<camel:from uri="direct:wfs_in" />
+			<to uri="wfsEndpoint" />
+		</camel:route>
+
+	</camel:routeContext>
+
+</beans>

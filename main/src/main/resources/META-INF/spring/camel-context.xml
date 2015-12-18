@@ -15,6 +15,7 @@
 
 	<import resource="classpath:META-INF/spring/sos-context.xml" />
 	<import resource="classpath:META-INF/spring/websocket-context.xml" />
+	<import resource="classpath:META-INF/spring/wfs-context.xml" />
 	<import resource="classpath:META-INF/spring/sbs1-context.xml" />
 	<import resource="classpath:META-INF/spring/ais-context.xml" />
 
@@ -34,12 +35,14 @@
 		
 		<camel:routeContextRef ref="stueSOSRoutes" />
 		<camel:routeContextRef ref="stueWebsocketRoutes" />
-
+		<camel:routeContextRef ref="stueWFSRoutes" />
+		
 		<camel:route autoStartup="{{sbs1.enabled}}">
 			<camel:from uri="direct:sbs1_out" />
 			<camel:multicast stopOnException="false">
 				<camel:to uri="direct:websocket_in?failIfNoConsumers=false" />
 				<camel:to uri="direct:sos_in?failIfNoConsumers=false" />
+				<camel:to uri="direct:wfs_in?failIfNoConsumers=false" />
 			</camel:multicast>
 		</camel:route>
 
@@ -48,6 +51,7 @@
 			<camel:multicast stopOnException="false">
 				<camel:to uri="direct:websocket_in?failIfNoConsumers=false" />
 				<camel:to uri="direct:sos_in?failIfNoConsumers=false" />
+				<camel:to uri="direct:wfs_in?failIfNoConsumers=false" />
 			</camel:multicast>
 		</camel:route>
 

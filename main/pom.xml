@@ -41,6 +41,11 @@
       <artifactId>transmitter-route-sos</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>ch.stue</groupId>
+      <artifactId>transmitter-route-wfs</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
     
     <!-- camel dependencies -->
     <dependency>
