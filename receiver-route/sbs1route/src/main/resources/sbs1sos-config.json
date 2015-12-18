@@ -1,4 +1,6 @@
-[
+{
+"offerings": ["http://stue.ch/sensorobservation/offering/flighttracking"]
+"observedProperties" : [
 {
 	"type": "Text",
 	"observationName": "callsignObservation",
@@ -68,3 +70,4 @@
 	"createNullValueMessages": false
 }
 ]
+}

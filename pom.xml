@@ -44,5 +44,15 @@
     <module>main</module>
   </modules>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>ch.stue</groupId>
+        <artifactId>main</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    </dependencies>
+  </dependencyManagement>
+
 </project>
 
