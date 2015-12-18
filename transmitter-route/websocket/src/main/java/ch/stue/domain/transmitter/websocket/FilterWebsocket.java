@@ -10,29 +10,29 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Extends the {@link DefaultWebsocket} with the ability to filter messages
- * 
+ *
  * @author stue
  */
 public class FilterWebsocket extends DefaultWebsocket implements Predicate<Message> {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FilterWebsocket.class);
 
 	private Predicate<Message> filter;
-	
+
 	/**
 	 * Default constructor
 	 */
 	public FilterWebsocket(NodeSynchronization sync, WebsocketConsumer consumer){
 		super(sync, consumer);
 	}
-	
+
 	/**
 	 * @return the filter
 	 */
 	public Predicate<Message> getFilter() {
-		return filter;
+		return this.filter;
 	}
 
 	/**
@@ -42,13 +42,13 @@ public class FilterWebsocket extends DefaultWebsocket implements Predicate<Messa
 		LOGGER.trace("filter predicate set");
 		this.filter = filter;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean evaluate(Message object) {
-		if(filter == null || filter.evaluate(object)){
+		if(this.filter == null || this.filter.evaluate(object)){
 			return true;
 		}
 		return false;

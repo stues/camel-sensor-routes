@@ -9,11 +9,11 @@ import org.apache.camel.component.websocket.WebsocketStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vividsolutions.jts.geom.Polygon;
+
 import ch.stue.domain.Feature;
 import ch.stue.domain.Geometry;
 import ch.stue.domain.PolygonGeometry;
-
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Extracts the {@link Feature} from the exchanged List
@@ -33,7 +33,7 @@ public class FilterWebsocketProcessor implements Processor {
 	 * @return the websocketStore
 	 */
 	public WebsocketStore getWebsocketStore() {
-		return websocketStore;
+		return this.websocketStore;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class FilterWebsocketProcessor implements Processor {
 			Geometry<?> geometry = feature.getGeometry();
 
 			String connectionKey = (String) in.getHeader(WebsocketConstants.CONNECTION_KEY);
-			DefaultWebsocket websocket = websocketStore.get(connectionKey);
+			DefaultWebsocket websocket = this.websocketStore.get(connectionKey);
 
 			if (websocket instanceof FilterWebsocket) {
 				FilterWebsocket filterWebsocket = (FilterWebsocket) websocket;
@@ -72,7 +72,7 @@ public class FilterWebsocketProcessor implements Processor {
 
 				if (SET_AREA_FILTER_ACTION_NAME.equals(action)) {
 					if (geometry instanceof PolygonGeometry) {
-						Polygon polygon = GeometryConverterHelper.getGeometry((PolygonGeometry) geometry);
+						Polygon polygon = GeometryConverterHelper.getPolygonGeometry((PolygonGeometry) geometry);
 						if (polygon != null) {
 
 							TrackPositionGeometryFilter geometryFilter = new TrackPositionGeometryFilter(polygon);

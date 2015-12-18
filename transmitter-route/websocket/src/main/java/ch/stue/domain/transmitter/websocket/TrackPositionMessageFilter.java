@@ -17,7 +17,7 @@ import ch.stue.domain.PointGeometry;
 /**
  * Predicate Filter which iterates over all configured predicates. It accepts
  * the given object only if all predicates accept the object. If no predicate is set it will be accepted
- * 
+ *
  * @author stue
  */
 public class TrackPositionMessageFilter implements Predicate<Message> {
@@ -35,8 +35,8 @@ public class TrackPositionMessageFilter implements Predicate<Message> {
 		Feature<PointGeometry> object;
 		try {
 			object = message.getMandatoryBody(Feature.class);
-			if (object instanceof Feature && CollectionUtils.isNotEmpty(predicates)) {
-				for (Predicate<Feature<PointGeometry>> predicate : predicates) {
+			if (object instanceof Feature && CollectionUtils.isNotEmpty(this.predicates)) {
+				for (Predicate<Feature<PointGeometry>> predicate : this.predicates) {
 					if (!predicate.evaluate(object)) {
 						return false;
 					}
@@ -53,7 +53,7 @@ public class TrackPositionMessageFilter implements Predicate<Message> {
 	 * @return the predicates
 	 */
 	public Collection<Predicate<Feature<PointGeometry>>> getPredicates() {
-		return predicates;
+		return this.predicates;
 	}
 
 	/**
@@ -71,13 +71,13 @@ public class TrackPositionMessageFilter implements Predicate<Message> {
 		LOGGER.trace("Single Predicate set");
 		this.predicates = Collections.singleton(predicate);
 	}
-	
+
 	/**
 	 * Resets the filter to evaluate every message positive
 	 */
 	public void clearPredicates(){
-		if(CollectionUtils.isNotEmpty(predicates)){
-			predicates = null;
+		if(CollectionUtils.isNotEmpty(this.predicates)){
+			this.predicates = null;
 		}
 	}
 }

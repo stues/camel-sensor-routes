@@ -15,9 +15,9 @@ import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * Extends the {@link WebsocketProducer} with the ability to filter messages
- * 
+ *
  * @author stue
- * 
+ *
  */
 public class FilterWebsocketProducer extends WebsocketProducer {
 
@@ -40,13 +40,13 @@ public class FilterWebsocketProducer extends WebsocketProducer {
 		Message in = exchange.getIn();
 
 		if (sendToAllSet(in)) {
-			doSendToAll(store, in, exchange);
+			doSendToAll(this.store, in, exchange);
 		} else {
 			// look for connection key and get Websocket
 			String connectionKey = in.getHeader(WebsocketConstants.CONNECTION_KEY, String.class);
 			if (connectionKey != null) {
-				DefaultWebsocket websocket = store.get(connectionKey);
-				log.debug("Sending to connection key {} -> {}", connectionKey, in);
+				DefaultWebsocket websocket = this.store.get(connectionKey);
+				this.log.debug("Sending to connection key {} -> {}", connectionKey, in);
 				String message = in.getMandatoryBody(String.class);
 				sendMessage(message, websocket);
 			} else {
@@ -60,7 +60,7 @@ public class FilterWebsocketProducer extends WebsocketProducer {
 	 */
 	@Override
 	public WebsocketEndpoint getEndpoint() {
-		return endpoint;
+		return this.endpoint;
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class FilterWebsocketProducer extends WebsocketProducer {
 	@Override
 	public void start() throws Exception {
 		super.start();
-		endpoint.connect(this);
+		this.endpoint.connect(this);
 	}
 
 	/**
@@ -77,13 +77,13 @@ public class FilterWebsocketProducer extends WebsocketProducer {
 	 */
 	@Override
 	public void stop() throws Exception {
-		endpoint.disconnect(this);
+		this.endpoint.disconnect(this);
 		super.stop();
 	}
 
 	/**
 	 * returns whether the service shall send the given message to all
-	 * 
+	 *
 	 * @param in
 	 *            the message
 	 * @return send to all
@@ -91,13 +91,13 @@ public class FilterWebsocketProducer extends WebsocketProducer {
 	protected boolean sendToAllSet(Message in) {
 		// header may be null; have to be careful here (and fallback to use
 		// sendToAll option configured from endpoint)
-		Boolean value = in.getHeader(WebsocketConstants.SEND_TO_ALL, sendToAll, Boolean.class);
+		Boolean value = in.getHeader(WebsocketConstants.SEND_TO_ALL, this.sendToAll, Boolean.class);
 		return value == null ? false : value;
 	}
 
 	/**
 	 * Sends the message to all Websocket
-	 * 
+	 *
 	 * @param store
 	 *            the websocket store
 	 * @param in
@@ -108,7 +108,7 @@ public class FilterWebsocketProducer extends WebsocketProducer {
 	 *             if message conversion to string fails
 	 */
 	protected void doSendToAll(WebsocketStore store, Message in, Exchange exchange) throws Exception {
-		log.debug("Sending to all {}", in);
+		this.log.debug("Sending to all {}", in);
 
 		Exception exception = null;
 
@@ -118,7 +118,7 @@ public class FilterWebsocketProducer extends WebsocketProducer {
 			for (DefaultWebsocket websocket : websockets) {
 				try {
 					if ((!(websocket instanceof FilterWebsocket)
-							|| (websocket instanceof FilterWebsocket 
+							|| (websocket instanceof FilterWebsocket
 									&& ((FilterWebsocket) websocket).evaluate(in)))) {
 						sendMessage(message, websocket);
 					}
@@ -136,17 +136,17 @@ public class FilterWebsocketProducer extends WebsocketProducer {
 
 	/**
 	 * Checks whether the websocket conneciton is open, is so, the given message will be send
-	 * 
+	 *
 	 * @param message
 	 *            the message
 	 * @param websocket
 	 *            the websocket
-	 * @throws IOException if message sending fails 
-	 *             
+	 * @throws IOException if message sending fails
+	 *
 	 */
 	private void sendMessage(String message, DefaultWebsocket websocket) throws IOException {
 		if (websocket.getConnection().isOpen()) {
-			log.trace("Sending to websocket {} -> {}", websocket.getConnectionKey(), message);
+			this.log.trace("Sending to websocket {} -> {}", websocket.getConnectionKey(), message);
 			websocket.getConnection().sendMessage(message);
 		}
 	}

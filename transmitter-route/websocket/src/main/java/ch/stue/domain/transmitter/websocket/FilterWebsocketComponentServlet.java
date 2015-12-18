@@ -12,14 +12,14 @@ import org.eclipse.jetty.websocket.WebSocket;
 /**
  * Extends the {@link WebsocketComponentServlet} to instantiate a {@link FilterWebsocket} within the
  * {@link #doWebSocketConnect(HttpServletRequest, String)} Method
- * 
+ *
  * @author stue
  */
 public class FilterWebsocketComponentServlet extends WebsocketComponentServlet {
 
 	private static final long serialVersionUID = 1L;
-	private NodeSynchronization sync;
-	
+	private final NodeSynchronization sync;
+
 	/**
 	 * Constructor with {@link NodeSynchronization}
 	 * @param sync the node synchronization object
@@ -28,15 +28,15 @@ public class FilterWebsocketComponentServlet extends WebsocketComponentServlet {
 		super(sync, Collections.<String, WebSocketFactory>emptyMap());
 		this.sync = sync;
 	}
-	
+
 	/**
 	 * Derived to instantiate custom {@link FilterWebsocket}
-	 * 
+	 *
 	 * {@inheritDoc}
 	 */
-    @Override
-    public WebSocket doWebSocketConnect(HttpServletRequest request, String protocol) {
-        return new FilterWebsocket(sync, getConsumer());
-    }
-	
+	@Override
+	public WebSocket doWebSocketConnect(HttpServletRequest request, String protocol) {
+		return new FilterWebsocket(this.sync, getConsumer());
+	}
+
 }

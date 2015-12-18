@@ -5,15 +5,15 @@ import org.apache.camel.RuntimeCamelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ch.stue.domain.GeoJSONFeature;
 import ch.stue.domain.PolygonGeometry;
 import ch.stue.domain.transmitter.websocket.FilterWebsocketProcessor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * Converts a {@link String} which contains a JSON Object into a {@link PolygonGeometry}
- * 
+ *
  * @author stue
  */
 
@@ -22,12 +22,11 @@ public class StringToGeoJSONFeatureConverter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FilterWebsocketProcessor.class);
 
-	
 	private static ObjectMapper mapper = new ObjectMapper();
-	
+
 	/**
 	 * converts the {@link String} containing a JSON Object into a {@link PolygonGeometry}
-	 * 
+	 *
 	 * @param message the String to convert
 	 * @return the {@link PolygonGeometry} object
 	 */
