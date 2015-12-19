@@ -1,73 +1,54 @@
 {
-"offerings": ["http://stue.ch/sensorobservation/offering/flighttracking"]
-"observedProperties" : [
-{
-	"type": "Text",
-	"observationName": "callsignObservation",
-	"procedure": "http://stue.ch/sensorobservation/procedure/sbs-1",
-	"observedProperty": "http://stue.ch/sensorobservation/observableProperty/callsign",
-	"featureOfInterestPrefix": "http://stue.ch/sensorobservation/foi/aircraft/",
-	"featureIdentPropertyName": "hexIdent",
-	"featureTitlePropertyName": "hexIdent",
-	"featureTextPropertyName": "callsign",
-	"phenomenonTimePropertyName": "messageGenerated",
-	"createNullValueMessages": false
-},
-{
-	"type": "Measurement",
-	"observationName": "speedObservation",
-	"procedure": "http://stue.ch/sensorobservation/procedure/sbs-1",
-	"observedProperty": "http://stue.ch/sensorobservation/observableProperty/speed",
-	"featureOfInterestPrefix": "http://stue.ch/sensorobservation/foi/aircraft/",
-	"featureIdentPropertyName": "hexIdent",
-	"featureTitlePropertyName": "hexIdent",
-	"measureUom": "[kn_i]",
-	"featureMeasurementPropertyName": "groundSpeed",
-	"featureMeasurementPropertyClazz": "java.lang.Integer",
-	"phenomenonTimePropertyName": "messageGenerated",
-	"createNullValueMessages": false
-},
-{
-	"type": "Measurement",
-	"observationName": "altitudeObservation",
-	"procedure": "http://stue.ch/sensorobservation/procedure/sbs-1",
-	"observedProperty": "http://stue.ch/sensorobservation/observableProperty/altitude",
-	"featureOfInterestPrefix": "http://stue.ch/sensorobservation/foi/aircraft/",
-	"featureIdentPropertyName": "hexIdent",
-	"featureTitlePropertyName": "hexIdent",
-	"measureUom": "[ft_i]",
-	"featureMeasurementPropertyName": "altitude",
-	"featureMeasurementPropertyClazz": "java.lang.Integer",
-	"phenomenonTimePropertyName": "messageGenerated",
-	"createNullValueMessages": false
-},
-{
-	"type": "Measurement",
-	"observationName": "headingObservation",
-	"procedure": "http://stue.ch/sensorobservation/procedure/sbs-1",
-	"observedProperty": "http://stue.ch/sensorobservation/observableProperty/heading",
-	"featureOfInterestPrefix": "http://stue.ch/sensorobservation/foi/aircraft/",
-	"featureIdentPropertyName": "hexIdent",
-	"featureTitlePropertyName": "hexIdent",
-	"measureUom": "deg",
-	"featureMeasurementPropertyName": "heading",
-	"featureMeasurementPropertyClazz": "java.lang.Integer",
-	"phenomenonTimePropertyName": "messageGenerated",
-	"createNullValueMessages": false
-},
-{
-	"type": "PointGeometry",
-	"observationName": "positionObservation",
-	"procedure": "http://stue.ch/sensorobservation/procedure/sbs-1",
-	"observedProperty": "http://stue.ch/sensorobservation/observableProperty/position",
-	"featureOfInterestPrefix": "http://stue.ch/sensorobservation/foi/aircraft/",
-	"featureIdentPropertyName": "hexIdent",
-	"featureTitlePropertyName": "hexIdent",
-	"useFeatureGeometry": true,
-	"srsName": "http://www.opengis.net/def/crs/EPSG/0/4326",
-	"pointId": "aircraftPosition",
-	"phenomenonTimePropertyName": "messageGenerated",
-	"createNullValueMessages": false
-}
-]
+	"offerings":[
+		"http://stue.ch/sensorobservation/offering/flighttracking"
+	],
+	"defaultValues":{
+		"procedure":"http://stue.ch/sensorobservation/procedure/sbs-1",
+		"observedPropertyPrefix":"http://stue.ch/sensorobservation/observableProperty",
+		"featureOfInterestPrefix":"http://stue.ch/sensorobservation/foi/aircraft",
+		"featureIdentPropertyName":"hexIdent",
+		"featureTitlePropertyName":"hexIdent",
+		"phenomenonTimePropertyName":"messageGenerated",
+		"createNullValueMessages":false
+	},
+	"observedProperties":[
+		{
+			"type":"Text",
+			"observationName":"callsignObservation",
+			"observedPropertySuffix":"callsign",
+			"featureTextPropertyName":"callsign"
+		},
+		{
+			"type":"Measurement",
+			"observationName":"speedObservation",
+			"observedPropertySuffix":"speed",
+			"measureUom":"[kn_i]",
+			"featureMeasurementPropertyName":"groundSpeed",
+			"featureMeasurementPropertyClazz":"java.lang.Integer"
+		},
+		{
+			"type":"Measurement",
+			"observationName":"altitudeObservation",
+			"observedPropertySuffix":"altitude",
+			"measureUom":"[ft_i]",
+			"featureMeasurementPropertyName":"altitude",
+			"featureMeasurementPropertyClazz":"java.lang.Integer"
+		},
+		{
+			"type":"Measurement",
+			"observationName":"headingObservation",
+			"observedPropertySuffix":"heading",
+			"measureUom":"deg",
+			"featureMeasurementPropertyName":"heading",
+			"featureMeasurementPropertyClazz":"java.lang.Integer"
+		},
+		{
+			"type":"PointGeometry",
+			"observationName":"positionObservation",
+			"observedPropertySuffix":"position",
+			"useFeatureGeometry":true,
+			"srsName":"http://www.opengis.net/def/crs/EPSG/0/4326",
+			"pointId":"aircraftPosition"
+		}
+	]
 }

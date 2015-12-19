@@ -6,14 +6,14 @@ import ch.stue.domain.Geometry;
 /**
  * Extends the {@link AbstractPropertyConfiguration} with further attributes for
  * Geometric Observation Results
- * 
+ *
  * @author stue
- * 
+ *
  * @param <T>
  *            the Type of Object which will be added as result
  */
-public class AbstractGeometryPropertyConfiguration<T extends Geometry<?>> extends AbstractPropertyConfiguration<T> {
-	
+public abstract class AbstractGeometryPropertyConfiguration<T extends Geometry<?>> extends AbstractPropertyConfiguration<T> {
+
 	private String geometryMeasurementPropertyName;
 
 	private Class<T> geometryMeasurementPropertyClazz;
@@ -24,7 +24,7 @@ public class AbstractGeometryPropertyConfiguration<T extends Geometry<?>> extend
 	 * @return the geometryMeasurementPropertyName
 	 */
 	public String getGeometryMeasurementPropertyName() {
-		return geometryMeasurementPropertyName;
+		return this.geometryMeasurementPropertyName;
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class AbstractGeometryPropertyConfiguration<T extends Geometry<?>> extend
 	 * @return the geometryMeasurementPropertyClazz
 	 */
 	public Class<T> getGeometryMeasurementPropertyClazz() {
-		return geometryMeasurementPropertyClazz;
+		return this.geometryMeasurementPropertyClazz;
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class AbstractGeometryPropertyConfiguration<T extends Geometry<?>> extend
 	 * @return the useFeatureGeometry
 	 */
 	public boolean isUseFeatureGeometry() {
-		return useFeatureGeometry;
+		return this.useFeatureGeometry;
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class AbstractGeometryPropertyConfiguration<T extends Geometry<?>> extend
 	@Override
 	@SuppressWarnings("unchecked")
 	public T getValue(Feature<?> feature) {
-		if (useFeatureGeometry) {
+		if (this.useFeatureGeometry) {
 			return (T) feature.getGeometry();
 		} else {
 			return feature.getProperty(getGeometryMeasurementPropertyName(), getGeometryMeasurementPropertyClazz());

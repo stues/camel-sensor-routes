@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 /**
  * This interface describes Classes which can be asked for a update interval
  * duration
- * 
+ *
  * @author stue
- * 
+ *
  */
 public class VariableGeneratorInterval extends AbstractGeneratorInterval {
 
@@ -38,12 +38,12 @@ public class VariableGeneratorInterval extends AbstractGeneratorInterval {
 	 */
 	@Override
 	public int getUpdateInterval() {
-		return currentUpdateIntervall.get();
+		return this.currentUpdateIntervall.get();
 	}
 
 	@Override
 	public boolean isConfigured() {
-		return startTrackAmount >= 0 && amountOfSteps >= 0;
+		return this.startTrackAmount >= 0 && this.amountOfSteps >= 0;
 	}
 
 	/**
@@ -52,8 +52,8 @@ public class VariableGeneratorInterval extends AbstractGeneratorInterval {
 	@Override
 	public void doStartInterval(final RandomTrackGenerator randomTrackGenerator) {
 		if (isEnabled()) {
-			currentStep = 1;
-			currentUpdateIntervall = new AtomicInteger((int) ((double) 1000 / startTrackAmount));
+			this.currentStep = 1;
+			this.currentUpdateIntervall = new AtomicInteger((int) ((double) 1000 / this.startTrackAmount));
 			if (isConfigured()) {
 				startInterval(randomTrackGenerator);
 				randomTrackGenerator.generateTracks();
@@ -64,48 +64,47 @@ public class VariableGeneratorInterval extends AbstractGeneratorInterval {
 	/**
 	 * Starts the timer after which the next interval will be calculated an
 	 * initiated
-	 * 
+	 *
 	 * @param randomTrackGenerator
 	 *            the random track generator
 	 */
 	private void startInterval(final RandomTrackGenerator randomTrackGenerator) {
-		timer.schedule(new TimerTask() {
+		this.timer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
-				if (currentStep < amountOfSteps) {
-					int currentStepSize = startTrackAmount + (++currentStep * stepSize);
+				if (VariableGeneratorInterval.this.currentStep < VariableGeneratorInterval.this.amountOfSteps) {
+					int currentStepSize = VariableGeneratorInterval.this.startTrackAmount + (++VariableGeneratorInterval.this.currentStep * VariableGeneratorInterval.this.stepSize);
 					int newUpdateIntervall = (int) ((double) 1000 / currentStepSize);
 					startNextInterval(randomTrackGenerator, newUpdateIntervall);
 				} else {
-					timer.cancel();
+					VariableGeneratorInterval.this.timer.cancel();
 					randomTrackGenerator.disconnectSource();
 				}
 			}
-		}, stepDuration);
+		}, this.stepDuration);
 	}
 
 	/**
 	 * starts the next interval. If a delayBetweenSteps is set the thread will
 	 * sleep for the defined time
-	 * 
+	 *
 	 * @param randomTrackGenerator
 	 * @param newUpdateIntervall
 	 */
 	private void startNextInterval(final RandomTrackGenerator randomTrackGenerator, int newUpdateIntervall) {
-		LOGGER.info("Disconnect Source and Sleep for" + delayBetweenSteps + "ms");
-		if (delayBetweenSteps > 0) {
+		LOGGER.info("Disconnect Source and Sleep for {} ms", this.delayBetweenSteps);
+		if (this.delayBetweenSteps > 0) {
 			randomTrackGenerator.disconnectSource();
 			try {
-				Thread.sleep(delayBetweenSteps);
-				currentUpdateIntervall.set(newUpdateIntervall);
+				Thread.sleep(this.delayBetweenSteps);
+				this.currentUpdateIntervall.set(newUpdateIntervall);
 			} catch (InterruptedException e) {
 				LOGGER.debug("Thread interrupted", e);
 			}
 		}
 
-		System.out.println("The new upate intervall is: " + newUpdateIntervall + "ms Next Step incease is in " + stepDuration + "ms");
-		LOGGER.info("The new upate intervall is: " + newUpdateIntervall + "ms Next Step incease is in " + stepDuration + "ms");
+		LOGGER.info("The new upate intervall is: {}ms Next Step incease is in {}ms", newUpdateIntervall, this.stepDuration);
 
 		randomTrackGenerator.generateTracks();
 		startInterval(randomTrackGenerator);
@@ -115,7 +114,7 @@ public class VariableGeneratorInterval extends AbstractGeneratorInterval {
 	 * @return the startTrackAmount
 	 */
 	public int getStartTrackAmount() {
-		return startTrackAmount;
+		return this.startTrackAmount;
 	}
 
 	/**
@@ -130,7 +129,7 @@ public class VariableGeneratorInterval extends AbstractGeneratorInterval {
 	 * @return the amountOfSteps
 	 */
 	public int getAmountOfSteps() {
-		return amountOfSteps;
+		return this.amountOfSteps;
 	}
 
 	/**
@@ -145,7 +144,7 @@ public class VariableGeneratorInterval extends AbstractGeneratorInterval {
 	 * @return the stepSize
 	 */
 	public int getStepSize() {
-		return stepSize;
+		return this.stepSize;
 	}
 
 	/**
@@ -160,7 +159,7 @@ public class VariableGeneratorInterval extends AbstractGeneratorInterval {
 	 * @return the stepDuration
 	 */
 	public int getStepDuration() {
-		return stepDuration;
+		return this.stepDuration;
 	}
 
 	/**
@@ -175,7 +174,7 @@ public class VariableGeneratorInterval extends AbstractGeneratorInterval {
 	 * @return the enabled
 	 */
 	public boolean isEnabled() {
-		return enabled;
+		return this.enabled;
 	}
 
 	/**
@@ -190,7 +189,7 @@ public class VariableGeneratorInterval extends AbstractGeneratorInterval {
 	 * @return the delayBetweenSteps
 	 */
 	public int getDelayBetweenSteps() {
-		return delayBetweenSteps;
+		return this.delayBetweenSteps;
 	}
 
 	/**

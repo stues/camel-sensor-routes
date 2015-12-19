@@ -86,7 +86,7 @@ public class SBS1Message {
 	 * @return the messageType
 	 */
 	public String getMessageType() {
-		return messageType;
+		return this.messageType;
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class SBS1Message {
 	 * @return the transmissionType
 	 */
 	public Integer getTransmissionType() {
-		return transmissionType;
+		return this.transmissionType;
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class SBS1Message {
 	 * @return the sessionId
 	 */
 	public Integer getSessionId() {
-		return sessionId;
+		return this.sessionId;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class SBS1Message {
 	 * @return the aircraftId
 	 */
 	public Integer getAircraftId() {
-		return aircraftId;
+		return this.aircraftId;
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class SBS1Message {
 	 * @return the hexIdent
 	 */
 	public String getHexIdent() {
-		return hexIdent;
+		return this.hexIdent;
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class SBS1Message {
 	 * @return the flightId
 	 */
 	public Integer getFlightId() {
-		return flightId;
+		return this.flightId;
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class SBS1Message {
 	 * @return the dateMessageGenerated
 	 */
 	public String getDateMessageGenerated() {
-		return dateMessageGenerated;
+		return this.dateMessageGenerated;
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class SBS1Message {
 	 * @return the timeMessageGenerated
 	 */
 	public String getTimeMessageGenerated() {
-		return timeMessageGenerated;
+		return this.timeMessageGenerated;
 	}
 
 	/**
@@ -206,7 +206,7 @@ public class SBS1Message {
 	 * @return the dateMessageLogged
 	 */
 	public String getDateMessageLogged() {
-		return dateMessageLogged;
+		return this.dateMessageLogged;
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class SBS1Message {
 	 * @return the timeMessageLogged
 	 */
 	public String getTimeMessageLogged() {
-		return timeMessageLogged;
+		return this.timeMessageLogged;
 	}
 
 	/**
@@ -236,7 +236,7 @@ public class SBS1Message {
 	 * @return the callsign
 	 */
 	public String getCallsign() {
-		return callsign;
+		return this.callsign;
 	}
 
 	/**
@@ -251,7 +251,7 @@ public class SBS1Message {
 	 * @return the altitude
 	 */
 	public Integer getAltitude() {
-		return altitude;
+		return this.altitude;
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class SBS1Message {
 	 * @return the groundSpeed
 	 */
 	public Integer getGroundSpeed() {
-		return groundSpeed;
+		return this.groundSpeed;
 	}
 
 	/**
@@ -281,7 +281,7 @@ public class SBS1Message {
 	 * @return the heading
 	 */
 	public Integer getHeading() {
-		return heading;
+		return this.heading;
 	}
 
 	/**
@@ -296,7 +296,7 @@ public class SBS1Message {
 	 * @return the latitude
 	 */
 	public Double getLatitude() {
-		return latitude;
+		return this.latitude;
 	}
 
 	/**
@@ -311,7 +311,7 @@ public class SBS1Message {
 	 * @return the longitude
 	 */
 	public Double getLongitude() {
-		return longitude;
+		return this.longitude;
 	}
 
 	/**
@@ -326,7 +326,7 @@ public class SBS1Message {
 	 * @return the verticalRate
 	 */
 	public String getVerticalRate() {
-		return verticalRate;
+		return this.verticalRate;
 	}
 
 	/**
@@ -341,7 +341,7 @@ public class SBS1Message {
 	 * @return the squawk
 	 */
 	public String getSquawk() {
-		return squawk;
+		return this.squawk;
 	}
 
 	/**
@@ -356,7 +356,7 @@ public class SBS1Message {
 	 * @return the alert
 	 */
 	public String getAlert() {
-		return alert;
+		return this.alert;
 	}
 
 	/**
@@ -371,7 +371,7 @@ public class SBS1Message {
 	 * @return the emergency
 	 */
 	public String getEmergency() {
-		return emergency;
+		return this.emergency;
 	}
 
 	/**
@@ -386,7 +386,7 @@ public class SBS1Message {
 	 * @return the spi
 	 */
 	public Integer getSpi() {
-		return spi;
+		return this.spi;
 	}
 
 	/**
@@ -401,7 +401,7 @@ public class SBS1Message {
 	 * @return the isOnGround
 	 */
 	public Integer getIsOnGround() {
-		return isOnGround;
+		return this.isOnGround;
 	}
 
 	/**
@@ -416,7 +416,7 @@ public class SBS1Message {
 	 * @return the messageGenerated
 	 */
 	public Date getMessageGenerated() {
-		return messageGenerated;
+		return this.messageGenerated;
 	}
 
 	/**
@@ -432,9 +432,9 @@ public class SBS1Message {
 	 */
 	protected void updateMessageGenerated() {
 		try {
-			if (dateMessageGenerated != null && timeMessageGenerated != null) {
-				Date date = DateUtils.parseDate(dateMessageGenerated + " " + timeMessageGenerated, "yyyy/MM/dd HH:mm:ss.S");
-				messageGenerated = date;
+			if (this.dateMessageGenerated != null && this.timeMessageGenerated != null) {
+				Date date = DateUtils.parseDate(String.format("%s %s", this.dateMessageGenerated, this.timeMessageGenerated), "yyyy/MM/dd HH:mm:ss.S");
+				this.messageGenerated = date;
 			}
 		} catch (ParseException e) {
 			// No Valid date,do Nothing

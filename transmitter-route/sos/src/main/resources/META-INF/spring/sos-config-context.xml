@@ -152,22 +152,7 @@
 		<property name="createNullValueMessages" value="false" />
 	</bean>
 
-	<bean id="insertObservationConfiguration"
-		class="ch.stue.transmitter.sos.converter.insertobservation.InsertObservationSOSV2Configuration">
+	<bean id="insertObservationConfiguration" class="ch.stue.transmitter.sos.converter.insertobservation.JsonInsertObservationConfigurationFactory">
 		<property name="jsonConfig" value="sbs1sos-config.json" />
-		<property name="offerings">
-			<list>
-				<value>http://stue.ch/sensorobservation/offering/flighttracking</value>
-			</list>
-		</property>
-		<property name="observedProperties">
-			<list>
-				<ref bean="callsignObservationConfiguration" />
-				<ref bean="speedObservationConfiguration" />
-				<ref bean="altitudeObservationConfiguration" />
-				<ref bean="headingObservationConfiguration" />
-				<ref bean="positionObservationConfiguration" />
-			</list>
-		</property>
 	</bean>
 </beans>

@@ -4,6 +4,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.esi.metis.aisparser.AISMessage;
 import nl.esi.metis.aisparser.AISParser;
 import nl.esi.metis.aisparser.HandleAISMessage;
@@ -15,26 +20,21 @@ import nl.esi.metis.aisparser.provenance.Provenance;
 import nl.esi.metis.aisparser.provenance.VDMLineProvenance;
 import nl.esi.metis.aisparser.provenance.VDMMessageProvenance;
 
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Processor which converts a VDML Message into a AisMessage it updates the
  * Exchange out body if conversion was successful otherwise Exchange out will be
  * null
- * 
+ *
  * @author stue
- * 
+ *
  */
 public class AISProcessor implements Processor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AISProcessor.class);
 
-	private AISParser aisParser;
+	private final AISParser aisParser;
 
-	private ExchangeAwareProvenance provenance;
+	private final ExchangeAwareProvenance provenance;
 
 	/**
 	 * Default Constructor
@@ -45,27 +45,27 @@ public class AISProcessor implements Processor {
 
 		HandleAISMessage messageHandler = new ExchangeAwareHandleAISMessage();
 
-		aisParser = new AISParser(messageHandler, errorHandler);
+		this.aisParser = new AISParser(messageHandler, errorHandler);
 
-		provenance = new ExchangeAwareProvenance();
+		this.provenance = new ExchangeAwareProvenance();
 	}
 
 	@Override
 	public void process(final Exchange exchange) {
-		
-		provenance.setExchange(exchange);
-		
+
+		this.provenance.setExchange(exchange);
+
 		String message = exchange.getIn().getBody(String.class);
 		message = message.trim();
 		exchange.getOut().setBody(null);
-		aisParser.handleSensorData(provenance, message);
+		this.aisParser.handleSensorData(this.provenance, message);
 	}
 
 	/**
 	 * Handle AIS Message implementation which sets the body of the exchange
-	 * 
+	 *
 	 * @author stue
-	 * 
+	 *
 	 */
 	private static final class ExchangeAwareHandleAISMessage implements HandleAISMessage {
 
@@ -85,31 +85,31 @@ public class AISProcessor implements Processor {
 
 	/**
 	 * InvalidInput handler which simply logs the issues
-	 * 
+	 *
 	 * @author stue
-	 * 
+	 *
 	 */
 	private static final class LoggerHandleInvalidInput implements HandleInvalidInput {
 
 		@Override
 		public void handleInvalidSensorData(Provenance paramProvenance, String paramString) {
-			LOGGER.warn("Invalid Sensor Data for: " + paramString);
+			LOGGER.warn("Invalid Sensor Data for: {}", paramString);
 		}
 
 		@Override
 		public void handleInvalidVDMLine(VDMLine paramVDMLine) {
-			LOGGER.warn("Invalid VDMLine: " + paramVDMLine);
+			LOGGER.warn("Invalid VDMLine: {}", paramVDMLine);
 		}
 
 		@Override
 		public void handleInvalidVDMMessage(VDMMessage paramVDMMessage) {
-			LOGGER.warn("Invalid VDMMessage: " + paramVDMMessage);
+			LOGGER.warn("Invalid VDMMessage: {}", paramVDMMessage);
 		}
 	}
 
 	/**
 	 * Provenance which is aware of the message exchange and callback
-	 * 
+	 *
 	 * @author stue
 	 */
 	private static final class ExchangeAwareProvenance implements Provenance {
@@ -135,7 +135,7 @@ public class AISProcessor implements Processor {
 		 * @return the exchange
 		 */
 		public Exchange getExchange() {
-			return exchange;
+			return this.exchange;
 		}
 
 		/**

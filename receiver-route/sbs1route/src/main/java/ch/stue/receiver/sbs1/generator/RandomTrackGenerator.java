@@ -63,12 +63,12 @@ public class RandomTrackGenerator implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (isEnabled() && amountOfTracks > 0) {
-			trackPositions = new ArrayList<TrackPositionMessage>(amountOfTracks);
+		if (isEnabled() && this.amountOfTracks > 0) {
+			this.trackPositions = new ArrayList<TrackPositionMessage>(this.amountOfTracks);
 
-			for (int i = 0; i < amountOfTracks; i++) {
+			for (int i = 0; i < this.amountOfTracks; i++) {
 				TrackPositionMessage trackPosition = createRandomTrackPosition();
-				trackPositions.add(trackPosition);
+				this.trackPositions.add(trackPosition);
 			}
 		}
 	}
@@ -82,16 +82,16 @@ public class RandomTrackGenerator implements InitializingBean {
 
 	/**
 	 * Creates a new {@link TrackPositionMessage} which contains random data
-	 * 
+	 *
 	 * @return the {@link TrackPositionMessage} which contains random data
 	 */
 	private TrackPositionMessage createRandomTrackPosition() {
 		TrackPositionMessage trackPosition = new TrackPositionMessage();
 		trackPosition.setHex(getRandomHexIdent());
 		trackPosition.setCallSign(getRandomCallSign());
-		trackPosition.setGroundSpeed(200 + random.nextInt(400));
-		trackPosition.setHeading(1 + random.nextInt(360));
-		trackPosition.setAltitude(5000 + random.nextInt(15000));
+		trackPosition.setGroundSpeed(200 + this.random.nextInt(400));
+		trackPosition.setHeading(1 + this.random.nextInt(360));
+		trackPosition.setAltitude(5000 + this.random.nextInt(15000));
 		trackPosition.setGeometry(getRandomPointPosition());
 		trackPosition.setMessageReceived(new Date());
 		trackPosition.setMessageGenerated(new Date());
@@ -104,9 +104,9 @@ public class RandomTrackGenerator implements InitializingBean {
 	protected String getRandomHexIdent() {
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < 2; i++) {
-			builder.append((char) ('A' + random.nextInt(('Z' - 'A') + 1)));
+			builder.append((char) ('A' + this.random.nextInt(('Z' - 'A') + 1)));
 		}
-		builder.append(random.nextInt(10000));
+		builder.append(this.random.nextInt(10000));
 		return builder.toString();
 	}
 
@@ -116,9 +116,9 @@ public class RandomTrackGenerator implements InitializingBean {
 	protected String getRandomCallSign() {
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < 3; i++) {
-			builder.append((char) ('A' + random.nextInt(('Z' - 'A') + 1)));
+			builder.append((char) ('A' + this.random.nextInt(('Z' - 'A') + 1)));
 		}
-		builder.append(random.nextInt(1000));
+		builder.append(this.random.nextInt(1000));
 		return builder.toString();
 	}
 
@@ -126,11 +126,11 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return a random point position within the defined bounds
 	 */
 	protected PointGeometry getRandomPointPosition() {
-		double latitudeOffset = (maxLatitude - minLatitude) * random.nextDouble();
-		double randomLatitude = minLatitude + latitudeOffset;
+		double latitudeOffset = (this.maxLatitude - this.minLatitude) * this.random.nextDouble();
+		double randomLatitude = this.minLatitude + latitudeOffset;
 
-		double longitudeOffset = (maxLongitude - minLongitude) * random.nextDouble();
-		double randomLongitude = minLongitude + longitudeOffset;
+		double longitudeOffset = (this.maxLongitude - this.minLongitude) * this.random.nextDouble();
+		double randomLongitude = this.minLongitude + longitudeOffset;
 
 		return new PointGeometry(randomLongitude, randomLatitude);
 	}
@@ -143,33 +143,33 @@ public class RandomTrackGenerator implements InitializingBean {
 		if (isTrackGenerating()) {
 			disconnectSource();
 		}
-		generating = true;
-		offlineSourceThread = new Thread(new GeneratorRunnable());
-		offlineSourceThread.setName(THREAD_ID);
-		offlineSourceThread.start();
+		this.generating = true;
+		this.offlineSourceThread = new Thread(new GeneratorRunnable());
+		this.offlineSourceThread.setName(THREAD_ID);
+		this.offlineSourceThread.start();
 	}
 
 	/**
 	 * @return true if generating random tracks is started otherwise false
 	 */
 	public boolean isTrackGenerating() {
-		return generating;
+		return this.generating;
 	}
 
 	/**
 	 * Stops offline source generating and updating tracks.
 	 */
 	public void disconnectSource() {
-		if (isTrackGenerating() && offlineSourceThread != null) {
-			offlineSourceThread.interrupt();
-			offlineSourceThread = null;
+		if (isTrackGenerating() && this.offlineSourceThread != null) {
+			this.offlineSourceThread.interrupt();
+			this.offlineSourceThread = null;
 		}
-		generating = false;
+		this.generating = false;
 	}
 
 	/**
 	 * move and update the given trackPosition according the attributes
-	 * 
+	 *
 	 * @param trackPosition
 	 *            the trackPosition to move
 	 */
@@ -184,7 +184,7 @@ public class RandomTrackGenerator implements InitializingBean {
 
 	/**
 	 * Returns the new value +- half of the max delta
-	 * 
+	 *
 	 * @param value
 	 *            the value
 	 * @param maxDelta
@@ -197,51 +197,51 @@ public class RandomTrackGenerator implements InitializingBean {
 
 	/**
 	 * Update the altitude of the given TrackPosition
-	 * 
+	 *
 	 * @param trackPosition
 	 *            the trackPosition to update
 	 */
 	private void updateAltitude(TrackPositionMessage trackPosition) {
-		int halfMaxAltitudeDelta = maxAltitudeDelta / 2;
-		int trackAltitude = getRandomValue(trackPosition.getAltitude(), maxAltitudeDelta);
+		int halfMaxAltitudeDelta = this.maxAltitudeDelta / 2;
+		int trackAltitude = getRandomValue(trackPosition.getAltitude(), this.maxAltitudeDelta);
 
 		if (trackAltitude < halfMaxAltitudeDelta) {
 			trackAltitude = halfMaxAltitudeDelta;
-		} else if (trackAltitude > maxAltitudeDelta * 10) {
-			trackAltitude = maxAltitudeDelta * 10;
+		} else if (trackAltitude > this.maxAltitudeDelta * 10) {
+			trackAltitude = this.maxAltitudeDelta * 10;
 		}
 		trackPosition.setAltitude(trackAltitude);
 	}
 
 	/**
 	 * Update the ground speed of the given TrackPosition
-	 * 
+	 *
 	 * @param trackPosition
 	 *            the trackPosition to update
 	 */
 	private void updateGroundSpeed(TrackPositionMessage trackPosition) {
-		int speedKnots = getRandomValue(trackPosition.getGroundSpeed(), maxSpeedDelta);
-		if (speedKnots < maxSpeedDelta) {
-			speedKnots = maxSpeedDelta;
-		} else if (speedKnots > maxSpeedDelta * 20) {
-			speedKnots = maxSpeedDelta * 20;
+		int speedKnots = getRandomValue(trackPosition.getGroundSpeed(), this.maxSpeedDelta);
+		if (speedKnots < this.maxSpeedDelta) {
+			speedKnots = this.maxSpeedDelta;
+		} else if (speedKnots > this.maxSpeedDelta * 20) {
+			speedKnots = this.maxSpeedDelta * 20;
 		}
 		trackPosition.setGroundSpeed(speedKnots);
 	}
 
 	/**
 	 * Update the position of the given TrackPosition
-	 * 
+	 *
 	 * @param trackPosition
 	 *            the trackPosition to update
 	 */
 	private void updatePosition(TrackPositionMessage trackPosition) {
-		PointGeometry geometry = (PointGeometry) trackPosition.getGeometry();
+		PointGeometry geometry = trackPosition.getGeometry();
 		double currentLongitude = geometry.getLongitude();
 		double currentLatitude = geometry.getLatitude();
 
 		final double kmhGroundSpeed = trackPosition.getGroundSpeed() * KNOTS_TO_KMH_FACTOR;
-		double absolutDistance = kmhGroundSpeed * (double) getUpdateInterval() / 3600000;
+		double absolutDistance = kmhGroundSpeed * getUpdateInterval() / 3600000;
 
 		double heading = trackPosition.getHeading();
 		double latitudeDelta = absolutDistance * Math.cos(Math.toRadians(heading)) / 100.0;
@@ -252,27 +252,27 @@ public class RandomTrackGenerator implements InitializingBean {
 
 	/**
 	 * Update the heading of the given TrackPosition
-	 * 
+	 *
 	 * @param trackPosition
 	 *            the trackPosition to update
 	 */
 	private void updateHeading(TrackPositionMessage trackPosition) {
 
-		PointGeometry geometry = (PointGeometry) trackPosition.getGeometry();
+		PointGeometry geometry = trackPosition.getGeometry();
 		double currentLongitude = geometry.getLongitude();
 		double currentLatitude = geometry.getLatitude();
 
-		if ((currentLatitude < minLatitude) || (currentLatitude > maxLatitude) || (currentLongitude < minLongitude) || (currentLongitude > maxLongitude)) {
+		if ((currentLatitude < this.minLatitude) || (currentLatitude > this.maxLatitude) || (currentLongitude < this.minLongitude) || (currentLongitude > this.maxLongitude)) {
 			int heading = trackPosition.getHeading();
-			if (random.nextBoolean()) {
+			if (this.random.nextBoolean()) {
 				heading += 45;
 			} else {
 				heading -= 45;
 			}
 			trackPosition.setHeading(heading % 360);
 		} else {
-			if (random.nextInt(100) >= 99) {
-				int heading = getRandomValue(trackPosition.getHeading(), maxHeadingDelta);
+			if (this.random.nextInt(100) >= 99) {
+				int heading = getRandomValue(trackPosition.getHeading(), this.maxHeadingDelta);
 				if (heading <= 0) {
 					heading += 360;
 				} else if (heading > 360) {
@@ -301,10 +301,10 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the current update interval aware instance
 	 */
 	public TrackGeneratorIntervalAware getUpdateIntervalAware() {
-		if (useVariableInterval) {
-			return variableGeneratorInterval;
+		if (this.useVariableInterval) {
+			return this.variableGeneratorInterval;
 		} else {
-			return fixGeneratorInterval;
+			return this.fixGeneratorInterval;
 		}
 	}
 
@@ -312,7 +312,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the producerTemplate
 	 */
 	public ProducerTemplate getProducerTemplate() {
-		return producerTemplate;
+		return this.producerTemplate;
 	}
 
 	/**
@@ -327,7 +327,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the minLatitude
 	 */
 	public double getMinLatitude() {
-		return minLatitude;
+		return this.minLatitude;
 	}
 
 	/**
@@ -342,7 +342,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the maxLatitude
 	 */
 	public double getMaxLatitude() {
-		return maxLatitude;
+		return this.maxLatitude;
 	}
 
 	/**
@@ -357,7 +357,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the minLongitude
 	 */
 	public double getMinLongitude() {
-		return minLongitude;
+		return this.minLongitude;
 	}
 
 	/**
@@ -372,7 +372,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the maxLongitude
 	 */
 	public double getMaxLongitude() {
-		return maxLongitude;
+		return this.maxLongitude;
 	}
 
 	/**
@@ -387,7 +387,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the maxAltitudeDelta
 	 */
 	public int getMaxAltitudeDelta() {
-		return maxAltitudeDelta;
+		return this.maxAltitudeDelta;
 	}
 
 	/**
@@ -402,7 +402,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the maxSpeedDelta
 	 */
 	public int getMaxSpeedDelta() {
-		return maxSpeedDelta;
+		return this.maxSpeedDelta;
 	}
 
 	/**
@@ -417,7 +417,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the amountOfTracks
 	 */
 	public int getAmountOfTracks() {
-		return amountOfTracks;
+		return this.amountOfTracks;
 	}
 
 	/**
@@ -432,7 +432,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the maxHeadingDelta
 	 */
 	public int getMaxHeadingDelta() {
-		return maxHeadingDelta;
+		return this.maxHeadingDelta;
 	}
 
 	/**
@@ -447,7 +447,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the enabled
 	 */
 	public boolean isEnabled() {
-		return enabled;
+		return this.enabled;
 	}
 
 	/**
@@ -462,7 +462,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the fixGeneratorInterval
 	 */
 	public TrackGeneratorIntervalAware getFixGeneratorInterval() {
-		return fixGeneratorInterval;
+		return this.fixGeneratorInterval;
 	}
 
 	/**
@@ -477,7 +477,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the variableGeneratorInterval
 	 */
 	public TrackGeneratorIntervalAware getVariableGeneratorInterval() {
-		return variableGeneratorInterval;
+		return this.variableGeneratorInterval;
 	}
 
 	/**
@@ -492,7 +492,7 @@ public class RandomTrackGenerator implements InitializingBean {
 	 * @return the useVariableInterval
 	 */
 	public boolean isUseVariableInterval() {
-		return useVariableInterval;
+		return this.useVariableInterval;
 	}
 
 	/**
@@ -514,25 +514,25 @@ public class RandomTrackGenerator implements InitializingBean {
 		 */
 		@Override
 		public void run() {
-			while (generating) {
+			while (RandomTrackGenerator.this.generating) {
 				try {
 					int updateDuration = getUpdateInterval();
 					if (LOGGER.isInfoEnabled()) {
-						LOGGER.info("Tracks send - sleeping for " + updateDuration / 1000 + "s");
+						LOGGER.info("Tracks send - sleeping for {}s", updateDuration / 1000);
 					}
 					if (updateDuration > 0) {
 						Thread.sleep(updateDuration);
 					}
 
-					for (TrackPositionMessage trackPosition : trackPositions) {
+					for (TrackPositionMessage trackPosition : RandomTrackGenerator.this.trackPositions) {
 						updateTrackPosition(trackPosition);
 					}
 
 					int trackAmountPerInterval = getTrackAmountPerInterval();
 					for (int i = 0; i < trackAmountPerInterval; i++) {
-						TrackPositionMessage trackPosition = trackPositions.get(currentTrack);
-						producerTemplate.sendBody(removeSomeProperties(trackPosition));
-						currentTrack = ++currentTrack % amountOfTracks;
+						TrackPositionMessage trackPosition = RandomTrackGenerator.this.trackPositions.get(RandomTrackGenerator.this.currentTrack);
+						RandomTrackGenerator.this.producerTemplate.sendBody(removeSomeProperties(trackPosition));
+						RandomTrackGenerator.this.currentTrack = ++RandomTrackGenerator.this.currentTrack % RandomTrackGenerator.this.amountOfTracks;
 					}
 				} catch (InterruptedException e) {
 					LOGGER.debug("Thread has been interrupted", e);
@@ -545,7 +545,7 @@ public class RandomTrackGenerator implements InitializingBean {
 		/**
 		 * Does clone the given {@link TrackPositionMessage} and remove some
 		 * random properties
-		 * 
+		 *
 		 * @param trackPosition
 		 *            the trackPosition
 		 * @return a clone of the given trackPosition with less properties
@@ -572,7 +572,7 @@ public class RandomTrackGenerator implements InitializingBean {
 		 * @return does randomly return true
 		 */
 		private boolean doRemoveProperty() {
-			return random.nextInt(5) >= 4;
+			return RandomTrackGenerator.this.random.nextInt(5) >= 4;
 		}
 	}
 

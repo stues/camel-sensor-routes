@@ -4,25 +4,25 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 
-import ch.stue.domain.GeoJSONFeature;
-import ch.stue.domain.PointGeometry;
-
 import org.apache.commons.lang3.time.DateUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import ch.stue.domain.GeoJSONFeature;
+import ch.stue.domain.PointGeometry;
+
 /**
  * Extends the GeoJSONFeature with some utility methods to instantiate a
  * {@link TrackPositionMessage}
- * 
+ *
  * It also provides some getter and setter methods for the Mode-S Attributes
- * 
+ *
  * @author stue
  */
 public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	public static String HEX_PROPERTY_NAME = "hexIdent";
 	public static String CALLSIGN_PROPERTY_NAME = "callsign";
 	public static String ALTITUDE_PROPERTY_NAME = "altitude";
@@ -137,7 +137,7 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 
 	/**
 	 * Sets the geometry with longitude and latitude
-	 * 
+	 *
 	 * @param longitude
 	 *            the longitude
 	 * @param latitude
@@ -164,12 +164,12 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	 */
 	@JsonIgnore
 	public Date getMessageReceived() {
-		return messageReceived;
+		return this.messageReceived;
 	}
 
 	/**
 	 * Sets the message generated date as to strings
-	 * 
+	 *
 	 * @param dateString
 	 *            the date string
 	 * @param timeString
@@ -178,7 +178,7 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	public void setMessageGenerated(String dateString, String timeString) {
 		try {
 			if (dateString != null && timeString != null) {
-				Date date = DateUtils.parseDate(dateString + " " + timeString, "yyyy/MM/dd HH:mm:ss.S");
+				Date date = DateUtils.parseDate(String.format("%s %s",dateString, timeString), "yyyy/MM/dd HH:mm:ss.S");
 				getProperties().put(DATE_TIME_MESSAGE_GENERATED_NAME, date);
 			} else {
 				getProperties().remove(DATE_TIME_MESSAGE_GENERATED_NAME);
@@ -190,7 +190,7 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 
 	/**
 	 * Sets the message generated date
-	 * 
+	 *
 	 * @param messageGenerated
 	 *            the daten when the message has been generated
 	 */

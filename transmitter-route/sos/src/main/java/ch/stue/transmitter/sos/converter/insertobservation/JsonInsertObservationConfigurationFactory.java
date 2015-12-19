@@ -1,10 +1,8 @@
 package ch.stue.transmitter.sos.converter.insertobservation;
 
 import java.io.InputStream;
-import java.util.Arrays;
 
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -15,15 +13,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Default Insert observation sos v2.0 configuration
  * @author stue
  */
-public class JsonInsertObserrvationConfigurationFactory implements FactoryBean<InsertObservationSOSV2Configuration>, ResourceLoaderAware, InitializingBean {
+public class JsonInsertObservationConfigurationFactory implements FactoryBean<InsertObservationSOSV2Configuration>, ResourceLoaderAware {
 
 	private ResourceLoader resourceLoader;
-	
+
 	private String jsonConfig;
-	
+
 	/**
 	 * @param resourceLoader the resourceLoader to set
 	 */
+	@Override
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
 	}
@@ -32,14 +31,14 @@ public class JsonInsertObserrvationConfigurationFactory implements FactoryBean<I
 	 * @return the resourceLoader
 	 */
 	public Resource getResource(String location){
-		return resourceLoader.getResource(location);
+		return this.resourceLoader.getResource(location);
 	}
-	
+
 	/**
 	 * @return the jsonConfig
 	 */
 	public String getJsonConfig() {
-		return jsonConfig;
+		return this.jsonConfig;
 	}
 
 	/**
@@ -49,22 +48,13 @@ public class JsonInsertObserrvationConfigurationFactory implements FactoryBean<I
 		this.jsonConfig = jsonConfig;
 	}
 
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		
-	}
-	
 	@Override
 	public InsertObservationSOSV2Configuration getObject() throws Exception {
-		DefaultInsertObserrvationSOSV2Configuration sosV2Configuration = new DefaultInsertObserrvationSOSV2Configuration();
 		Resource resource = getResource(getJsonConfig());
 		InputStream inputStream = resource.getInputStream();
 		ObjectMapper mapper = new ObjectMapper();
-		AbstractPropertyConfiguration<?>[] propertyConfiguration = mapper.readValue(inputStream, AbstractPropertyConfiguration[].class);
-		if(propertyConfiguration != null){
-			sosV2Configuration.setObservedProperties(Arrays.asList(propertyConfiguration));
-		}
+		DefaultInsertObservationSOSV2Configuration sosV2Configuration = mapper.readValue(inputStream, DefaultInsertObservationSOSV2Configuration.class);
+		sosV2Configuration.afterPropertiesSet();
 		return sosV2Configuration;
 	}
 
