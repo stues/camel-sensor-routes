@@ -23,12 +23,15 @@
 				<prop key="sos.host">${sos.host}</prop>
 				<prop key="sos.port">8080</prop>
 				<prop key="sos.path">/52n-sos-webapp/sos/pox</prop>
+				<prop key="sos.configfiles">sbs1sos-config.json</prop>
 			</props>
 		</property>
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 	</bean>
 
-	<import resource="sos-config-context.xml" />
+	<bean id="sosConfiguration" class="ch.stue.transmitter.sos.converter.insertobservation.SOSConfigurationFactory">
+		<property name="jsonConfig" value="${sos.configfiles}" />
+	</bean>
 
 	<camel:endpoint id="sosEndpoint" uri="http://${sos.host}:${sos.port}${sos.path}" />
 
@@ -39,8 +42,7 @@
 			<camel:from uri="direct:sos_in" />
 			<convertBodyTo type="javax.xml.bind.JAXBElement" />
 			<marshal>
-				<jaxb id="myJaxb" prettyPrint="false"
-					contextPath="net.opengis.sos.v_2_0_0:net.opengis.swe.v_2_0_0:net.opengis.filter.v_2_0_0" />
+				<jaxb id="myJaxb" prettyPrint="false" contextPath="net.opengis.sos.v_2_0_0:net.opengis.swe.v_2_0_0:net.opengis.filter.v_2_0_0" />
 			</marshal>
 			<setHeader headerName="CamelHttpMethod">
 				<constant>POST</constant>

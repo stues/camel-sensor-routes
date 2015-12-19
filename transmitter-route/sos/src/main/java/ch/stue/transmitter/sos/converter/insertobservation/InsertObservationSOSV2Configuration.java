@@ -2,7 +2,14 @@ package ch.stue.transmitter.sos.converter.insertobservation;
 
 import java.util.List;
 
+import ch.stue.domain.Feature;
+
 public interface InsertObservationSOSV2Configuration {
+
+	/**
+	 * @return the type of feature for which this configuration can be used
+	 */
+	public abstract Class<? extends Feature<?>> getFeatureType();
 
 	/**
 	 * @return the service

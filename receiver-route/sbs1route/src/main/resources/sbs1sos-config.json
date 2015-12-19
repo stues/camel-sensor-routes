@@ -1,4 +1,5 @@
 {
+	"featureType": "ch.stue.receiver.sbs1.domain.TrackPositionMessage",	
 	"offerings":[
 		"http://stue.ch/sensorobservation/offering/flighttracking"
 	],

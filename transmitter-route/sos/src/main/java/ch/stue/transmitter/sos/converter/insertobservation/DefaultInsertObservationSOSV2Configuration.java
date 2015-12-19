@@ -6,6 +6,8 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
 
+import ch.stue.domain.Feature;
+
 /**
  * Default Insert observation sos v2.0 configuration
  * @author stue
@@ -23,8 +25,12 @@ public class DefaultInsertObservationSOSV2Configuration implements InsertObserva
 	public static final String PHENOMENON_TIME_PROPERTY_DEFAULT = "phenomenonTimePropertyName";
 	public static final String CREATE_NULL_VALUE_MESSAGES_DEFAULT = "createNullValueMessages";
 
+	private Class<? extends Feature<?>> featureType;
+
 	private List<? extends ObservedPropertyConfiguration<?>> observedProperties;
+
 	private List<String> offerings;
+
 	private Map<String, Object> defaultValues;
 
 	@Override
@@ -35,6 +41,21 @@ public class DefaultInsertObservationSOSV2Configuration implements InsertObserva
 	@Override
 	public String getVersion() {
 		return SOS_VERSION;
+	}
+
+	/**
+	 * @return the featureType
+	 */
+	@Override
+	public Class<? extends Feature<?>> getFeatureType() {
+		return this.featureType;
+	}
+
+	/**
+	 * @param featureType the featureType to set
+	 */
+	public void setFeatureType(Class<? extends Feature<?>> featureType) {
+		this.featureType = featureType;
 	}
 
 	@Override
