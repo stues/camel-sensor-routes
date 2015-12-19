@@ -1,1 +1,1 @@
-class=ch.stue.transmitter.wfs.converter.WFSComponent
+class=ch.stue.transmitter.wfs.component.WFSComponent

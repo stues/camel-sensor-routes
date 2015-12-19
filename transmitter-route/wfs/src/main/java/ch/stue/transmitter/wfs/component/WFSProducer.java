@@ -1,4 +1,4 @@
-package ch.stue.transmitter.wfs.converter;
+package ch.stue.transmitter.wfs.component;
 
 import java.util.Map;
 
@@ -8,7 +8,7 @@ import org.apache.camel.impl.DefaultProducer;
 import org.apache.commons.beanutils.BeanMap;
 
 /**
- * Thes WFS Producer
+ * The WFS insert transaction Producer
  *
  * @author stue
  *

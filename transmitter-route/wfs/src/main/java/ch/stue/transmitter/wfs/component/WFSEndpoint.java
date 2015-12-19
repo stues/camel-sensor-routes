@@ -1,4 +1,4 @@
-package ch.stue.transmitter.wfs.converter;
+package ch.stue.transmitter.wfs.component;
 
 import java.io.IOException;
 import java.net.URI;
