@@ -101,7 +101,7 @@ public class AISMessageToFeatureConverter {
 			propertiesMap.put(AISPositionMessage.ELECTRONIC_POSITION_FIXING_DEVICE_TYPE, aisMessage05.getTypeOfElectronicPositionFixingDevice());
 			propertiesMap.put(AISPositionMessage.ETA, UtilsEta.convertToTime(aisMessage05.getEta(), new Date().getTime()));
 			propertiesMap.put(AISPositionMessage.MAX_PRESENT_STATIC_DRAUGHT, aisMessage05.getMaximumPresentStaticDraught());
-			propertiesMap.put(AISPositionMessage.DESTINATION, StringUtils.isEmpty(aisMessage05.getDestination()) ? "-No Destination-" : aisMessage05.getDestination());
+			propertiesMap.put(AISPositionMessage.DESTINATION, StringUtils.isEmpty(aisMessage05.getDestination()) ? null : aisMessage05.getDestination());
 			propertiesMap.put(AISPositionMessage.DTE, aisMessage05.getDte());
 			propertiesMap.put(AISPositionMessage.SPARE, aisMessage05.getSpare());
 		}
