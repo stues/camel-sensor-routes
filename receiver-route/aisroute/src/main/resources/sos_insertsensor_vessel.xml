@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swes:InsertSensor xmlns:swes="http://www.opengis.net/swes/2.0" xmlns:sos="http://www.opengis.net/sos/2.0" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" service="SOS" version="2.0.0" xsi:schemaLocation="http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sosInsertSensor.xsd   http://www.opengis.net/swes/2.0 http://schemas.opengis.net/swes/2.0/swes.xsd">
+  <swes:procedureDescriptionFormat>http://www.opengis.net/sensorML/1.0.1</swes:procedureDescriptionFormat>
+  <swes:procedureDescription>
+    <sml:SensorML version="1.0.1">
+      <sml:member>
+        <sml:System>
+          <sml:identification>
+            <sml:IdentifierList>
+              <sml:identifier name="uniqueID">
+                <sml:Term definition="urn:ogc:def:identifier:OGC:1.0:uniqueID">
+                  <sml:value>http://stue.ch/sensorobservation/procedure/ais</sml:value>
+                </sml:Term>
+              </sml:identifier>
+              <sml:identifier name="longName">
+                <sml:Term definition="urn:ogc:def:identifier:OGC:1.0:longName">
+                  <sml:value>Vessel Tracking Procedure contains AIS Data</sml:value>
+                </sml:Term>
+              </sml:identifier>
+              <sml:identifier name="shortName">
+                <sml:Term definition="urn:ogc:def:identifier:OGC:1.0:shortName">
+                  <sml:value>Vessel Tracking</sml:value>
+                </sml:Term>
+              </sml:identifier>
+            </sml:IdentifierList>
+          </sml:identification>
+          <sml:capabilities name="offerings">
+            <swe:SimpleDataRecord>
+              <swe:field name="Offering for AIS Sensor">
+                <swe:Text definition="urn:ogc:def:identifier:OGC:offeringID">
+                  <swe:value>http://stue.ch/sensorobservation/offering/vesseltracking</swe:value>
+                </swe:Text>
+              </swe:field>
+            </swe:SimpleDataRecord>
+          </sml:capabilities>
+          <sml:inputs>
+            <sml:InputList>
+              <sml:input name="vesseltraffic">
+                <swe:ObservableProperty definition="http://stue.ch/sensorobservation/observableProperty/vesseltraffic"/>
+              </sml:input>
+            </sml:InputList>
+          </sml:inputs>
+          <sml:outputs>
+            <sml:OutputList>
+              <sml:output name="callsign">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/vessel/callsign">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::Callsign</id>
+                      <name>Callsign text measurement</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                </swe:Quantity>
+              </sml:output>
+              <sml:output name="name">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/vessel/name">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::Name</id>
+                      <name>Name of the vessel text measurement</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                </swe:Quantity>
+              </sml:output>
+              <sml:output name="destination">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/vessel/destination">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::Destination</id>
+                      <name>Destination text measurement</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                </swe:Quantity>
+              </sml:output>
+              <sml:output name="speed">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/vessel/speed">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::Speed</id>
+                      <name>speed measurements</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                  <swe:uom code="[kn_i]"/>
+                </swe:Quantity>
+              </sml:output>
+              <sml:output name="specialManoeuvre">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/vessel/specialManoeuvre">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::SpecialManoeuvre</id>
+                      <name>special manoeuvre</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                </swe:Quantity>
+              </sml:output>
+              <sml:output name="course">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/vessel/course">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::Course</id>
+                      <name>Course over ground measurements</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                  <swe:uom code="deg"/>
+                </swe:Quantity>
+              </sml:output>
+              <sml:output name="heading">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/vessel/heading">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::Heading</id>
+                      <name>Heading of the vessel measurements</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                  <swe:uom code="deg"/>
+                </swe:Quantity>
+              </sml:output>
+              <sml:output name="position">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/vessel/position">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::Position</id>
+                      <name>position measurements</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                </swe:Quantity>
+              </sml:output>
+            </sml:OutputList>
+          </sml:outputs>
+        </sml:System>
+      </sml:member>
+    </sml:SensorML>
+  </swes:procedureDescription>
+  <!-- multiple values possible -->
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/vessel/callsign</swes:observableProperty>
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/vessel/name</swes:observableProperty>
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/vessel/destination</swes:observableProperty>
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/vessel/speed</swes:observableProperty>
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/vessel/specialManoeuvre</swes:observableProperty>
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/vessel/course</swes:observableProperty>
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/vessel/heading</swes:observableProperty>
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/vessel/position</swes:observableProperty>
+  <swes:metadata>
+    <sos:SosInsertionMetadata>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement</sos:observationType>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CategoryObservation</sos:observationType>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CountObservation</sos:observationType>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_TextObservation</sos:observationType>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_TruthObservation</sos:observationType>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_GeometryObservation</sos:observationType>
+      <!-- multiple values possible -->
+      <sos:featureOfInterestType>http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint</sos:featureOfInterestType>
+    </sos:SosInsertionMetadata>
+  </swes:metadata>
+</swes:InsertSensor>

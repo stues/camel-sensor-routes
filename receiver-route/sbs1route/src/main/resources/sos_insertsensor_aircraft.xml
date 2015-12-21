@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swes:InsertSensor xmlns:swes="http://www.opengis.net/swes/2.0" xmlns:sos="http://www.opengis.net/sos/2.0" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" service="SOS" version="2.0.0" xsi:schemaLocation="http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sosInsertSensor.xsd   http://www.opengis.net/swes/2.0 http://schemas.opengis.net/swes/2.0/swes.xsd">
+  <swes:procedureDescriptionFormat>http://www.opengis.net/sensorML/1.0.1</swes:procedureDescriptionFormat>
+  <swes:procedureDescription>
+    <sml:SensorML version="1.0.1">
+      <sml:member>
+        <sml:System>
+          <sml:identification>
+            <sml:IdentifierList>
+              <sml:identifier name="uniqueID">
+                <sml:Term definition="urn:ogc:def:identifier:OGC:1.0:uniqueID">
+                  <sml:value>http://stue.ch/sensorobservation/procedure/sbs-1</sml:value>
+                </sml:Term>
+              </sml:identifier>
+              <sml:identifier name="longName">
+                <sml:Term definition="urn:ogc:def:identifier:OGC:1.0:longName">
+                  <sml:value>Flight Tracking Procedure contains ADS-B Data. 
+                   The ADS-B receiver generates sbs-1 socket output data.</sml:value>
+                </sml:Term>
+              </sml:identifier>
+              <sml:identifier name="shortName">
+                <sml:Term definition="urn:ogc:def:identifier:OGC:1.0:shortName">
+                  <sml:value>Flight Tracking</sml:value>
+                </sml:Term>
+              </sml:identifier>
+            </sml:IdentifierList>
+          </sml:identification>
+          <sml:capabilities name="offerings">
+            <swe:SimpleDataRecord>
+              <swe:field name="Offering for ADS-B Sensor">
+                <swe:Text definition="urn:ogc:def:identifier:OGC:offeringID">
+                  <swe:value>http://stue.ch/sensorobservation/offering/flighttracking</swe:value>
+                </swe:Text>
+              </swe:field>
+            </swe:SimpleDataRecord>
+          </sml:capabilities>
+          <sml:position name="sensorPosition">
+            <swe:Position referenceFrame="urn:ogc:def:crs:EPSG::4326">
+              <swe:location>
+                <swe:Vector gml:id="STATION_LOCATION">
+                  <swe:coordinate name="easting">
+                    <swe:Quantity axisID="x">
+                      <swe:uom code="degree"/>
+                      <swe:value>7.573065</swe:value>
+                    </swe:Quantity>
+                  </swe:coordinate>
+                  <swe:coordinate name="northing">
+                    <swe:Quantity axisID="y">
+                      <swe:uom code="degree"/>
+                      <swe:value>47.536427</swe:value>
+                    </swe:Quantity>
+                  </swe:coordinate>
+                  <swe:coordinate name="altitude">
+                    <swe:Quantity axisID="z">
+                      <swe:uom code="m"/>
+                      <swe:value>310</swe:value>
+                    </swe:Quantity>
+                  </swe:coordinate>
+                </swe:Vector>
+              </swe:location>
+            </swe:Position>
+          </sml:position>
+          <sml:inputs>
+            <sml:InputList>
+              <sml:input name="airtraffic">
+                <swe:ObservableProperty definition="http://stue.ch/sensorobservation/observableProperty/airtraffic"/>
+              </sml:input>
+            </sml:InputList>
+          </sml:inputs>
+          <sml:outputs>
+            <sml:OutputList>
+              <sml:output name="callsign">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/callsign">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::Callsign</id>
+                      <name>Callsign text measurement</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                </swe:Quantity>
+              </sml:output>
+              <sml:output name="speed">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/speed">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::Speed</id>
+                      <name>speed measurements</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                  <swe:uom code="[kn_i]"/>
+                </swe:Quantity>
+              </sml:output>
+              <sml:output name="altitude">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/altitude">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::Altitude</id>
+                      <name>altitude measurements</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                  <swe:uom code="[ft_i]"/>
+                </swe:Quantity>
+              </sml:output>
+              <sml:output name="heading">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/heading">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::Heading</id>
+                      <name>heading measurements</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                  <swe:uom code="deg"/>
+                </swe:Quantity>
+              </sml:output>
+              <sml:output name="position">
+                <swe:Quantity definition="http://stue.ch/sensorobservation/observableProperty/position">
+                  <gml:metaDataProperty>
+                    <offering>
+                      <id>urn:x-ogc:def:property:OGC::Position</id>
+                      <name>position measurements</name>
+                    </offering>
+                  </gml:metaDataProperty>
+                </swe:Quantity>
+              </sml:output>
+            </sml:OutputList>
+          </sml:outputs>
+        </sml:System>
+      </sml:member>
+    </sml:SensorML>
+  </swes:procedureDescription>
+  <!-- multiple values possible -->
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/callsign</swes:observableProperty>
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/speed</swes:observableProperty>
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/altitude</swes:observableProperty>
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/heading</swes:observableProperty>
+  <swes:observableProperty>http://stue.ch/sensorobservation/observableProperty/position</swes:observableProperty>
+  <swes:metadata>
+    <sos:SosInsertionMetadata>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement</sos:observationType>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CategoryObservation</sos:observationType>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CountObservation</sos:observationType>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_TextObservation</sos:observationType>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_TruthObservation</sos:observationType>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_GeometryObservation</sos:observationType>
+      <!-- multiple values possible -->
+      <sos:featureOfInterestType>http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint</sos:featureOfInterestType>
+    </sos:SosInsertionMetadata>
+  </swes:metadata>
+</swes:InsertSensor>

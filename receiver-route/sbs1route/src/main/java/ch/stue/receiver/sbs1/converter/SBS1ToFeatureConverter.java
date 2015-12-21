@@ -13,10 +13,11 @@ import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import ch.stue.domain.GeoJSONFeature;
 import ch.stue.domain.PointGeometry;
 import ch.stue.receiver.sbs1.domain.SBS1Message;
+import ch.stue.receiver.sbs1.domain.TrackPositionMessage;
 
 /**
  * Converts a {@link SBS1Message} to a {@link GeoJSONFeature}
- * 
+ *
  * @author stue
  */
 @Converter
@@ -24,23 +25,23 @@ public class SBS1ToFeatureConverter {
 
 	@BeanInject("sbs1PropertyNamePredicate")
 	private Predicate<String> propertyNamePredicate;
-	
+
 	@BeanInject("sbs1ValuePredicate")
 	private Predicate<Object> valuePredicate;
-	
+
 	/**
 	 * Converts the given {@link SBS1Message} into a {@link GeoJSONFeature}
-	 * 
+	 *
 	 * @param sbs1Message
 	 *            the {@link SBS1Message}
 	 * @return the {@link GeoJSONFeature} object
 	 */
 	@Converter
-	public GeoJSONFeature<PointGeometry> convert(SBS1Message sbs1Message) {
+	public TrackPositionMessage convert(SBS1Message sbs1Message) {
 		BidiMap<String, Object> properties = getProperties(sbs1Message);
-		CollectionUtils.filter(properties.values(), valuePredicate);
-		CollectionUtils.filter(properties.keySet(), propertyNamePredicate);
-		
+		CollectionUtils.filter(properties.values(), this.valuePredicate);
+		CollectionUtils.filter(properties.keySet(), this.propertyNamePredicate);
+
 		PointGeometry pointGeometry;
 		if(sbs1Message.getLatitude() != null || sbs1Message.getLongitude() != null){
 			pointGeometry = new PointGeometry(sbs1Message.getLongitude(), sbs1Message.getLatitude());
@@ -48,8 +49,7 @@ public class SBS1ToFeatureConverter {
 		else{
 			pointGeometry = null;
 		}
-		GeoJSONFeature<PointGeometry> geoJSONFeature = new GeoJSONFeature<PointGeometry>(pointGeometry, properties);
-		return geoJSONFeature;
+		return new TrackPositionMessage(pointGeometry, properties);
 	}
 
 	/**

@@ -35,7 +35,7 @@
 			<camel:process ref="aisProcessor" />
 			<camel:filter>
 				<simple>${body} != null</simple>
-				<convertBodyTo type="ch.stue.domain.GeoJSONFeature" />
+				<convertBodyTo type="ch.stue.receiver.ais.domain.AISPositionMessage" />
 				<camel:log message="${body}" logName="RECEIVED_FEATURE" />
 				<camel:to uri="direct:ais_out" />
 			</camel:filter>
@@ -43,7 +43,7 @@
 
 		<!-- Raw AIS input route -->
 		<camel:route id="aisrawInputRoute" autoStartup="{{ais.enabled}}">
-			<camel:from	uri="stream:file?fileName=${ais.sourceName}&amp;scanStream=true" />
+			<camel:from	uri="stream:file?fileName={{ais.sourcename}}&amp;scanStream=true" />
 			<to uri="direct:ais_in" />
 		</camel:route>
 

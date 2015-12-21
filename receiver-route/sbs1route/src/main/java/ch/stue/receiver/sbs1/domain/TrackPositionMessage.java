@@ -3,6 +3,7 @@ package ch.stue.receiver.sbs1.domain;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -37,6 +38,15 @@ public class TrackPositionMessage extends GeoJSONFeature<PointGeometry> {
 	 */
 	public TrackPositionMessage() {
 		super(null, new HashMap<String, Object>());
+	}
+
+	/**
+	 * Constructor with point geometry and properties
+	 * @param pointGeometry the point geometry
+	 * @param properties the properties
+	 */
+	public TrackPositionMessage(PointGeometry pointGeometry, Map<String, Object> properties) {
+		super(pointGeometry, properties);
 	}
 
 	/**
