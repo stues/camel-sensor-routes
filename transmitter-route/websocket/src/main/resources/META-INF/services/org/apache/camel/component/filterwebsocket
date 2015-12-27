@@ -1,1 +1,1 @@
-class=ch.stue.domain.transmitter.websocket.FilterWebsocketComponent
+class=ch.stue.transmitter.websocket.FilterWebsocketComponent

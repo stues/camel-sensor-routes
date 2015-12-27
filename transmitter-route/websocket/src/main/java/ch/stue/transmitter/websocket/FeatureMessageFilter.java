@@ -20,11 +20,11 @@ import ch.stue.domain.PointGeometry;
  *
  * @author stue
  */
-public class TrackPositionMessageFilter implements Predicate<Message> {
+public class FeatureMessageFilter implements Predicate<Message> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TrackPositionMessageFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FeatureMessageFilter.class);
 
-	private Collection<Predicate<Feature<PointGeometry>>> predicates;
+	private Collection<Predicate<Object>> predicates;
 
 	/**
 	 * {@inheritDoc}
@@ -36,7 +36,7 @@ public class TrackPositionMessageFilter implements Predicate<Message> {
 		try {
 			object = message.getMandatoryBody(Feature.class);
 			if (object instanceof Feature && CollectionUtils.isNotEmpty(this.predicates)) {
-				for (Predicate<Feature<PointGeometry>> predicate : this.predicates) {
+				for (Predicate<Object> predicate : this.predicates) {
 					if (!predicate.evaluate(object)) {
 						return false;
 					}
@@ -53,14 +53,14 @@ public class TrackPositionMessageFilter implements Predicate<Message> {
 	/**
 	 * @return the predicates
 	 */
-	public Collection<Predicate<Feature<PointGeometry>>> getPredicates() {
+	public Collection<Predicate<Object>> getPredicates() {
 		return this.predicates;
 	}
 
 	/**
 	 * @param predicates a collection of the predicates to set
 	 */
-	public void setPredicates(Collection<Predicate<Feature<PointGeometry>>> predicates) {
+	public void setPredicates(Collection<Predicate<Object>> predicates) {
 		LOGGER.trace("Set Predicates");
 		this.predicates = predicates;
 	}
@@ -68,7 +68,7 @@ public class TrackPositionMessageFilter implements Predicate<Message> {
 	/**
 	 * @param predicate a single predicate to set
 	 */
-	public void setPredicate(Predicate<Feature<PointGeometry>> predicate) {
+	public void setPredicate(Predicate<Object> predicate) {
 		LOGGER.trace("Single Predicate set");
 		this.predicates = Collections.singleton(predicate);
 	}

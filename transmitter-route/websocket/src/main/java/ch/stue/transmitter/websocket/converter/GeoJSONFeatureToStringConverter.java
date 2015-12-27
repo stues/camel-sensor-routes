@@ -22,7 +22,7 @@ public class GeoJSONFeatureToStringConverter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FilterWebsocketProcessor.class);
 
-	ObjectMapper mapper;
+	private final ObjectMapper mapper;
 
 	/**
 	 * Default Constructor

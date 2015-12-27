@@ -28,6 +28,8 @@
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 	</bean>
 
+	<bean id="jsonPredicateMapper" class="ch.stue.transmitter.websocket.domain.JSONPredicateMapperFactory" />
+
 	<bean id="websocketStore" class="org.apache.camel.component.websocket.MemoryWebsocketStore" />
 
 	<bean name="filterWebsocketProcessor" class="ch.stue.transmitter.websocket.FilterWebsocketProcessor">
@@ -41,7 +43,7 @@
 
 		<camel:route id="websocketInputRoute" autoStartup="{{websocket.enabled}}">
 			<camel:from uri="websocketClientJSONEndpoint" />
-			<convertBodyTo type="ch.stue.domain.GeoJSONFeature" />
+			<convertBodyTo type="ch.stue.transmitter.websocket.domain.JSONPredicate" />
 			<camel:process ref="filterWebsocketProcessor"></camel:process>
 			<log message="Converted: ${body}" />
 			<camel:stop />

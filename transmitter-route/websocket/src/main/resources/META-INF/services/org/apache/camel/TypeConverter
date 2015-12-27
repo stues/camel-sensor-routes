@@ -1,2 +1,3 @@
+ch.stue.transmitter.websocket.converter.StringToJSONPredicateConverter,
 ch.stue.transmitter.websocket.converter.StringToGeoJSONFeatureConverter,
 ch.stue.transmitter.websocket.converter.GeoJSONFeatureToStringConverter
