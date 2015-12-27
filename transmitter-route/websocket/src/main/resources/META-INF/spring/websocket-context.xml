@@ -30,7 +30,7 @@
 
 	<bean id="websocketStore" class="org.apache.camel.component.websocket.MemoryWebsocketStore" />
 
-	<bean name="filterWebsocketProcessor" class="ch.stue.domain.transmitter.websocket.FilterWebsocketProcessor">
+	<bean name="filterWebsocketProcessor" class="ch.stue.transmitter.websocket.FilterWebsocketProcessor">
 		<property name="websocketStore" ref="websocketStore" />
 	</bean>
 

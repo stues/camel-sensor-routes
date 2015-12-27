@@ -1,4 +1,4 @@
-package ch.stue.domain.transmitter.websocket.converter;
+package ch.stue.transmitter.websocket.converter;
 
 import org.apache.camel.Converter;
 import org.apache.camel.RuntimeCamelException;
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.stue.domain.GeoJSONFeature;
 import ch.stue.domain.PolygonGeometry;
-import ch.stue.domain.transmitter.websocket.FilterWebsocketProcessor;
+import ch.stue.transmitter.websocket.FilterWebsocketProcessor;
 
 /**
  * Converts a {@link String} which contains a JSON Object into a {@link PolygonGeometry}

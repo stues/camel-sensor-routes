@@ -1,4 +1,4 @@
-package ch.stue.domain.transmitter.websocket;
+package ch.stue.transmitter.websocket;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;

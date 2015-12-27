@@ -1,4 +1,4 @@
-package ch.stue.domain.transmitter.websocket;
+package ch.stue.transmitter.websocket;
 
 import java.util.List;
 

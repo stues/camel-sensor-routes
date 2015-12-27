@@ -1,22 +1,22 @@
-package ch.stue.domain.transmitter.websocket;
+package ch.stue.transmitter.websocket;
 
 import org.apache.commons.collections4.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.stue.domain.Feature;
-import ch.stue.domain.PointGeometry;
-
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
+import ch.stue.domain.Feature;
+import ch.stue.domain.PointGeometry;
+
 /**
  * This predicate filters by boundingBox.
- * 
+ *
  * The given {@link TrackPositionMessages} are within the configured BoundingBox
- * 
- * If boundingBox is null every TrackPosition will be accepted
- * 
+ *
+ * If boundingBox is null every TrackPosition will be rejected
+ *
  * @author stue
  */
 public class TrackPositionGeometryFilter implements Predicate<Feature<PointGeometry>> {
@@ -32,7 +32,7 @@ public class TrackPositionGeometryFilter implements Predicate<Feature<PointGeome
 	public TrackPositionGeometryFilter(){
 		//Nothing to do!
 	}
-	
+
 	/**
 	 * Constructor with geometry
 	 * @param geometry the geometry
@@ -40,26 +40,26 @@ public class TrackPositionGeometryFilter implements Predicate<Feature<PointGeome
 	public TrackPositionGeometryFilter(Geometry geometry){
 		this.geometry = geometry;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean evaluate(Feature<PointGeometry> trackPositionMessage) {
-		if(geometry != null){
+		if(this.geometry != null){
 			Point position = GeometryConverterHelper.getGeometry(trackPositionMessage.getGeometry());
-			if(position != null && geometry.contains(position)){
+			if(position != null && this.geometry.contains(position)){
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @return the geometry
 	 */
 	public Geometry getGeometry() {
-		return geometry;
+		return this.geometry;
 	}
 
 	/**
