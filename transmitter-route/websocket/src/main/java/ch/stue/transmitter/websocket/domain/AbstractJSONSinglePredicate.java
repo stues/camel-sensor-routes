@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  * @author stue
  */
-public abstract class AbstractJSONSinglePredicate implements JSONPredicate {
+public abstract class AbstractJSONSinglePredicate extends AbstractJSONPredicate {
 
 	@Override
 	public Predicate<Object> getPredicate() {
@@ -50,5 +50,4 @@ public abstract class AbstractJSONSinglePredicate implements JSONPredicate {
 	 * @param jsonPredicate the predicate to set
 	 */
 	public abstract void setJSONPredicate(JSONPredicate jsonPredicate);
-
 }

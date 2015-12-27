@@ -61,6 +61,4 @@ public class OrJSONPredicate extends AbstractJSONMultiPredicate {
 	public void setOr(Collection<JSONPredicate> or) {
 		this.or = or;
 	}
-
-
 }

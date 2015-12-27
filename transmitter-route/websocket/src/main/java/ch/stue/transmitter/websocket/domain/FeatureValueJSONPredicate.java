@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author stue
  */
-public class FeatureValueJSONPredicate implements JSONPredicate {
+public class FeatureValueJSONPredicate extends AbstractJSONPredicate {
 
 	public static final String PROPERTY = "property";
 	public static final String CRITERIA = "criteria";

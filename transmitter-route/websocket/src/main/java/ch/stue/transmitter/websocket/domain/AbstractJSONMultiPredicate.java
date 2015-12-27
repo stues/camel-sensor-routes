@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  * @author stue
  */
-public abstract class AbstractJSONMultiPredicate implements JSONPredicate {
+public abstract class AbstractJSONMultiPredicate extends AbstractJSONPredicate {
 
 	@Override
 	public Predicate<Object> getPredicate() {

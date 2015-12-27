@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author stue
  */
-public class FeatureIsNullJSONPredicate implements JSONPredicate {
+public class FeatureIsNullJSONPredicate extends AbstractJSONPredicate {
 
 	public static final String IS_NULL = "isNull";
 
