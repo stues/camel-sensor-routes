@@ -4,18 +4,19 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import ch.stue.domain.PointGeometry;
-import ch.stue.domain.PolygonGeometry;
-
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
+import ch.stue.domain.PointGeometry;
+import ch.stue.domain.PolygonGeometry;
+
 /**
  * Helper Class for transforming GeoJSON Data to JTS Geometries
- * 
+ *
  * @author stue
  */
 public final class GeometryConverterHelper {
@@ -30,8 +31,26 @@ public final class GeometryConverterHelper {
 	}
 
 	/**
+	 * Returns a JTS {@link Geometry} for the given {@link ch.stue.domain.Geometry}
+	 *
+	 * @param geometry
+	 *            the {@link ch.stue.domain.Geometry}
+	 * @return the jts geometry or null if not able to convert
+	 */
+	public static Geometry getGeometry(ch.stue.domain.Geometry<?> geometry) {
+		if (geometry != null) {
+			if (geometry instanceof PointGeometry) {
+				return getGeometry((PointGeometry) geometry);
+			} else if (geometry instanceof PolygonGeometry) {
+				return getGeometry((PolygonGeometry) geometry);
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Returns a JTS {@link Point} for the given {@link PointGeometry}
-	 * 
+	 *
 	 * @param point
 	 *            the {@link PointGeometry}
 	 * @return if given {@link PointGemetry} contains two coordinates, a
@@ -39,22 +58,22 @@ public final class GeometryConverterHelper {
 	 *         null
 	 */
 	public static Point getGeometry(PointGeometry point) {
-		if(point != null){
+		if (point != null) {
 			Double[] coordinates = point.getCoordinates();
 			return GEOMETRY_FACTORY.createPoint(getCoordinate(coordinates));
-		}
-		else{
+		} else {
 			return null;
 		}
 	}
 
 	/**
 	 * Returns a JTS {@link Geometry} for the given {@link PolygonGeometry}
-	 * 
+	 *
 	 * @param polygon
 	 *            the {@link PolygonGeometry}
-	 * @return if given {@link PolygonGeometry} contains polygon coordinates returns a
-	 *         {@link Polygon} with these coordinates as polygon otherwise null
+	 * @return if given {@link PolygonGeometry} contains polygon coordinates
+	 *         returns a {@link Polygon} with these coordinates as polygon
+	 *         otherwise null
 	 */
 	public static Polygon getGeometry(PolygonGeometry polygon) {
 		List<Double[]> shellDoubleValues = polygon.getShell();
@@ -64,7 +83,7 @@ public final class GeometryConverterHelper {
 		if (CollectionUtils.isNotEmpty(holesDoubleValues)) {
 			int holesSize = holesDoubleValues.size();
 			LinearRing[] holes = new LinearRing[holesSize];
-			for(int i = 0; i< holesSize; i++){
+			for (int i = 0; i < holesSize; i++) {
 				holes[i] = getLinearRing(holesDoubleValues.get(i));
 			}
 			return GEOMETRY_FACTORY.createPolygon(shell, holes);
@@ -75,7 +94,7 @@ public final class GeometryConverterHelper {
 
 	/**
 	 * Returns the coordinate for the given Double array
-	 * 
+	 *
 	 * @param coordinates
 	 *            the double array which should have two values
 	 * @return a {@link Coordinate} instance
@@ -86,10 +105,12 @@ public final class GeometryConverterHelper {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns a Linear Ring for the given List of Double array
-	 * @param polygonDoubleValues the List of Double array
+	 *
+	 * @param polygonDoubleValues
+	 *            the List of Double array
 	 * @return a {@link LinearRing} instance
 	 */
 	private static LinearRing getLinearRing(List<Double[]> polygonDoubleValues) {

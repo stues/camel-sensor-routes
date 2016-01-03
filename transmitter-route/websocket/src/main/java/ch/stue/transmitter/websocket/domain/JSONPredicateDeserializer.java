@@ -35,10 +35,14 @@ public class JSONPredicateDeserializer extends StdDeserializer<JSONPredicate> {
 		this.propertyMap.put(FeatureValueJSONPredicate.CRITERIA, FeatureValueJSONPredicate.class);
 		this.propertyMap.put(FeatureValueJSONPredicate.VALUE, FeatureValueJSONPredicate.class);
 
+		this.propertyMap.put(WithinGeometryJSONPredicate.WITHIN, GeometryJSONPredicate.class);
+
 		this.propertyMap.put(AndJSONPredicate.AND, AndJSONPredicate.class);
 		this.propertyMap.put(OrJSONPredicate.OR, OrJSONPredicate.class);
 		this.propertyMap.put(NotJSONPredicate.NOT, NotJSONPredicate.class);
-		this.propertyMap.put(FeatureIsNullJSONPredicate.IS_NULL, FeatureIsNullJSONPredicate.class);
+		this.propertyMap.put(FeatureValueIsNullJSONPredicate.IS_NULL, FeatureValueIsNullJSONPredicate.class);
+
+		this.propertyMap.putAll(GeometryJSONPredicate.getJSONUniqueIdentifiers());
 	}
 
 	@Override

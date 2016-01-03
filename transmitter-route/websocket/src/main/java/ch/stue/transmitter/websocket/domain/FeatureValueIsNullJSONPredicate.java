@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author stue
  */
-public class FeatureIsNullJSONPredicate extends AbstractJSONPredicate {
+public class FeatureValueIsNullJSONPredicate extends AbstractJSONPredicate {
 
 	public static final String IS_NULL = "isNull";
 
@@ -20,7 +20,7 @@ public class FeatureIsNullJSONPredicate extends AbstractJSONPredicate {
 	/**
 	 * Default Constructor
 	 */
-	public FeatureIsNullJSONPredicate() {
+	public FeatureValueIsNullJSONPredicate() {
 	}
 
 	/**
@@ -28,7 +28,7 @@ public class FeatureIsNullJSONPredicate extends AbstractJSONPredicate {
 	 *
 	 * @param nullPropertyName
 	 */
-	public FeatureIsNullJSONPredicate(String nullPropertyName) {
+	public FeatureValueIsNullJSONPredicate(String nullPropertyName) {
 		this.nullPropertyName = nullPropertyName;
 	}
 

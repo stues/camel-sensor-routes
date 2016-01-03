@@ -13,28 +13,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * This Class Provides members to describe a GeoJSON-Feature the geometry type
  * must be of the Type {@link AbstractGeometry} the properties Map may contain
  * different types of Values (String, Integer, Double, ...)
- * 
+ *
  * @author stue
- * 
+ *
  */
-public class GeoJSONFeature<T extends AbstractGeometry<?>> implements Feature<T>, Serializable {
+public class GeoJSONFeature<T extends Geometry<?>> implements Feature<T>, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final String GEOMETRY_PROPERTY_NAME = "geometry";
 	private static final String PROPERTIES_PROPERTY_NAME = "properties";
-	
+
 	private static final String FEATURE_TYPE_STRING = "Feature";
-	
+
 	private String type;
 
-	private AbstractGeometry<?> geometry;
+	private Geometry<?> geometry;
 
 	private Map<String, Object> properties;
 
 	/**
 	 * Constructor with a given geometry
-	 * 
+	 *
 	 * @param geometry
 	 *            the geometry
 	 */
@@ -44,7 +44,7 @@ public class GeoJSONFeature<T extends AbstractGeometry<?>> implements Feature<T>
 
 	/**
 	 * Constructor with a geometry and properties
-	 * 
+	 *
 	 * @param geometry
 	 *            the geometry
 	 * @param properties
@@ -52,7 +52,7 @@ public class GeoJSONFeature<T extends AbstractGeometry<?>> implements Feature<T>
 	 */
 	@JsonCreator
 	public GeoJSONFeature(
-			@JsonProperty(GEOMETRY_PROPERTY_NAME) AbstractGeometry<?> geometry, 
+			@JsonProperty(GEOMETRY_PROPERTY_NAME) Geometry<?> geometry,
 			@JsonProperty(PROPERTIES_PROPERTY_NAME) Map<String, Object> properties) {
 		this.geometry = geometry;
 		this.properties = properties;
@@ -62,11 +62,12 @@ public class GeoJSONFeature<T extends AbstractGeometry<?>> implements Feature<T>
 	/**
 	 * @return the Geometry
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public T getGeometry() {
-		return (T) geometry;
+		return (T) this.geometry;
 	}
-	
+
 	/**
 	 * @param geometry
 	 *            the geometry to set
@@ -78,14 +79,15 @@ public class GeoJSONFeature<T extends AbstractGeometry<?>> implements Feature<T>
 	/**
 	 * @return the type
 	 */
+	@Override
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	@Override
 	public <O> O getProperty(String propertyName, Class<O> clazz) {
-		if (MapUtils.isNotEmpty(properties) && properties.containsKey(propertyName)) {
-			return clazz.cast(properties.get(propertyName));
+		if (MapUtils.isNotEmpty(this.properties) && this.properties.containsKey(propertyName)) {
+			return clazz.cast(this.properties.get(propertyName));
 		}
 		return null;
 	}
@@ -93,8 +95,9 @@ public class GeoJSONFeature<T extends AbstractGeometry<?>> implements Feature<T>
 	/**
 	 * @return the map which contains all the key value pairs
 	 */
+	@Override
 	public Map<String, Object> getProperties() {
-		return properties;
+		return this.properties;
 	}
 
 	/**

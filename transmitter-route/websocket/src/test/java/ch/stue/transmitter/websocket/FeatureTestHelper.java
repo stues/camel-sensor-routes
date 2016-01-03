@@ -7,6 +7,7 @@ import org.apache.commons.collections4.functors.ComparatorPredicate.Criterion;
 
 import ch.stue.domain.Feature;
 import ch.stue.domain.GeoJSONFeature;
+import ch.stue.domain.Geometry;
 import ch.stue.domain.PointGeometry;
 import ch.stue.transmitter.websocket.domain.FeatureValueJSONPredicate;
 
@@ -68,6 +69,19 @@ public class FeatureTestHelper {
 	 *            the latitude
 	 * @return the created feature
 	 */
+	public static Feature<?> createFeature(Geometry<?> geometry) {
+		return createFeature(geometry, null);
+	}
+
+	/**
+	 * Returns a new feature for the given properties
+	 *
+	 * @param longitude
+	 *            the longitude
+	 * @param latitude
+	 *            the latitude
+	 * @return the created feature
+	 */
 	public static Feature<PointGeometry> createFeature(Double longitude, Double latitude, String key, Object value) {
 		return createFeature(longitude, latitude, Collections.<String, Object> singletonMap(key, value));
 	}
@@ -99,6 +113,24 @@ public class FeatureTestHelper {
 	public static Feature<PointGeometry> createFeature(Double longitude, Double latitude, Map<String, Object> properties) {
 		PointGeometry pointGeometry = new PointGeometry(longitude, latitude);
 		GeoJSONFeature<PointGeometry> feature = new GeoJSONFeature<PointGeometry>(pointGeometry);
+		feature.setProperties(properties);
+		return feature;
+	}
+
+	/**
+	 * Returns a new feature for the given properties
+	 *
+	 * @param longitude
+	 *            the longitude
+	 * @param latitude
+	 *            the latitude
+	 * @param properties
+	 *            the properties to add
+	 * @return the created feature
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static Feature<?> createFeature(Geometry<?> geometry, Map<String, Object> properties) {
+		GeoJSONFeature<?> feature = new GeoJSONFeature(geometry);
 		feature.setProperties(properties);
 		return feature;
 	}

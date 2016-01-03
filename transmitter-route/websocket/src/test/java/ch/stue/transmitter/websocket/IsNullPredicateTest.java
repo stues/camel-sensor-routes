@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ch.stue.domain.Feature;
 import ch.stue.domain.PointGeometry;
-import ch.stue.transmitter.websocket.domain.FeatureIsNullJSONPredicate;
+import ch.stue.transmitter.websocket.domain.FeatureValueIsNullJSONPredicate;
 
 /**
  * Test Is Null Predicate
@@ -29,8 +29,8 @@ public class IsNullPredicateTest extends AbstractJSONPredicateTests {
 	@Test(dataProvider = "notPredicate")
 	public void testNotPredicate(String propertyName, Object value, String predicatePropertyName, boolean result) {
 		Feature<PointGeometry> feature = FeatureTestHelper.createFeature(propertyName, value);
-		FeatureIsNullJSONPredicate featureIsNullJSONPredicate = createIsNullPredicate(predicatePropertyName);
-		Assert.assertEquals(result, featureIsNullJSONPredicate.getPredicate().evaluate(feature));
+		FeatureValueIsNullJSONPredicate featureValueIsNullJSONPredicate = createIsNullPredicate(predicatePropertyName);
+		Assert.assertEquals(result, featureValueIsNullJSONPredicate.getPredicate().evaluate(feature));
 	}
 
 	@DataProvider(name = "jsonDataProvider")
@@ -41,13 +41,13 @@ public class IsNullPredicateTest extends AbstractJSONPredicateTests {
 	}
 
 	@Test(dataProvider = "jsonDataProvider")
-	private void testSerialize(FeatureIsNullJSONPredicate isNull, String result) throws JsonProcessingException {
+	private void testSerialize(FeatureValueIsNullJSONPredicate isNull, String result) throws JsonProcessingException {
 		Assert.assertEquals(this.jsonPredicateMapper.writeValueAsString(isNull), result);
 	}
 
 	@Test(dataProvider = "jsonDataProvider")
-	private void testDeserialize(FeatureIsNullJSONPredicate isNull, String jsonString) throws IOException {
-		FeatureIsNullJSONPredicate isNullPredicate = this.jsonPredicateMapper.readValue(jsonString, FeatureIsNullJSONPredicate.class);
+	private void testDeserialize(FeatureValueIsNullJSONPredicate isNull, String jsonString) throws IOException {
+		FeatureValueIsNullJSONPredicate isNullPredicate = this.jsonPredicateMapper.readValue(jsonString, FeatureValueIsNullJSONPredicate.class);
 		Assert.assertEquals(isNullPredicate, isNull);
 	}
 
@@ -59,10 +59,10 @@ public class IsNullPredicateTest extends AbstractJSONPredicateTests {
 	}
 
 	@Test(dataProvider = "serializeDeserializeDataProvider")
-	private void testSerializeDeserialize(FeatureIsNullJSONPredicate isNull, String nullPropertyName) throws IOException {
+	private void testSerializeDeserialize(FeatureValueIsNullJSONPredicate isNull, String nullPropertyName) throws IOException {
 		String deserializedString = this.jsonPredicateMapper.writeValueAsString(isNull);
-		FeatureIsNullJSONPredicate featureIsNullJSONPredicate = this.jsonPredicateMapper.readValue(deserializedString, FeatureIsNullJSONPredicate.class);
-		Assert.assertEquals(featureIsNullJSONPredicate.getNullPropertyName(), nullPropertyName);
+		FeatureValueIsNullJSONPredicate featureValueIsNullJSONPredicate = this.jsonPredicateMapper.readValue(deserializedString, FeatureValueIsNullJSONPredicate.class);
+		Assert.assertEquals(featureValueIsNullJSONPredicate.getNullPropertyName(), nullPropertyName);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class IsNullPredicateTest extends AbstractJSONPredicateTests {
 	 * @param propertyName the property to check for null
 	 * @return the created feature is null predicate
 	 */
-	private static FeatureIsNullJSONPredicate createIsNullPredicate(String propertyName) {
-		return new FeatureIsNullJSONPredicate(propertyName);
+	private static FeatureValueIsNullJSONPredicate createIsNullPredicate(String propertyName) {
+		return new FeatureValueIsNullJSONPredicate(propertyName);
 	}
 }

@@ -4,6 +4,13 @@ import org.apache.commons.collections4.Predicate;
 
 import ch.stue.domain.Feature;
 
+/**
+ * Predicate class to check for values of a given Feature
+ *
+ * @author stue
+ *
+ * @param <T> the type of the predicate
+ */
 public class FeaturePredicate<T> implements Predicate<Object> {
 
 	private final String propertyName;
@@ -12,13 +19,23 @@ public class FeaturePredicate<T> implements Predicate<Object> {
 
 	private final Class<T> valueClazz;
 
+	/**
+	 * Constructor with property name and predicate
+	 * @param propertyName the property name
+	 * @param predicate the predicate to test on the property
+	 */
 	public FeaturePredicate(String propertyName, Predicate<T> predicate){
 		this.propertyName = propertyName;
 		this.predicate = predicate;
 		this.valueClazz = null;
 	}
 
-
+	/**
+	 * Constructor with property name, valueClazz and predicate
+	 * @param propertyName the property name
+	 * @param valueClazz the value clazz
+	 * @param predicate the predicate
+	 */
 	public FeaturePredicate(String propertyName, Class<T> valueClazz, Predicate<T> predicate){
 		this.propertyName = propertyName;
 		this.predicate = predicate;
